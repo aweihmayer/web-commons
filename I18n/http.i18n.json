@@ -1,0 +1,38 @@
+﻿{
+    "400": {
+        "en": "Request payload contains errors",
+        "fr": "Le contenu de la requête contient des erreurs"
+    },
+    "401": {
+        "en": "Could not confirm your identity",
+        "fr": "Incapable de confirmer votre identité"
+    },
+    "403": {
+        "en": "You do not have necessary permissions",
+        "fr": "Vous n'avez pas les autorisations nécessaires"
+    },
+    "404": {
+        "en": "Could not find the requested resource",
+        "fr": "Incapable de trouver la ressource demandée"
+    },
+    "409": {
+        "en": "A conflict occured",
+        "fr": "Un conflit est survenu"
+    },
+    "410": {
+        "en": "Requested resource was deleted",
+        "fr": "La ressource demandée a été supprimée"
+    },
+    "423": {
+        "en": "Requested resource is locked",
+        "fr": "La ressource demandée est verrouillée"
+    },
+    "500": {
+        "en": "Our servers encountered a problem",
+        "fr": "Nos serveurs ont rencontré un problème"
+    },
+    "507": {
+        "en": "Your storage is full",
+        "fr": "Votre espace de stockage est plein"
+    }
+}

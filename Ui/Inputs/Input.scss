@@ -1,0 +1,51 @@
+﻿.input {
+    font-size: 60px;
+
+    > label {
+        display: block;
+        font-size: 0.3em;
+        margin-bottom: 0.1em;
+    }
+
+    .input-wrapper {
+        display: block;
+        height: 1em;
+        width: 100%;
+    }
+
+    &.select-input select,
+    &.tag-input input,
+    &.text-input input,
+    &.textarea-input textarea {
+        background-color: white;
+        border: 1px solid black;
+        border-radius: $BORDER_RADIUS_SMALL$;
+        box-sizing: border-box;
+        display: block;
+        font-size: 0.3em;
+        height: 100%;
+        padding-bottom: 0.5em;
+        padding-left: 10px;
+        padding-right: 5px;
+        padding-top: 0.5em;
+        width: 100%;
+    }
+
+    &.error.text-input input,
+    &.error.textarea-input textarea,
+    &.error select-input select {
+        border-color: $RED$;
+    }
+}
+
+.error-message {
+    min-height: 0.3em;
+
+    p {
+        color: $RED$;
+        display: block;
+        font-size: 0.3em;
+        margin: 0px;
+        vertical-align: top;
+    }
+}

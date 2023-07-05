@@ -1,0 +1,20 @@
+﻿.input.image-input {
+    .input-wrapper {
+        border: 1px dashed gray;
+        box-sizing: border-box;
+        font-size: initial;
+        height: 200px;
+        margin-bottom: 10px;
+        padding: 5px;
+        position: relative;
+
+        div {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            height: 85%;
+            margin: auto;
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,50 @@
+﻿.tag-input {
+    position: relative;
+
+    .input-wrapper > ul {
+        display: none;
+
+        &.open {
+            border: 1px solid black;
+            display: block;
+            font-size: 0.15em;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        }
+
+        li {
+            background-color: white;
+            cursor: pointer;
+            font-size: 2em;
+            line-height: 2.2em;
+            list-style: none;
+
+            &:hover {
+                background-color: lightgray;
+            }
+        }
+    }
+
+    > div > ul {
+        font-size: 0.5em;
+        margin: 5px 0px 5px 0px;
+        padding: 0px;
+
+        li {
+            background-color: lightgray;
+            display: inline-block;
+            margin-right: 5px;
+            padding: 0px 5px 0px 5px;
+
+            span {
+                color: #f44336;
+                cursor: pointer;
+                font-weight: bold;
+                padding-left: 10px;
+            }
+        }
+    }
+}

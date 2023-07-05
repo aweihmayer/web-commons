@@ -1,0 +1,2 @@
+﻿# React
+React is a front-end library to render the HTML interface on the client-side instead of the server. It is also great for managing JS events because a UI component class encapsulates all necessary events for that component and can be extended.

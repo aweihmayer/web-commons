@@ -1,0 +1,19 @@
+﻿.loader {
+    display: none;
+    height: 75%;
+    margin: auto;
+    max-width: 150px;
+
+    svg {
+        height: 100%;
+        vertical-align: top;
+    }
+
+    &.active {
+        display: block;
+    }
+}
+
+.hidden-while-loading {
+    display: none !important;
+}

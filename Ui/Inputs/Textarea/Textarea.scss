@@ -1,0 +1,19 @@
+﻿.input.textarea-input .input-wrapper {
+    height: auto;
+}
+
+.input.textarea-input textarea {
+    border: 1px solid black;
+    display: block;
+    resize: none;
+    width: 100%;
+}
+
+.input .editor-toolbar, .CodeMirror {
+    font-size: 18px;
+}
+
+.input .editor-toolbar, .CodeMirror.cm-s-paper {
+    background-color: white;
+    border: 1px solid black;
+}
