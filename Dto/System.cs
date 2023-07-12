@@ -29,14 +29,19 @@ namespace WebCommons.Dto
 
         public SystemDto(object obj)
         {
-            TimestampableEntity timestampable = obj as TimestampableEntity;
-            if (timestampable != null) {
+            this.SetTimestamps(obj);
+        }
+
+        public void SetTimestamps(object obj)
+        {
+            if (obj is TimestampableEntity timestampable)
+            {
                 this.CreatedDate = timestampable.CreatedDate;
                 this.UpdatedDate = timestampable.UpdatedDate;
             }
 
-            SearchableEntity searchable = obj as SearchableEntity;
-            if (searchable != null) {
+            if (obj is SearchableEntity searchable)
+            {
                 this.Searchable = searchable.IsSearchable();
             }
         }

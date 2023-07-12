@@ -2,12 +2,13 @@
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Web.Mvc;
-using System.Web.Routing;
 using WebCommons.Bundling;
 
 namespace WebCommons.Core
@@ -30,15 +31,20 @@ namespace WebCommons.Core
             JsEngineSwitcher.Current.DefaultEngineName = V8JsEngine.EngineName;
             JsEngineSwitcher.Current.EngineFactories.AddV8();
 
-            // Views
-            ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new CustomViewEngine());
-            AreaRegistration.RegisterAllAreas();
-
-            // Routing
-            RouteTable.Routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            RouteTable.Routes.MapMvcAttributeRoutes();
-            RouteTable.Routes.RouteExistingFiles = false;
+            // View
+            builder.Services.AddRazorPages();
+            builder.Services.Configure<MvcRazorRuntimeCompilationOptions>(options => {
+                options.FileProviders.Clear();
+                options.FileProviders.Add(new PhysicalFileProvider("/path/to/custom/views"));
+            });
+            /*
+            builder.Services.AddMvc().AddViewOptions(options => {
+                options.ViewEngines.Clear();
+                options.ViewLocationFormats.Clear();
+                options.ViewLocationFormats.Add("/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
+                options.ViewLocationFormats.Add("/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
+                options.ViewEngines.Add(typeof(CommonViewEngine));
+            });*/
 
             // Json serialization
             JsonConvert.DefaultSettings = (() => {
@@ -46,10 +52,7 @@ namespace WebCommons.Core
                 settings.Converters.Add(new StringEnumConverter { AllowIntegerValues = true });
                 return settings; });
 
-            // NEW
-
-            // Add services to the container.
-            builder.Services.AddRazorPages();
+            // NEW            
 
             var app = builder.Build();
 
@@ -61,14 +64,11 @@ namespace WebCommons.Core
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (environment.IsProduction()) { app.UseHttpsRedirection(); }
+
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
-
-            
 
             app.Run();
         }

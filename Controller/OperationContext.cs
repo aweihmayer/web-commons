@@ -7,6 +7,8 @@ namespace WebCommons.Controllers
 {
     public class OperationContext<TUser> where TUser : CommonUser
     {
+        public I18n I18n { get; set; } = new("en");
+
         private string locale = "en";
         public string Locale {
             get {
@@ -18,10 +20,8 @@ namespace WebCommons.Controllers
             }
         }
 
-        public I18n I18n { get; set; } = new("en");
-
         public DateTime Date { get; set; } = DateTime.UtcNow;
-        protected AuthContext<TUser> Auth { get; set; } = new AuthContext<TUser>();
+        public AuthContext<TUser> Auth { get; set; } = new AuthContext<TUser>();
 
         public void Init(HttpRequest request, HttpResponse response)
         {

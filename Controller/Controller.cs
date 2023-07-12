@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MartialMap.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
@@ -156,15 +157,38 @@ namespace WebCommons.Controllers
             ViewBag.Domain = this.Request.Host.Value;
             ViewBag.OperationContext = this.OperationContext;
 
+            ControllerActionDescriptor controllerActionDescriptor;
+            if (context.ActionDescriptor is ControllerActionDescriptor) {
+                controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            } else {
+                return;
+            }
+
+
+            // Check the user's permissions
+            try {
+                // Check if the action has the RequiresAuth attribute
+                object[] permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(RequiresAuthAttribute), false);
+                if (permissionAttributes.Length == 0) { return; }
+                // The action has the attribute, check that the user is authenticated
+                RequiresAuthAttribute permissionAttribute = (RequiresAuthAttribute)permissionAttributes[0];
+                this.OperationContext.Auth.MustBeAuthenticated();
+            } catch (Exception ex) {
+                // The user is not authenticated
+                object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
+                // The action is an API call, show a JSON error
+                if (jsRouteAttributes.Length == 0) { context.Result = this.ErrorJson(ex); }
+                // The action is a view, show a HTML error
+                else { context.Result = this.ErrorView(ex); }
+            }
+
             // Set cache headers depending on the action's attributes
-            if (context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor) {
-                object[] cacheAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CacheAttribute), false);
-                if (cacheAttributes.Length > 0) {
-                    CacheAttribute cacheAttribute = (CacheAttribute)cacheAttributes[0];
-                    object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
-                    // Set cached headers only if the method does not have a JsRoute attribute
-                    if (jsRouteAttributes.Length == 0) { Response.SetCache(cacheAttribute.Duration); }
-                }
+            object[] cacheAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CacheAttribute), false);
+            if (cacheAttributes.Length > 0) {
+                CacheAttribute cacheAttribute = (CacheAttribute)cacheAttributes[0];
+                object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
+                // Set cached headers only if the method does not have a JsRoute attribute
+                if (jsRouteAttributes.Length == 0) { Response.SetCache(cacheAttribute.Duration); }
             }
         }
 

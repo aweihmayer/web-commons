@@ -70,6 +70,16 @@ namespace WebCommons.Auth
         }
 
         /// <summary>
+        /// Determines if the user is authenticated and throws an exception if he is not, otherwise returns true.
+        /// </summary>
+        /// <exception cref="UnauthorizedException"></exception>
+        public bool MustBeAuthenticated()
+        {
+            if (!this.IsAuthenticated()) { throw new UnauthorizedException(); }
+            return true;
+        }
+
+        /// <summary>
         /// Authenticates the user.
         /// </summary>
         public void Authenticate(string email, string password)

@@ -61,7 +61,7 @@ namespace WebCommons.Api
         public HttpRequestMessage Build()
 		{
 			Dictionary<string, object> query = this.BuildQuery();
-			string uri = this.BuildUri(query);
+			string uri = this.BuildEndpoint(query);
 
 			// Create the request
 			HttpRequestMessage request = new(this.Method, uri);
@@ -114,9 +114,9 @@ namespace WebCommons.Api
 		/// Builds the full URI.
 		/// Query parameters can replace placeholders in the URI and will be removed from the query string if they are.
 		/// </summary>
-		protected string BuildUri(Dictionary<string, object> query)
+		protected string BuildEndpoint(Dictionary<string, object> query)
 		{
-			string uri = this.Api.BaseURI + this.Endpoint;
+			string uri = this.Endpoint;
 
 			// Replace placeholders in the URI with query parameter value and remove the parameter
 			foreach (KeyValuePair<string, object> param in query) {

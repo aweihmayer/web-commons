@@ -1,13 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebCommons.Db
 {
     [Table("app_user")]
+    [Index(nameof(Id), IsUnique = true)]
     public abstract class CommonUser
     {
+        [Column("id")]
         [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("first_name", TypeName = DbColumns.NAME_VARCHAR)]

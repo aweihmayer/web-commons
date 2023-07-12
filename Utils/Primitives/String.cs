@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace WebCommons.Utils
+namespace System
 {
     public static class StringUtils
     {

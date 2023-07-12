@@ -57,5 +57,21 @@ namespace WebCommons.Api
 				this.StatusCode.ToString(),
 				JsonConvert.SerializeObject(this.Content));
         }
+
+		public ResponseException ToException()
+		{
+			string message = this.ToString();
+            switch (this.StatusCode) {
+				case HttpStatusCode.BadRequest: return new BadRequestException(message);
+                case HttpStatusCode.Conflict: return new ConflictException(message);
+                case HttpStatusCode.Forbidden: return new ForbiddenException(message);
+                case HttpStatusCode.Gone: return new GoneException(message);
+                case HttpStatusCode.InternalServerError: return new InternalErrorException(message);
+                case HttpStatusCode.Locked: return new LockedException(message);
+                case HttpStatusCode.NotFound: return new NotFoundException(message);
+                case HttpStatusCode.Unauthorized: return new UnauthorizedException(message);
+				default: return new ResponseException(this.StatusCode, message);
+            }
+		}
     }
 }

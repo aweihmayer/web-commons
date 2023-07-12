@@ -1,14 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebCommons.Db
 {
     [Table("token")]
-    [Index(nameof(Id))]
+    [Index(nameof(Id), IsUnique = true)]
     public class Token<TUser> where TUser : CommonUser
     {
         [Column("token")]
+        [Key]
         public Guid Id { get; set; }
 
         /// <summary>

@@ -2,7 +2,7 @@
 
 namespace WebCommons
 {
-    public abstract class ResponseException : Exception
+    public class ResponseException : Exception
     {
         public HttpStatusCode StatusCode { get; set; }
 

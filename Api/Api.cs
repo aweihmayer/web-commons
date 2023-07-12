@@ -40,7 +40,7 @@ namespace WebCommons.Api
                 watch.Stop();
                 var parsedResponse = new ApiResponse<T>(response, content, watch.Elapsed);
 
-                if (!parsedResponse.IsSuccessStatusCode) { throw parsedResponse; }
+                if (!parsedResponse.IsSuccessStatusCode) { throw parsedResponse.ToException(); }
                 return parsedResponse;
             }
             catch (Exception)
@@ -65,5 +65,4 @@ namespace WebCommons.Api
             return await this.SendRequest<T>(request);
         }
     }
-}
 }
