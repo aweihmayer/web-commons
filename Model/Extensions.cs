@@ -12,14 +12,9 @@ namespace WebCommons.Model
     public static class ModelExtensions
     {
         // TODO remove these constants, use a custom attribute instead
-        public const int DESCRIPTION_MAX = 1000;
         public const int EMAIL_MAX = 255;
         public const string EMAIL_REGEX = "^.*@.*\\..*$";
-        public const int NAME_MAX = 50;
         public const int PASSWORD_MAX = 50;
-        public const int SUMMARY_MAX = 255;
-        public const int URL_MAX = 255;
-        public const int URL_PARAM_MAX = 25;
 
         /// <summary>
         /// Determines if the model is valid.

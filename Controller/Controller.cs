@@ -108,7 +108,7 @@ namespace WebCommons.Controllers
 
         #region Error file response
 
-        protected FileResult ErrorFile()
+        protected FileResult? ErrorFile()
         {
             Response.StatusCode = 404;
             return default;
@@ -163,7 +163,6 @@ namespace WebCommons.Controllers
             } else {
                 return;
             }
-
 
             // Check the user's permissions
             try {

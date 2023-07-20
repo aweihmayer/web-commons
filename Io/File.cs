@@ -11,32 +11,26 @@ namespace WebCommons.IO
     /// </summary>
     public class SystemFile
     {
-        /// <summary>
-        /// Maps the file extension to its file stream type.
-        /// </summary>
-        protected static readonly Dictionary<string, string> EXTENSION_TYPE_MAP = new Dictionary<string, string>() {
-            // Web
-            { "js", "text/javascript" },
-            { "css", "text/css" },
-            // Images
-            { "jpg", "image/jpeg" },
-            { "png", "image/png" },
-            { "ico", "image/x-icon" },
-            // Fonts
-            { "ttf", "application/x-font-ttf" },
-            { "woff", "application/x-font-woff" } };
+        public string Path { get; }
+        public string Extension { get { return FileTypeMap.GetExtension(this.FileType); } }
+        public FileType FileType { get; set; }
 
-        public string Path { get; set; }
-        public string Extension { get; set; }
-
-        public SystemFile(string path) : this()
+        public SystemFile(string path)
         {
             this.Path = MapPath(path);
             string[] parts = this.Path.Split('.');
-            this.Extension = parts[parts.Length - 1];
+            this.FileType = FileTypeMap.GetFileType(parts[parts.Length - 1]);
         }
 
-        public SystemFile() { }
+        public SystemFile(string path, FileType type)
+        {
+            this.Path = MapPath(path);
+            this.FileType = type;
+            string[] parts = this.Path.Split('.');
+            if (parts.Length == 1) {
+                this.Path += "." + FileTypeMap.GetExtension(type);
+            }
+        }
 
         /// <summary>
         /// Appends the file path to the root path.
@@ -49,7 +43,7 @@ namespace WebCommons.IO
         private static IWebHostEnvironment host = null;
         private static IWebHostEnvironment Host { get {
             if (host != null) { return host; }
-            HttpContextAccessor accessor = new HttpContextAccessor();
+            HttpContextAccessor accessor = new();
             if (accessor.HttpContext != null) {
                 host = accessor.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
             }
@@ -67,21 +61,21 @@ namespace WebCommons.IO
         /// <summary>
         /// Reads the file as plain text.
         /// </summary>
-        public string Read() => File.ReadAllText(this.Path);
+        public string? Read() => File.ReadAllText(this.Path);
 
         /// <summary>
         /// Reads the file as JSON and deserializes the contents into an object.
         /// </summary>
         /// <typeparam name="T">The type that the file contents will be deserialized to.</typeparam>
-        public T Read<T>() => JsonConvert.DeserializeObject<T>(this.Read());
+        public T? Read<T>() => JsonConvert.DeserializeObject<T>(this.Read());
 
         /// <summary>
         /// Creates a stream of the file.
         /// </summary>
         public FileStreamResult ReadStreamResult()
         {
-            FileStream fs = new FileStream(this.Path, FileMode.Open, FileAccess.Read);
-            return new FileStreamResult(fs, EXTENSION_TYPE_MAP[this.Extension]);
+            FileStream fs = new(this.Path, FileMode.Open, FileAccess.Read);
+            return new FileStreamResult(fs, FileTypeMap.GetContentType(this.Extension));
         }
 
         /// <summary>
@@ -126,7 +120,7 @@ namespace WebCommons.IO
         /// <returns>A list of file objects.</returns>
         public static List<SystemFile> GetAllFilesInDirectory(string directory, string pattern)
         {
-            List<SystemFile> files = new List<SystemFile>();
+            List<SystemFile> files = new();
             
             string[] filePaths = Directory.GetFiles(
                 MapPath(directory),

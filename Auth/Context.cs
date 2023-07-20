@@ -82,27 +82,41 @@ namespace WebCommons.Auth
         /// <summary>
         /// Authenticates the user.
         /// </summary>
-        public void Authenticate(string email, string password)
+        /// <exception cref="NotFoundException">Thrown if the user is not found</exception>
+        public TUser Authenticate(SigninModel model)
         {
-            TUser? user = this.Db.GetUser(email, password);
-            this.Authenticate(user);
+            return this.Authenticate(model.Email, model.Password);
         }
 
         /// <summary>
         /// Authenticates the user.
         /// </summary>
-        public void Authenticate(Guid token)
+        /// <exception cref="NotFoundException">Thrown if the user is not found</exception>
+        public TUser Authenticate(string email, string password)
+        {
+            TUser? user = this.Db.GetUser(email, password);
+            this.Authenticate(user);
+            return user;
+        }
+
+        /// <summary>
+        /// Authenticates the user.
+        /// </summary>
+        /// <exception cref="NotFoundException">Thrown if the user is not found</exception>
+        public TUser Authenticate(Guid token)
         {
             TUser? user = this.Db.GetUser(token);
             this.Authenticate(user);
+            return user;
         }
 
         /// <summary>
         /// Authenticates the user by creating the token if necessary and creating an auth cookie.
         /// </summary>
+        /// <exception cref="NotFoundException">Thrown if the user is not found</exception>
         public void Authenticate(TUser? user)
         {
-            if (user == null) { return; }
+            if (user == null) { throw new NotFoundException(); }
             if (user.AuthTokenId == null) {
                 WebCommons.Db.Token<TUser> token = new(user, this.Cookie.Duration, false);
                 user.AuthTokenId = token.Id;
