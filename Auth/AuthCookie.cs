@@ -6,7 +6,7 @@ namespace WebCommons.Auth
     public class AuthCookie : Cookie
     {
         [JsonProperty("token")]
-        public Guid Token { get; set; }
+        public Guid? Token { get; set; }
 
         public AuthCookie() : base("auth", TimeSpan.FromDays(7)) { }
 
@@ -18,7 +18,7 @@ namespace WebCommons.Auth
 
         public bool IsValid()
         {
-            return (this.Token != Guid.Empty);
+            return this.Token.HasValue;
         }
     }
 }

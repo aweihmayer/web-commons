@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MartialMap.Controllers
+﻿namespace MartialMap.Controllers
 {
     /// <summary>
     /// Validates that a user is authenticated before executing the endpoint.

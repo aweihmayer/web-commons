@@ -9,9 +9,9 @@
     public class CacheAttribute : Attribute
 	{
 		public TimeSpan Duration { get; set; }
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
-        public CacheAttribute(int seconds = 0, int minutes = 0, int hours = 0, int days = 0, int weeks = 0, int months = 0, string name = null)
+        public CacheAttribute(int seconds = 0, int minutes = 0, int hours = 0, int days = 0, int weeks = 0, int months = 0, string? name = null)
         {
             days += (weeks * 7);
             days += (months * 30);

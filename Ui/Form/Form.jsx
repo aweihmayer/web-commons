@@ -6,17 +6,13 @@ class Form extends FieldSet {
      * The callback function if the submit was successful.
      * @param {any} ev
      */
-    onSubmitSuccess(ev) {
-
-    }
+    onSubmitSuccess(response) { return response; }
 
     /**
      * The callback function if the submit failed.
      * @param {any} ev
      */
-    onSubmitError(ev) {
-
-    }
+    onSubmitError(response) { return response; }
 
     /**
      * Determines if form is valid and submits it if it is.
@@ -24,7 +20,7 @@ class Form extends FieldSet {
      * @param {Event} [ev] The submit event.
      * @returns {boolean} True if the inputs are valid, otherwise false.
      */
-    submit(onSuccess, onError, ev) {
+    submit(ev) {
         if (ev) { ev.preventDefault(); }
 
         return new Promise(function (resolve, reject) {

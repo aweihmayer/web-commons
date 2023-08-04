@@ -40,7 +40,7 @@ namespace WebCommons.Model
         /// Gets the query string parameters of an object.
         /// </summary>
         /// <param name="onlyPropertiesWithQueryAttribute">If true, only properties with the <see cref="FromQueryAttribute" /> will be collected.</param>
-        public static Dictionary<string, object> GetQueryStringParams(this object obj, bool onlyPropertiesWithQueryAttribute = true)
+        public static Dictionary<string, object> GetQueryStringParams(this object? obj, bool onlyPropertiesWithQueryAttribute = true)
         {
             if (obj == null) { return new Dictionary<string, object>(); }
 

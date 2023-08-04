@@ -12,13 +12,13 @@ namespace WebCommons.Api
 		/// The request's endpoint.
 		/// <example>/article/{id}</example>
 		/// </summary>
-		public string Endpoint { get; set; } = string.Empty;
+		public string Endpoint { get; set; }
 
 		/// <summary>
 		/// The request's HTTP method.
 		/// GET requests cannot have a content body.
 		/// </summary>
-		public HttpMethod Method { get; set; } = HttpMethod.Get;
+		public HttpMethod Method { get; set; }
 
 		/// <summary>
 		/// The request's query.
@@ -26,7 +26,9 @@ namespace WebCommons.Api
 		/// The remaining parameters will be added as a query string.
 		/// The query can be <see cref="Dictionary{string, object}" /> or a custom object.
 		/// </summary>
-		public object Query { get; set; }
+		public object? Query { get; set; }
+
+		public object? DefaultQuery { get; set; }
 
         /// <summary>
         /// The request's model.
@@ -35,24 +37,23 @@ namespace WebCommons.Api
         /// If the model is a custom object, properties that are for the query string must have a <see cref="FromQueryAttribute" />.
         /// If the method is not GET, the model will be serialized as JSON and added to the content body.
         /// </summary>
-        public object Model { get; set; }
+        public object? Model { get; set; }
+
+		public object? DefaultModel { get; set; }
 
 		/// <summary>
 		/// The request's headers.
 		/// </summary>
 		public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-        /// <summary>
-        /// The API that this request belongs to.
-        /// </summary>
-        public Api Api { get; set; }
-
-		public ApiRequest() { }
-
-		public ApiRequest(string endpoint, HttpMethod method)
+		public ApiRequest(string endpoint, HttpMethod method, object? query = null, object? model = null, object? defaultQuery = null, object? defaultModel = null)
 		{
 			this.Endpoint = endpoint;
 			this.Method = method;
+			this.Query = query;
+			this.Model = model;
+			this.DefaultQuery = defaultQuery;
+			this.DefaultModel = defaultModel;
 		}
 
 		/// <summary>
@@ -99,11 +100,11 @@ namespace WebCommons.Api
 				query.Add(param.Key, param.Value);
 			}
 			// Add default query params
-			foreach (KeyValuePair<string, object> param in this.Api.Defaults.Query.GetQueryStringParams(false)) {
+			foreach (KeyValuePair<string, object> param in this.DefaultQuery.GetQueryStringParams(false)) {
 				query.Add(param.Key, param.Value);
 			}
 			// Add default model params
-			foreach (KeyValuePair<string, object> param in this.Api.Defaults.Model.GetQueryStringParams(true)) {
+			foreach (KeyValuePair<string, object> param in this.DefaultModel.GetQueryStringParams(true)) {
 				query.Add(param.Key, param.Value);
 			}
 
@@ -141,21 +142,21 @@ namespace WebCommons.Api
             foreach (KeyValuePair<string, string> header in this.Headers) {
                 headers.Add(header.Key, header.Value);
             }
-            // Add default headerss
-            foreach (KeyValuePair<string, string> header in this.Api.Defaults.Headers) {
-                headers.Add(header.Key, header.Value);
-            }
 
 			return headers;
         }
 
+		/// <summary>
+		/// Creates a string that represents the request.
+		/// </summary>
         public override string ToString()
 		{
 			HttpRequestMessage request = this.Build();
-            return string.Format("Request {0} {1} {2}",
-				request.RequestUri.ToString(),
-				request.Method.ToString(),
-				request.Content.ToString());
+            return string.Format("[{0}] Request {1} {2} {3}",
+                DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
+                request.Method.ToString(),
+                (request.RequestUri == null) ? "/" : request.RequestUri.ToString(),
+                (request.Content == null) ? string.Empty : request.Content.ToString());
 		}
 	}
 }

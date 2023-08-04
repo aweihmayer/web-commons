@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,7 +33,20 @@ namespace WebCommons.Db
         [Column("active")]
         public bool Active { get; set; }
 
-        [Column("auth_token_id")]
-        public Guid? AuthTokenId { get; set; }
+        /// <summary>
+        /// Utility property to pass the token id to the authentification method.
+        /// If you want relationship properties, you must define them yourself.
+        /// </summary>
+        [JsonIgnore]
+        [NotMapped]
+        public virtual Guid? AuthTokenId { get; set; }
+
+        /*
+        [JsonIgnore]
+        public virtual List<TToken> Tokens { get; set; } = new List<TToken>();
+
+        [JsonIgnore]
+        [NotMapped]
+        public virtual TToken? Token { get; set; }*/
     }
 }

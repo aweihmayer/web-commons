@@ -17,7 +17,7 @@ namespace WebCommons.Data.Web
         /// The value of the cookie in base64.
         /// </summary>
         [JsonIgnore]
-        protected string Value { get; set; }
+        protected string? Value { get; set; }
 
         /// <summary>
         /// The duration of the cookie.
@@ -29,15 +29,15 @@ namespace WebCommons.Data.Web
         /// The request to read the cookie.
         /// </summary>
         [JsonIgnore]
-        public HttpRequest Request { get; set; }
+        public HttpRequest? Request { get; set; }
 
         /// <summary>
         /// The response to create the cookie.
         /// </summary>
         [JsonIgnore]
-        public HttpResponse Response { get; set; }
+        public HttpResponse? Response { get; set; }
 
-        protected Cookie(string name, TimeSpan duration, HttpRequest request = null, HttpResponse response = null)
+        protected Cookie(string name, TimeSpan duration, HttpRequest? request = null, HttpResponse? response = null)
         {
             this.Name = name;
             this.Duration = duration;
@@ -57,7 +57,7 @@ namespace WebCommons.Data.Web
         /// <summary>
         /// Sets the request and response references so that the cookie may be read and created.
         /// </summary>
-        public void Init(HttpRequest request = null, HttpResponse response = null)
+        public void Init(HttpRequest? request = null, HttpResponse? response = null)
         {
             this.Request = request;
             this.Response = response;
@@ -76,13 +76,15 @@ namespace WebCommons.Data.Web
             this.Value = Encoding.UTF8.GetString(bytes);
             try {
                 JsonConvert.PopulateObject(this.Value, this);
-            } catch (Exception ex) { }
+            } catch (Exception) {
+                
+            }
         }
 
         /// <summary>
         /// Adds the cookie to the response as a base64 encoded value.
         /// </summary>
-        public virtual void Create(HttpResponse response = null)
+        public virtual void Create(HttpResponse? response = null)
         {
             if (response != null) { this.Response = response; }
             this.Value = JsonConvert.SerializeObject(this);
@@ -98,7 +100,7 @@ namespace WebCommons.Data.Web
         /// </summary>
         public void Delete()
         {
-            Response.Cookies.Delete(this.Name);
+            this.Response.Cookies.Delete(this.Name);
         }
 
         /// <summary>

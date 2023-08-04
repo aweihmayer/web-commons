@@ -20,7 +20,7 @@ namespace WebCommons.Controllers
     ///     <item>Create cookies.</item>
     /// </list>
     /// </summary>
-    public class CommonController<TOperation, TUser> : Controller where TOperation : OperationContext<TUser>, new() where TUser : CommonUser
+    public class CommonController<TOperation, TUser> : Controller where TOperation : OperationContext<CommonDbContext, TUser>, new() where TUser : CommonUser
     {
         private bool AutoRedirect { get; set; } = true;
 
@@ -29,11 +29,11 @@ namespace WebCommons.Controllers
         #region Model
 
         /// <summary>
-        /// Determines if the model is valid. TODO maybe a cleaner way
+        /// Determines if the model is valid.
         /// </summary>
         /// <returns>True if the model is valid.</returns>
         /// <exception cref="ResponseException">Thrown as a bad request (400) if the model is not valid.</exception>
-        protected bool ValidateModel()
+        protected bool ModelMustBeValid()
         {
             if (ModelState.IsValid) { return true; }
             throw new BadRequestException();
@@ -152,14 +152,17 @@ namespace WebCommons.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            this.OperationContext.Init(this.Request, this.Response);
+
             // Set default utility values
             ViewBag.AbsolutePath = Request.Path.Value;
             ViewBag.Domain = this.Request.Host.Value;
             ViewBag.OperationContext = this.OperationContext;
 
-            ControllerActionDescriptor controllerActionDescriptor;
+            ControllerActionDescriptor? controllerActionDescriptor;
             if (context.ActionDescriptor is ControllerActionDescriptor) {
                 controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+                if (controllerActionDescriptor == null) { return; }
             } else {
                 return;
             }
@@ -168,10 +171,9 @@ namespace WebCommons.Controllers
             try {
                 // Check if the action has the RequiresAuth attribute
                 object[] permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(RequiresAuthAttribute), false);
-                if (permissionAttributes.Length == 0) { return; }
+                if (!permissionAttributes.Any()) { return; }
                 // The action has the attribute, check that the user is authenticated
-                RequiresAuthAttribute permissionAttribute = (RequiresAuthAttribute)permissionAttributes[0];
-                this.OperationContext.Auth.MustBeAuthenticated();
+                this.OperationContext.MustBeAuthenticated();
             } catch (Exception ex) {
                 // The user is not authenticated
                 object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
@@ -190,8 +192,6 @@ namespace WebCommons.Controllers
                 if (jsRouteAttributes.Length == 0) { Response.SetCache(cacheAttribute.Duration); }
             }
         }
-
-        public override void OnActionExecuted(ActionExecutedContext context) { }
 
         #endregion
     }

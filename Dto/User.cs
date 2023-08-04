@@ -27,12 +27,12 @@ namespace WebCommons.Dto
 
         #region Medium details
 
-        [JsonProperty("authToken", NullValueHandling = NullValueHandling.Ignore)]
-        public Guid? AuthToken { get; set; }
+        [JsonProperty("tokens", NullValueHandling = NullValueHandling.Ignore)]
+        public List<UserTokenDto>? Tokens { get; set; }
 
         #endregion
 
-        #region High details
+        #region All details
 
         [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
         public string? Password { get; set; }
@@ -44,7 +44,7 @@ namespace WebCommons.Dto
 
         public UserDto() { }
 
-        public UserDto(CommonUser user, Details details)
+        public UserDto(CommonUser user, List<UserToken<CommonUser>>? tokens = null, Details details = Details.None)
         {
             this.Id = user.Id;
             this.FirstName = user.FirstName;
@@ -53,10 +53,10 @@ namespace WebCommons.Dto
             if (details == Details.None) { return; }
             this.Email = user.Email;
 
-            if (details == Details.Low) { return; }
-            this.AuthToken = user.AuthTokenId;
-
             if (details == Details.Medium) { return; }
+            if (tokens != null) { this.Tokens = tokens.Select(t => new UserTokenDto(t)).ToList(); }
+
+            if (details == Details.High) { return; }
             this.Password = user.Password;
             this.Salt = user.Salt;
         }

@@ -23,7 +23,7 @@ namespace WebCommons.IO
         /// </summary>
         public string ReadBase64()
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             Image img = this.ReadImage();
             img.Save(ms, img.RawFormat);
             byte[] imageBytes = ms.ToArray();
@@ -37,12 +37,10 @@ namespace WebCommons.IO
         {
             base64 = base64.Substring(base64.IndexOf(',') + 1);
             byte[] bytes = Convert.FromBase64String(base64);
-
-            using(MemoryStream ms = new MemoryStream(bytes, false)) {
-                Image image = Image.FromStream(ms, useEmbeddedColorManagement: true, validateImageData: false);
-                image.Save(this.Path, ImageFormat.Jpeg);
-                ms.Dispose();
-            }
+            using MemoryStream ms = new(bytes, false);
+            Image image = Image.FromStream(ms, useEmbeddedColorManagement: true, validateImageData: false);
+            image.Save(this.Path, ImageFormat.Jpeg);
+            ms.Dispose();
         }
     }
 }

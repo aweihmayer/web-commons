@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using WebCommons.Auth;
-using WebCommons.Db;
+﻿using WebCommons.Db;
 using WebCommons.Internationalization;
 
 namespace WebCommons.Controllers
 {
-    public class OperationContext<TUser> where TUser : CommonUser
+    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContext where TUser : CommonUser
     {
+        public DateTime Date { get; set; } = DateTime.UtcNow;
         public I18n I18n { get; set; } = new("en");
-
         private string locale = "en";
         public string Locale {
             get {
@@ -20,12 +18,5 @@ namespace WebCommons.Controllers
             }
         }
 
-        public DateTime Date { get; set; } = DateTime.UtcNow;
-        public AuthContext<TUser> Auth { get; set; } = new AuthContext<TUser>();
-
-        public void Init(HttpRequest request, HttpResponse response)
-        {
-            this.Auth.Init(request, response);
-        }
     }
 }

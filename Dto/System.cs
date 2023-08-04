@@ -34,8 +34,7 @@ namespace WebCommons.Dto
 
         public void SetTimestamps(object obj)
         {
-            if (obj is TimestampableEntity timestampable)
-            {
+            if (obj is TimestampableEntity timestampable) {
                 this.CreatedDate = timestampable.CreatedDate;
                 this.UpdatedDate = timestampable.UpdatedDate;
             }

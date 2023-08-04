@@ -21,9 +21,7 @@ namespace WebCommons.Api
 		public ApiResponse(HttpResponseMessage response, string content, TimeSpan duration) : this(response)
 		{
 			this.Duration = duration;
-			if (!string.IsNullOrEmpty(content)) {
-				this.Content = JsonConvert.DeserializeObject<T>(content);
-			}
+			this.Content = !string.IsNullOrEmpty(content) ? JsonConvert.DeserializeObject<T>(content) : default;
 		}
 
 		public ApiResponse(HttpResponseMessage response)
@@ -62,15 +60,15 @@ namespace WebCommons.Api
 		{
 			string message = this.ToString();
             switch (this.StatusCode) {
-				case HttpStatusCode.BadRequest: return new BadRequestException(message);
-                case HttpStatusCode.Conflict: return new ConflictException(message);
-                case HttpStatusCode.Forbidden: return new ForbiddenException(message);
-                case HttpStatusCode.Gone: return new GoneException(message);
-                case HttpStatusCode.InternalServerError: return new InternalErrorException(message);
-                case HttpStatusCode.Locked: return new LockedException(message);
-                case HttpStatusCode.NotFound: return new NotFoundException(message);
-                case HttpStatusCode.Unauthorized: return new UnauthorizedException(message);
-				default: return new ResponseException(this.StatusCode, message);
+				case HttpStatusCode.BadRequest:				return new BadRequestException(message);
+                case HttpStatusCode.Conflict:				return new ConflictException(message);
+                case HttpStatusCode.Forbidden:				return new ForbiddenException(message);
+                case HttpStatusCode.Gone:					return new GoneException(message);
+                case HttpStatusCode.InternalServerError:	return new InternalErrorException(message);
+                case HttpStatusCode.Locked:					return new LockedException(message);
+                case HttpStatusCode.NotFound:				return new NotFoundException(message);
+                case HttpStatusCode.Unauthorized:			return new UnauthorizedException(message);
+				default:									return new ResponseException(this.StatusCode, message);
             }
 		}
     }

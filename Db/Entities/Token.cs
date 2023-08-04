@@ -7,23 +7,28 @@ namespace WebCommons.Db
 {
     [Table("token")]
     [Index(nameof(Id), IsUnique = true)]
-    public class Token<TUser> where TUser : CommonUser
+    public class UserToken<TUser> where TUser : CommonUser
     {
         [Column("token")]
         [Key]
         public Guid Id { get; set; }
 
+        #region Columns
+
         /// <summary>
-        /// Codes are used for two-factor verifications.
+        /// Codes are used for two-factor verification.
         /// </summary>
         [Column("code")]
         public int? Code { get; set; }
 
+        /// <summary>
+        /// Formatted code as a string with at least 6 characters as leading zeros.
+        /// </summary>
         [NotMapped]
         public string FormattedCode
         {
             get {
-                return this.Code.HasValue ? this.Code.Value.ToString("0000") : "0000";
+                return this.Code.HasValue ? this.Code.Value.ToString("000000") : "000000";
             }
             set {
                 this.Code = int.Parse(value);
@@ -31,24 +36,50 @@ namespace WebCommons.Db
         }
 
         [Column("duration")]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
 
         [Column("last_name")]
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+
+        [Column("is_auth_token")]
+        public bool IsAuthToken { get; set; }
+
+        #endregion
+
+        #region Relationships
 
         [Column("user_id")]
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         [JsonIgnore]
-        public virtual TUser User { get; set; }
+        public virtual TUser? User { get; set; }
 
-        public Token(TUser user, TimeSpan duration, bool hasCode = false)
+        #endregion
+
+        public UserToken() { }
+
+        public UserToken(TUser user, bool isAuthToken = false, bool hasCode = false)
+        {
+            this.Id = Guid.NewGuid();
+            this.Duration = null;
+            this.ExpiryDate = null;
+            this.UserId = user.Id;
+            this.User = user;
+            this.IsAuthToken = isAuthToken;
+            if (hasCode) {
+                Random rnd = new();
+                this.Code = rnd.Next(0, 9999);
+            }
+        }
+
+        public UserToken(TUser user, TimeSpan duration, bool isAuthToken = false, bool hasCode = false)
         {
             this.Id = Guid.NewGuid();
             this.Duration = duration;
-            this.ExpiryDate = DateTime.UtcNow.Add(duration);
+            this.Refresh();
             this.UserId = user.Id;
-
+            this.User = user;
+            this.IsAuthToken = isAuthToken;
             if (hasCode) {
                 Random rnd = new();
                 this.Code = rnd.Next(0, 9999);
@@ -60,7 +91,8 @@ namespace WebCommons.Db
         /// </summary>
         public void Refresh()
         {
-            this.ExpiryDate = DateTime.UtcNow.Add(this.Duration);
+            if (!this.Duration.HasValue) { return; }
+            this.ExpiryDate = DateTime.UtcNow.Add(this.Duration.Value);
         }
 
         /// <summary>
@@ -68,14 +100,16 @@ namespace WebCommons.Db
         /// </summary>
         public bool IsExpired()
         {
+            if (!this.ExpiryDate.HasValue) { return false; }
             return this.ExpiryDate < DateTime.UtcNow;
         }
 
         /// <summary>
         /// Returns the remaining time before the token expires.
         /// </summary>
-        public TimeSpan GetRemainingDuration()
+        public TimeSpan? GetRemainingDuration()
         {
+            if (!this.ExpiryDate.HasValue) { return null; }
             if (this.IsExpired()) { return TimeSpan.Zero; }
             return this.ExpiryDate - DateTime.UtcNow;
         }

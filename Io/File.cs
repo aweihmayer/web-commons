@@ -51,12 +51,21 @@ namespace WebCommons.IO
         } }
 
         /// <summary>
+        /// Copies the file to another location.
+        /// </summary>
+        public void Copy(SystemFile destination) => File.Copy(this.Path, destination.Path);
+
+        /// <summary>
+        /// Deletes the file.
+        /// </summary>
+        public void Delete() => File.Delete(this.Path);
+
+        /// <summary>
         /// Determines if the file exists.
         /// </summary>
-        public bool Exists()
-        {
-            return File.Exists(this.Path);
-        }
+        public bool Exists() => File.Exists(this.Path);
+
+        #region Read
 
         /// <summary>
         /// Reads the file as plain text.
@@ -78,39 +87,23 @@ namespace WebCommons.IO
             return new FileStreamResult(fs, FileTypeMap.GetContentType(this.Extension));
         }
 
+        #endregion
+
+        #region Write
+
         /// <summary>
         /// Writes contents into the file.
         /// If the file exists it is overwritten, otherwise it is created.
         /// </summary>
-        public void Write(string contents)
-        {
-            File.WriteAllText(this.Path, contents);
-        }
+        public void Write(string contents) => File.WriteAllText(this.Path, contents);
 
         /// <summary>
         /// Serializes an object and writes the contents into the file.
         /// If the file exists it is overwritten, otherwise it is created.
         /// </summary>
-        public void Write(object contents)
-        {
-            this.Write(JsonConvert.SerializeObject(contents));
-        }
+        public void Write(object contents) => this.Write(JsonConvert.SerializeObject(contents));
 
-        /// <summary>
-        /// Copies the file to another location.
-        /// </summary>
-        public void Copy(SystemFile destination)
-        {
-            File.Copy(this.Path, destination.Path);
-        }
-
-        /// <summary>
-        /// Deletes the file.
-        /// </summary>
-        public void Delete()
-        {
-            File.Delete(this.Path);
-        }
+        #endregion
 
         /// <summary>
         /// Gets all files matching a specified pattern in a directory and its subdirectories.

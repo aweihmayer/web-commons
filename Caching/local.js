@@ -1,29 +1,31 @@
-﻿/**
- * Retrieves a value from the cache.
- * @param {string} name
- * @param {number} [duration]
- * @returns {object|null} The cache data if it exists and is not expired, otherwise null.
- */
-Storage.prototype.retrieve = function (name, duration) {
-    let data = localStorage.getItem(name);
-    CacheHelper.retrieve(data, duration);
-};
+﻿class LocalStorageValue {
+    /**
+     * @param {string} name
+     * @param {number} duration The duration of the cookie in seconds.
+     */
+    constructor(name, duration) {
+        this.name = name;
+        this.duration = duration;
+    }
 
-/**
- * Caches an object and adds a timestamp to it.
- * @param {string} name
- * @param {any} data
- */
-Storage.prototype.cache = function (name, data) {
-    let cacheData = CacheHelper.toCacheFormat(data);
-    cacheData = JSON.stringify(cacheData);
-    localStorage.setItem(name, cacheData);
-};
+    /**
+     * Retrieves a value from the cache.
+     * @returns {object|null} The cache data if it exists and is not expired, otherwise null.
+     */
+    get() {
+        let data = localStorage.getItem(this.name);
+        let item = CacheHelper.retrieve(data, this.duration);
+        if (item == null) { localStoage.removeItem(this.name); }
+        return item;
+    }
 
-/**
- * Removes a value from the cache.
- * @param {string} name
- */
-Storage.prototype.remove = function (name) {
-    localStorage.removeItem(name);
-};
+    /**
+     * Caches an object and adds a timestamp to it.
+     * @param {any} data
+     */
+    set(value) {
+        value = CacheHelper.toCacheFormat(value);
+        value = JSON.stringify(value);
+        localStorage.setItem(this.name, value);
+    }
+}

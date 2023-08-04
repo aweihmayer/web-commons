@@ -1,4 +1,4 @@
-﻿namespace WebCommons.Utils
+﻿namespace System
 {
     public static class DateTimeExtensions
     {
@@ -10,6 +10,11 @@
             int currentDay = (int)date.DayOfWeek;
             int targetDay = (int)day;
             return date.AddDays(targetDay - currentDay);
+        }
+
+        public static DateTime GetFirstDayOfMonth(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, 1);
         }
     }
 }
