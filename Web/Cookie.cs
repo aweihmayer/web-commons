@@ -1,95 +1,60 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
+using System.Net;
+using System.Reflection;
 
-namespace WebCommons.Data.Web
+namespace WebCommons.Web
 {
-    public abstract class Cookie
+    /// <summary>
+    /// Defines a cookie. To manipulate cookies, see <see cref="CookieExtensions">extensions</see>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class Cookie<T>
     {
         /// <summary>
         /// The name of the cookie.
         /// </summary>
-        [JsonIgnore]
         public string Name { get; set; }
-
-        /// <summary>
-        /// The value of the cookie in base64.
-        /// </summary>
-        [JsonIgnore]
-        protected string? Value { get; set; }
 
         /// <summary>
         /// The duration of the cookie.
         /// </summary>
-        [JsonIgnore]
         public TimeSpan Duration { get; set; }
 
         /// <summary>
-        /// The request to read the cookie.
+        /// The value of the cookie.
         /// </summary>
-        [JsonIgnore]
-        public HttpRequest? Request { get; set; }
+        public T? Value { get; set; }
 
-        /// <summary>
-        /// The response to create the cookie.
-        /// </summary>
-        [JsonIgnore]
-        public HttpResponse? Response { get; set; }
+        public string Base64Value
+        {
+            get {
+                if (this.Value == null) { return string.Empty; }
+                string value = JsonConvert.SerializeObject(this.Value);
+                value = value.EncodeBase64();
+                return value;
+            }
+            set {
+                value = value.DecodeBase64();
+                this.Value = JsonConvert.DeserializeObject<T>(value);
+            }
+        }
 
-        protected Cookie(string name, TimeSpan duration, HttpRequest? request = null, HttpResponse? response = null)
+        protected Cookie(string name, TimeSpan duration)
         {
             this.Name = name;
             this.Duration = duration;
-            this.Init(request, response);
-        }
-
-        /// <summary>
-        /// Sets the request and response references so that the cookie may be read and created.
-        /// </summary>
-        public void Init(Controller controller)
-        {
-            this.Request = controller.Request;
-            this.Response = controller.Response;
-            if (this.Request != null) { this.Read(); }
-        }
-
-        /// <summary>
-        /// Sets the request and response references so that the cookie may be read and created.
-        /// </summary>
-        public void Init(HttpRequest? request = null, HttpResponse? response = null)
-        {
-            this.Request = request;
-            this.Response = response;
-            if (this.Request != null) { this.Read(); }
-        }
-
-        /// <summary>
-        /// If the cookie exists, decode the value as base64 and deserialize it.
-        /// </summary>
-        public virtual void Read(HttpRequest request = null)
-        {
-            if (request != null) { this.Request = request; }
-            if (!this.Exists()) { return; }
-            this.Value = this.Request.Cookies[this.Name];
-            byte[] bytes = Convert.FromBase64String(this.Value);
-            this.Value = Encoding.UTF8.GetString(bytes);
-            try {
-                JsonConvert.PopulateObject(this.Value, this);
-            } catch (Exception) {
-                
-            }
         }
 
         /// <summary>
         /// Adds the cookie to the response as a base64 encoded value.
         /// </summary>
-        public virtual void Create(HttpResponse? response = null)
+        public virtual void Create()
         {
-            if (response != null) { this.Response = response; }
-            this.Value = JsonConvert.SerializeObject(this);
-            byte[] bytes = Encoding.UTF8.GetBytes(this.Value);
-            string value = Convert.ToBase64String(bytes);
+            if (this.Value == null) { return; }
+            string value = JsonConvert.SerializeObject(this.Value);
+            value = value.EncodeBase64();
             CookieOptions options = new();
             options.Expires = DateTime.UtcNow.Add(this.Duration);
             this.Response.Cookies.Append(this.Name, value, options);
@@ -104,11 +69,23 @@ namespace WebCommons.Data.Web
         }
 
         /// <summary>
-        /// Determines if the cookie exists.
+        /// Determines if the cookie value is empty.
         /// </summary>
-        public bool Exists()
+        public bool IsEmpty()
         {
-            return (this.Request.Cookies[this.Name] != null);
+            return (this.Value == null);
+        }
+
+        /// <summary>
+        /// If the cookie exists, decode the value as base64 and deserialize it.
+        /// </summary>
+        public virtual void Read(HttpRequest? request = null)
+        {
+            if (!this.Exists()) { return; }
+            string? value = this.Request.Cookies[this.Name];
+            if (string.IsNullOrEmpty(value)) { return; }
+            value = value.DecodeBase64();
+            this.Value = JsonConvert.DeserializeObject<T>(value);
         }
     }
 }

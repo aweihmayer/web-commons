@@ -19,6 +19,7 @@ namespace WebCommons.Db
         {
             if (!token.HasValue) { return default; }
             UserToken<TUser>? tokenEntity = this.Tokens.Include(t => t.User).FirstOrDefault(t => t.Id == token); // TODO check sql query generated
+            // TODO check expiration
             if (tokenEntity == null || tokenEntity.User == null) { return null; }
             tokenEntity.User.AuthTokenId = token;
             return tokenEntity.User;
@@ -57,17 +58,17 @@ namespace WebCommons.Db
             return this.Tokens.FirstOrDefault(t => t.UserId == userId);
         }
 
-        public UserToken<TUser>? GetAuthToken(int userId)
+        public UserToken<TUser>? GetAccessToken(int userId)
         {
             return this.Tokens.FirstOrDefault(t => t.UserId == userId && t.IsAuthToken);
         }
 
-        public UserToken<TUser>? GetToken(Guid id)
+        public UserToken<TUser>? GetToken(Guid? id, bool includeUser = false)
         {
             return this.Tokens.FirstOrDefault(t => t.Id == id);
         }
 
-        public UserToken<TUser>? GetAuthToken(Guid id)
+        public UserToken<TUser>? GetAccessToken(Guid id)
         {
             return this.Tokens.FirstOrDefault(t => t.Id == id && t.IsAuthToken);
         }

@@ -1,73 +1,54 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebCommons.Auth;
 using WebCommons.Db;
+using WebCommons.Web;
 
 namespace WebCommons.Controllers
 {
     /// <summary>
     /// Defines how the request user identifies himself.
     /// </summary>
-    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContext where TUser : CommonUser
+    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser> where TUser : CommonUser
     {
-        public AuthSource Source { get; set; } = AuthSource.None;
-        public AuthType Type { get; set; } = AuthType.None;
+        #region Request values
 
-        public AuthCookie Cookie { get; set; } = new AuthCookie();
-        public Guid? RequestToken { get; set; }
-        public string? RequestEmail { get; set; }
-        public string? RequestPassword { get; set; }
-
-        public TDb? Db { get; set; }
-
-        private bool wasAuthProcessed = false;
-        private TUser? _user = null;
-        public TUser? User {
+        private Controller _controller = null;
+        public Controller? Controller
+        {
             get {
-                if (!this.wasAuthProcessed && this.Db != null && this.Db is CommonDbContextWithAuth<TUser>) {
-                    CommonDbContextWithAuth<TUser> db = this.Db as CommonDbContextWithAuth<TUser>;
-                    switch (this.Type) {
-                        case AuthType.Token:        this._user = db.GetUser(this.RequestToken); break;
-                        case AuthType.Credentials:  this._user = db.GetUser(this.RequestEmail, this.RequestPassword); break;
-                    }
-                    this.wasAuthProcessed = true;
-                }
-
-                return this._user;
+                return this._controller;
             }
             set {
-                this._user = value;
-                this.wasAuthProcessed = true;
+                this._controller = value;
+
+                // Header
+                string? authHeader = value.Request.Headers.Authorization;
+                if (!string.IsNullOrEmpty(authHeader)) {
+                    this.PopulateAuthValueFromHeader(authHeader);
+                    return;
+                }
+
+                // Cookie
+                var accessTokenCookie = value.Request.Cookies.Read<AccessTokenCookie>();
+                var refreshTokenCookie = value.Request.Cookies.Read<RefreshTokenCookie>();
+                this.PopulateAuthValueFromCookie(accessTokenCookie, refreshTokenCookie);
             }
         }
 
-        #region Construction
-
-        /// <summary>
-        /// Attempts to get the authentification information from the header or the cookie.
-        /// </summary>
-        public void Init(HttpRequest request, HttpResponse response)
-        {
-            // Header
-            string? authHeader = request.Headers["Authorization"];
-            if (!string.IsNullOrEmpty(authHeader))
-            {
-                this.From(authHeader);
-                return;
-            }
-
-            // Cookie
-            this.Cookie.Init(request, response);
-            this.Cookie.Read();
-            if (this.Cookie.Exists() && this.Cookie.IsValid())
-            {
-                this.From(this.Cookie);
-            }
-        }
+        public AuthSource AuthSource { get; set; } = AuthSource.None;
+        public AuthMethod AuthMethod { get; set; } = AuthMethod.None;
+        
+        public Guid? RequestAccessToken { get; set; }
+        public Guid? RequestRefreshToken { get; set; }
+        public string? RequestEmail { get; set; }
+        public string? RequestPassword { get; set; }
 
         /// <summary>
         /// Determines the auth values from a header.
         /// </summary>
-        public void From(string header)
+        private void PopulateAuthValueFromHeader(string header)
         {
             // Splits the header to seperate the value from the type. For example 'Basic <TOKEN>'
             string[] values = header.Trim().Split(' ');
@@ -79,31 +60,77 @@ namespace WebCommons.Controllers
                     if (credentials.Length != 2) { return; }
                     this.RequestEmail = credentials[0];
                     this.RequestPassword = credentials[1];
-                    this.Type = AuthType.Credentials;
+                    this.AuthMethod = AuthMethod.Credentials;
                     break;
                 // Bearer type has GUID token
                 case "Bearer":
                     Guid token;
                     if (!Guid.TryParse(values[1], out token)) { return; }
-                    this.RequestToken = token;
-                    this.Type = AuthType.Token;
+                    this.RequestAccessToken = token;
+                    this.AuthMethod = AuthMethod.Token;
                     break;
                 default:
                     return;
             }
 
-            this.Source = AuthSource.Header;
+            this.AuthSource = AuthSource.Header;
         }
 
         /// <summary>
         /// Determines the auth values from an auth cookie.
         /// </summary>
-        public void From(AuthCookie cookie)
+        public void PopulateAuthValueFromCookie(AccessTokenCookie accessCookie, RefreshTokenCookie refreshCookie)
         {
-            if (!cookie.IsValid()) { return; }
-            this.RequestToken = cookie.Token;
-            this.Type = AuthType.Token;
-            this.Source = AuthSource.Cookie;
+            if (!accessCookie.IsEmpty()) {
+                this.RequestAccessToken = accessCookie.Value;
+                this.AuthMethod = AuthMethod.Token;
+                this.AuthSource = AuthSource.Cookie;
+            }
+
+            if (!refreshCookie.IsEmpty()) {
+                this.RequestAccessToken = refreshCookie.Value;
+            }
+        }
+
+        #endregion
+
+        #region Request user
+
+        private bool wasUserFetched = false;
+        private TUser? _user = null;
+        public TUser? User {
+            get {
+                if (this.wasUserFetched) { return this._user; }
+
+                switch (this.AuthMethod)
+                {
+                    case AuthMethod.Token:
+                        UserToken<TUser>? accessToken = this.Db.GetToken(this.RequestAccessToken, true);
+                        if (accessToken == null) { this._user = null; break; }
+                        if (!accessToken.IsExpired()) { return accessToken.User; }
+
+                        if (!this.RequestRefreshToken.HasValue) { this._user = null; break; }
+                        UserToken<TUser>? refreshToken = this.Db.GetToken(this.RequestRefreshToken, true);
+                        if (refreshToken == null || refreshToken.UserId != accessToken.UserId || refreshToken.IsExpired()) { this._user = null; break; }
+                        accessToken.Id = Guid.NewGuid();
+                        accessToken.Refresh();
+                        this.Db.SaveChanges();
+
+                        var cookie = this.Controller.Request.Cookies.Read<AccessTokenCookie>();
+                        cookie.Value = accessToken.Id;
+                        this.Controller.Response.Cookies.Create(cookie);
+                        break;
+                    case AuthMethod.Credentials:
+                        break;
+                }
+
+                this.wasUserFetched = true;
+                return this._user;
+            }
+            set {
+                this.wasUserFetched = true;
+                this._user = value;
+            }
         }
 
         #endregion
@@ -172,7 +199,7 @@ namespace WebCommons.Controllers
                 CommonDbContextWithAuth<TUser> db = this.Db as CommonDbContextWithAuth<TUser>;
                 UserToken<TUser>? token = db.GetAuthToken(user);
                 if (token == null) {
-                    token = new(user, this.Cookie.Duration, true, false);
+                    token = new(user, this.Access.Duration, true, false);
                     user.AuthTokenId = token.Id;
                     db.Tokens.Add(token);
                     db.SaveChanges();
@@ -181,7 +208,7 @@ namespace WebCommons.Controllers
                 }
             }
 
-            this.Cookie.Create(user.AuthTokenId.Value);
+            this.AccessTokenCookie.Create(user.AuthTokenId.Value);
         }
 
         #endregion

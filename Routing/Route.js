@@ -82,7 +82,18 @@
             }
         }
 
-        path = path.joinAsUrl();
+        // Join the path array back into an URL
+        let url = '';
+        for (let part of path) {
+            // If the part is an extension, it is precended by a period
+            if (['json', 'xml', 'html', 'jpg', 'png', 'gif'].includes(part)) {
+                url += '.' + part;
+            } else {
+                url += '/' + part;
+            }
+        }
+
+        path = url;
 
         // Remove parameters used in the route path so that they are no duplicated in the query string
         for (let usedParam of usedParams) {

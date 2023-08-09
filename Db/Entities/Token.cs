@@ -56,6 +56,12 @@ namespace WebCommons.Db
 
         #endregion
 
+        #region Enums
+
+        public enum TokenType { Access = 0, Refresh = 1 }
+
+        #endregion
+
         public UserToken() { }
 
         public UserToken(TUser user, bool isAuthToken = false, bool hasCode = false)

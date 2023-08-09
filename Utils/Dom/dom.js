@@ -61,3 +61,16 @@ Element.prototype.hide = function () {
 Element.prototype.isVisible = function () {
     return (this.closest('.hidden') == null);
 };
+
+/**
+ * Builds a class name string from varying types.
+ * @param {string|Array} className
+ * @param {string|Array} extras
+ * @returns {string}
+ */
+function buildClassName(className, extras) {
+    className = Array.isArray(className) ? className.filterEmpty().join(' ').trim() : className;
+    if (typeof extras === 'string') { className += ' ' + extras.trim(); }
+    else if (Array.isArray(extras)) { className += ' ' + buildClassName(extras); }
+    return className;
+}

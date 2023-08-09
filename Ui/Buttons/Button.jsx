@@ -25,7 +25,7 @@
 
     render() {
         return <button ref="button"
-            className={this.props.className.toClassName('btn')}
+            className={buildClassName(this.props.className, 'btn')}
             type={this.props.type}
             onClick={this.handleClick.bind(this)}
             disabled={this.props.disabled}

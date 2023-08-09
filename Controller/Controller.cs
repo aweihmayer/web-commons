@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Net;
 using WebCommons.Caching;
 using WebCommons.Db;
+using WebCommons.Web;
 
 namespace WebCommons.Controllers
 {
@@ -152,7 +153,7 @@ namespace WebCommons.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            this.OperationContext.Init(this.Request, this.Response);
+            this.OperationContext.Controller = this;
 
             // Set default utility values
             ViewBag.AbsolutePath = Request.Path.Value;
