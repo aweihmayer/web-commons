@@ -6,7 +6,7 @@ namespace WebCommons.Db
     /// <summary>
     /// Defines a custom DB context able to handle user authentification.
     /// </summary>
-    public abstract class CommonDbContextWithAuth<TUser> : CommonDbContext where TUser : CommonUser
+    public class CommonDbContextWithAuth<TUser> : CommonDbContext where TUser : CommonUser
     {
         #region Users
 
@@ -15,20 +15,27 @@ namespace WebCommons.Db
         /// <summary>
         /// Finds a user with their auth token.
         /// </summary>
-        public TUser? GetUser(Guid? token)
+        public TUser? FindUser(Guid? accessTokenId, bool includeTokens = false)
         {
-            if (!token.HasValue) { return default; }
-            UserToken<TUser>? tokenEntity = this.Tokens.Include(t => t.User).FirstOrDefault(t => t.Id == token); // TODO check sql query generated
-            // TODO check expiration
-            if (tokenEntity == null || tokenEntity.User == null) { return null; }
-            tokenEntity.User.AuthTokenId = token;
-            return tokenEntity.User;
+            // Find the access token with the user
+            if (!accessTokenId.HasValue) { return default; }
+            UserToken<TUser>? accesstoken = this.FindToken(accessTokenId, true); // TODO check sql query generated
+            if (accesstoken == null || accesstoken.IsExpired() || accesstoken.User == null) { return default; }
+            TUser user = accesstoken.User;
+            user.AccessTokenid = accesstoken.Id;
+
+            // Include refresh token if applicable
+            if (!includeTokens) { return user; }
+            UserToken<TUser>? refreshToken = this.FindToken(user, UserTokenType.Refresh);
+            if (refreshToken == null) { return user; }
+            user.RefreshTokenId = refreshToken.Id;
+            return user;
         }
 
         /// <summary>
         /// Finds a user with their credentials.
         /// </summary>
-        public TUser? GetUser(string? email, string? password)
+        public TUser? FindUser(string? email, string? password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { return default; }
             TUser? user = this.Users.FirstOrDefault(u => u.Email == email);
@@ -43,34 +50,53 @@ namespace WebCommons.Db
 
         public DbSet<UserToken<TUser>> Tokens { get; set; }
 
-        public UserToken<TUser>? GetToken(TUser user)
+        /// <summary>
+        /// Builds the base token query.
+        /// </summary>
+        private IQueryable<UserToken<TUser>> FetchTokensQuery(TUser user, UserTokenType? type, bool includeUsers = false)
         {
-            return this.GetToken(user.Id);
+            var query = includeUsers
+                ? this.Tokens.Include(t => t.User)
+                : this.Tokens.AsQueryable();
+            query = query.Where(t => t.UserId == user.Id && !t.IsExpired());
+            if (type.HasValue) { query = query.Where(t => t.Type == type); }
+            return query;
         }
 
-        public UserToken<TUser>? GetAuthToken(TUser user)
+        /// <summary>
+        /// Fetches all tokens for a user.
+        /// </summary>
+        public List<UserToken<TUser>> FetchTokens(TUser user, bool includeUsers = false)
         {
-            return this.GetAuthToken(user.Id);
+            return this.FetchTokensQuery(user, null, includeUsers).ToList();
         }
 
-        public UserToken<TUser>? GetToken(int userId)
+        /// <summary>
+        /// Fetches tokens with a type for a user.
+        /// </summary>
+        public List<UserToken<TUser>> FetchTokens(TUser user, UserTokenType? type, bool includeUsers = false)
         {
-            return this.Tokens.FirstOrDefault(t => t.UserId == userId);
+            return this.FetchTokensQuery(user, type, includeUsers).ToList();
         }
 
-        public UserToken<TUser>? GetAccessToken(int userId)
+        /// <summary>
+        /// Fetches a token with a type for a user.
+        /// </summary>
+        public UserToken<TUser>? FindToken(TUser user, UserTokenType? type, bool includeUsers = false)
         {
-            return this.Tokens.FirstOrDefault(t => t.UserId == userId && t.IsAuthToken);
+            return this.FetchTokensQuery(user, type, includeUsers).FirstOrDefault();
         }
 
-        public UserToken<TUser>? GetToken(Guid? id, bool includeUser = false)
+        /// <summary>
+        /// Finds a token by id.
+        /// </summary>
+        public UserToken<TUser>? FindToken(Guid? id, bool includeUser = false)
         {
-            return this.Tokens.FirstOrDefault(t => t.Id == id);
-        }
+            var query = includeUser
+                ? this.Tokens.Include(t => t.User)
+                : this.Tokens.AsQueryable();
 
-        public UserToken<TUser>? GetAccessToken(Guid id)
-        {
-            return this.Tokens.FirstOrDefault(t => t.Id == id && t.IsAuthToken);
+            return query.FirstOrDefault(t => t.Id == id && !t.IsExpired()); // TODO check sql generated
         }
 
         #endregion

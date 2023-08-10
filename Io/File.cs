@@ -12,8 +12,9 @@ namespace WebCommons.IO
     public class SystemFile
     {
         public string Path { get; }
-        public string Extension { get { return FileTypeMap.GetExtension(this.FileType); } }
         public FileType FileType { get; set; }
+        public string Extension { get { return FileTypeMap.GetExtension(this.FileType); } }
+        public string ContentType { get { return FileTypeMap.GetContentType(this.FileType); } }
 
         public SystemFile(string path)
         {
@@ -81,11 +82,7 @@ namespace WebCommons.IO
         /// <summary>
         /// Creates a stream of the file.
         /// </summary>
-        public FileStreamResult ReadStreamResult()
-        {
-            FileStream fs = new(this.Path, FileMode.Open, FileAccess.Read);
-            return new FileStreamResult(fs, FileTypeMap.GetContentType(this.Extension));
-        }
+        public FileStream ReadAsStream() => new (this.Path, FileMode.Open, FileAccess.Read);
 
         #endregion
 

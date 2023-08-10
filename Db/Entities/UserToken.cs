@@ -5,9 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebCommons.Db
 {
+    public enum UserTokenType { Access = 0, Refresh = 1, Utility = 2 }
+
     [Table("token")]
     [Index(nameof(Id), IsUnique = true)]
-    public class UserToken<TUser> where TUser : CommonUser
+    public class UserToken<TUser> : TimestampableEntity where TUser : CommonUser
     {
         [Column("token")]
         [Key]
@@ -41,8 +43,14 @@ namespace WebCommons.Db
         [Column("last_name")]
         public DateTime? ExpiryDate { get; set; }
 
-        [Column("is_auth_token")]
-        public bool IsAuthToken { get; set; }
+        [Column("type")]
+        public UserTokenType Type { get; set; }
+
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; }
+
+        [Column("updated_date")]
+        public DateTime UpdatedDate { get; set; }
 
         #endregion
 
@@ -56,36 +64,30 @@ namespace WebCommons.Db
 
         #endregion
 
-        #region Enums
-
-        public enum TokenType { Access = 0, Refresh = 1 }
-
-        #endregion
-
         public UserToken() { }
 
-        public UserToken(TUser user, bool isAuthToken = false, bool hasCode = false)
+        public UserToken(TUser user, UserTokenType type, bool hasCode = false)
         {
             this.Id = Guid.NewGuid();
             this.Duration = null;
             this.ExpiryDate = null;
             this.UserId = user.Id;
             this.User = user;
-            this.IsAuthToken = isAuthToken;
+            this.Type = type;
             if (hasCode) {
                 Random rnd = new();
                 this.Code = rnd.Next(0, 9999);
             }
         }
 
-        public UserToken(TUser user, TimeSpan duration, bool isAuthToken = false, bool hasCode = false)
+        public UserToken(TUser user, UserTokenType type, TimeSpan duration, bool hasCode = false)
         {
             this.Id = Guid.NewGuid();
             this.Duration = duration;
             this.Refresh();
             this.UserId = user.Id;
             this.User = user;
-            this.IsAuthToken = isAuthToken;
+            this.Type = type;
             if (hasCode) {
                 Random rnd = new();
                 this.Code = rnd.Next(0, 9999);

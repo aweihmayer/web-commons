@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines entities that can be searched by a user.
     /// </summary>
-    interface SearchableEntity
+    public interface SearchableEntity
     {
         bool IsSearchable();
     }

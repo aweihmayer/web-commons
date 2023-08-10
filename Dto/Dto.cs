@@ -13,6 +13,6 @@ namespace WebCommons.Dto
     public abstract class CommonDto
     {
         [JsonProperty("system", NullValueHandling = NullValueHandling.Ignore)]
-        public SystemDto System { get; set; }
+        public SystemDto? System { get; set; }
     }
 }

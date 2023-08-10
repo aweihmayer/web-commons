@@ -48,27 +48,6 @@ namespace WebCommons.Web
         }
 
         /// <summary>
-        /// Adds the cookie to the response as a base64 encoded value.
-        /// </summary>
-        public virtual void Create()
-        {
-            if (this.Value == null) { return; }
-            string value = JsonConvert.SerializeObject(this.Value);
-            value = value.EncodeBase64();
-            CookieOptions options = new();
-            options.Expires = DateTime.UtcNow.Add(this.Duration);
-            this.Response.Cookies.Append(this.Name, value, options);
-        }
-
-        /// <summary>
-        /// Deletes the cookie.
-        /// </summary>
-        public void Delete()
-        {
-            this.Response.Cookies.Delete(this.Name);
-        }
-
-        /// <summary>
         /// Determines if the cookie value is empty.
         /// </summary>
         public bool IsEmpty()
@@ -76,16 +55,6 @@ namespace WebCommons.Web
             return (this.Value == null);
         }
 
-        /// <summary>
-        /// If the cookie exists, decode the value as base64 and deserialize it.
-        /// </summary>
-        public virtual void Read(HttpRequest? request = null)
-        {
-            if (!this.Exists()) { return; }
-            string? value = this.Request.Cookies[this.Name];
-            if (string.IsNullOrEmpty(value)) { return; }
-            value = value.DecodeBase64();
-            this.Value = JsonConvert.DeserializeObject<T>(value);
-        }
+        // TODO build options method
     }
 }

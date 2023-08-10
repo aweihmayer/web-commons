@@ -52,6 +52,7 @@ namespace WebCommons.Dto
 
             if (details == Details.None) { return; }
             this.Email = user.Email;
+            this.System = new SystemDto(user);
 
             if (details == Details.Medium) { return; }
             if (tokens != null) { this.Tokens = tokens.Select(t => new UserTokenDto(t)).ToList(); }

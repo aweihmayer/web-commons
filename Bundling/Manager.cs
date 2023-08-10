@@ -59,13 +59,13 @@ namespace WebCommons.Bundling
 		/// Merges the bundle's files and saves the contents.
 		/// </summary>
 		/// <returns>The file stream of the bundle.</returns>
-		public FileStreamResult Bundle(CustomBundle bundle)
+		public FileStream Bundle(CustomBundle bundle)
 		{
 			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name + "." + this.Extension);
 
 			// If caching is enabled, use existing file
 			if (cachedFile.Exists() && IsCachingEnabled) {
-				return cachedFile.ReadStreamResult();
+				return cachedFile.ReadAsStream();
 			}
 
 			// Build the bundle
@@ -89,7 +89,7 @@ namespace WebCommons.Bundling
 
 			// Create the bundle file and return the stream
 			cachedFile.Write(contents);
-			return cachedFile.ReadStreamResult();
+			return cachedFile.ReadAsStream();
 		}
 	}
 }

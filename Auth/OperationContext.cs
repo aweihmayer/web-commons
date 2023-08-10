@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Net;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Auth;
 using WebCommons.Db;
 using WebCommons.Web;
@@ -10,11 +8,11 @@ namespace WebCommons.Controllers
     /// <summary>
     /// Defines how the request user identifies himself.
     /// </summary>
-    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser> where TUser : CommonUser
+    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
         #region Request values
 
-        private Controller _controller = null;
+        private Controller? _controller = null;
         public Controller? Controller
         {
             get {
@@ -52,25 +50,35 @@ namespace WebCommons.Controllers
         {
             // Splits the header to seperate the value from the type. For example 'Basic <TOKEN>'
             string[] values = header.Trim().Split(' ');
-            if (values.Length != 2) { return; }
-            switch (values[0]) {
-                // Basic type has credentials separated by a colon as email:password
-                case "Basic":
-                    string[] credentials = values[1].DecodeBase64().Split(':');
-                    if (credentials.Length != 2) { return; }
-                    this.RequestEmail = credentials[0];
-                    this.RequestPassword = credentials[1];
-                    this.AuthMethod = AuthMethod.Credentials;
-                    break;
-                // Bearer type has GUID token
-                case "Bearer":
-                    Guid token;
-                    if (!Guid.TryParse(values[1], out token)) { return; }
-                    this.RequestAccessToken = token;
-                    this.AuthMethod = AuthMethod.Token;
-                    break;
-                default:
-                    return;
+            if (values.Length == 2)
+            {
+                switch (values[0])
+                {
+                    // Basic type has credentials separated by a colon as email:password
+                    case "Basic":
+                        string[] credentials = values[1].DecodeBase64().Split(':');
+                        if (credentials.Length != 2) { return; }
+                        this.RequestEmail = credentials[0];
+                        this.RequestPassword = credentials[1];
+                        this.AuthMethod = AuthMethod.Credentials;
+                        break;
+                    // Bearer type has GUID token
+                    case "Bearer":
+                        Guid token;
+                        if (!Guid.TryParse(values[1], out token)) { return; }
+                        this.RequestAccessToken = token;
+                        this.AuthMethod = AuthMethod.Token;
+                        break;
+                    default:
+                        return;
+                }
+            } else if (values.Length == 1) {
+                Guid token;
+                if (!Guid.TryParse(values[0], out token)) { return; }
+                this.RequestAccessToken = token;
+                this.AuthMethod = AuthMethod.Token;
+            } else {
+                return;
             }
 
             this.AuthSource = AuthSource.Header;
@@ -102,15 +110,14 @@ namespace WebCommons.Controllers
             get {
                 if (this.wasUserFetched) { return this._user; }
 
-                switch (this.AuthMethod)
-                {
+                switch (this.AuthMethod) {
                     case AuthMethod.Token:
-                        UserToken<TUser>? accessToken = this.Db.GetToken(this.RequestAccessToken, true);
+                        UserToken<TUser>? accessToken = this.Db.FindToken(this.RequestAccessToken, true);
                         if (accessToken == null) { this._user = null; break; }
                         if (!accessToken.IsExpired()) { return accessToken.User; }
 
                         if (!this.RequestRefreshToken.HasValue) { this._user = null; break; }
-                        UserToken<TUser>? refreshToken = this.Db.GetToken(this.RequestRefreshToken, true);
+                        UserToken<TUser>? refreshToken = this.Db.FindToken(this.RequestRefreshToken, true);
                         if (refreshToken == null || refreshToken.UserId != accessToken.UserId || refreshToken.IsExpired()) { this._user = null; break; }
                         accessToken.Id = Guid.NewGuid();
                         accessToken.Refresh();
@@ -166,49 +173,60 @@ namespace WebCommons.Controllers
         /// <summary>
         /// Authenticates the user.
         /// </summary>
-        public TUser? Authenticate(string? email, string? password)
+        /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
+        public TUser Authenticate(string? email, string? password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { return default; }
-            if (this.Db == null || this.Db is not CommonDbContextWithAuth<TUser>) { return default; }
-            CommonDbContextWithAuth<TUser> db = this.Db as CommonDbContextWithAuth<TUser>;
-            TUser? user = db.GetUser(email, password);
-            this.Authenticate(user);
-            return user;
-        }
-
-        /// <summary>
-        /// Authenticates the user.
-        /// </summary>
-        public TUser? Authenticate(Guid token)
-        {
-            if (this.Db == null || this.Db is not CommonDbContextWithAuth<TUser>) { return default; }
-            CommonDbContextWithAuth<TUser> db = this.Db as CommonDbContextWithAuth<TUser>;
-            TUser? user = db.GetUser(token);
-            this.Authenticate(user);
-            return user;
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { throw new BadRequestException(); }
+            TUser? user = this.Db.FindUser(email, password);
+            if (user == null) { throw new NotFoundException(); }
+            return this.Authenticate(user);
         }
 
         /// <summary>
         /// Authenticates the user by creating the token if necessary and creating an auth cookie.
         /// </summary>
-        public void Authenticate(TUser? user)
+        public TUser Authenticate(TUser? user)
         {
-            if (user == null) { return; }
-            if (user.AuthTokenId == null) {
-                if (this.Db == null || this.Db is not CommonDbContextWithAuth<TUser>) { return; }
-                CommonDbContextWithAuth<TUser> db = this.Db as CommonDbContextWithAuth<TUser>;
-                UserToken<TUser>? token = db.GetAuthToken(user);
-                if (token == null) {
-                    token = new(user, this.Access.Duration, true, false);
-                    user.AuthTokenId = token.Id;
-                    db.Tokens.Add(token);
-                    db.SaveChanges();
+            if (user == null) { throw new NotFoundException(); }
+
+            if (!user.RefreshTokenId.HasValue) {
+                UserToken<TUser>? refreshToken = this.Db.FindToken(user, UserTokenType.Refresh);
+                if (refreshToken == null) {
+                    refreshToken = new(user, UserTokenType.Refresh);
+                    this.Db.Tokens.Add(refreshToken);
                 } else {
-                    user.AuthTokenId = token.Id;
+                    refreshToken.Refresh();
                 }
+                
+                user.RefreshTokenId = refreshToken.Id;
             }
 
-            this.AccessTokenCookie.Create(user.AuthTokenId.Value);
+            if (!user.AccessTokenid.HasValue) {
+                UserToken<TUser>? accessToken = this.Db.FindToken(user, UserTokenType.Access);
+                if (accessToken == null) {
+                    accessToken = new(user, UserTokenType.Access, AccessTokenCookie.DURATION);
+                    this.Db.Tokens.Add(accessToken);
+                }
+
+                user.AccessTokenid = accessToken.Id;
+            }
+
+            user.LastAuthDate = DateTime.UtcNow;
+            this.Db.SaveChanges();
+
+            if (this.Controller == null) { return user; }
+
+            var refreshTokenCookie = this.Controller.Request.Cookies.Read<RefreshTokenCookie>();
+            if (refreshTokenCookie.IsEmpty() || refreshTokenCookie.Value != user.RefreshTokenId) {
+                refreshTokenCookie.Value = user.RefreshTokenId.Value;
+                this.Controller.Response.Cookies.Create(refreshTokenCookie);
+            }
+
+            AccessTokenCookie accessTokenCookie = new AccessTokenCookie();
+            accessTokenCookie.Value = user.AccessTokenid;
+            this.Controller.Response.Cookies.Create(accessTokenCookie);
+
+            return user;
         }
 
         #endregion

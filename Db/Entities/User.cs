@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,45 +7,58 @@ namespace WebCommons.Db
 {
     [Table("app_user")]
     [Index(nameof(Id), IsUnique = true)]
-    public abstract class CommonUser
+    public abstract class CommonUser : TimestampableEntity
     {
         [Column("id")]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Column("first_name", TypeName = DbColumns.NAME_VARCHAR)]
+        #region Columns
+
+        [Column("first_name", TypeName = "varchar(50)")]
         public string? FirstName { get; set; }
 
-        [Column("last_name", TypeName = DbColumns.NAME_VARCHAR)]
+        [Column("last_name", TypeName = "varchar(50)")]
         public string? LastName { get; set; }
 
-        [Column("email", TypeName = DbColumns.MAX_VARCHAR)]
+        [Column("email", TypeName = "varchar(255)")]
         public string? Email { get; set; }
 
-        [Column("password", TypeName = DbColumns.MAX_VARCHAR)]
+        [Column("password", TypeName = "varchar(255)")]
         public string? Password { get; set; }
 
-        [Column("salt", TypeName = DbColumns.TINY_VARCHAR)]
+        [Column("salt", TypeName = "varchar(10)")]
         public string? Salt { get; set; }
 
         [Column("active")]
         public bool Active { get; set; }
 
+        [Column("last_auth_date")]
+        public DateTime? LastAuthDate { get; set; }
+
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; }
+
+        [Column("updated_date")]
+        public DateTime UpdatedDate { get; set; }
+
+        #endregion
+
+        #region Relationships
+
         /// <summary>
-        /// Utility property to pass the token id to the authentification method.
-        /// If you want relationship properties, you must define them yourself.
+        /// Utility property to pass the access token id.
         /// </summary>
-        [JsonIgnore]
         [NotMapped]
-        public virtual Guid? AuthTokenId { get; set; }
+        public Guid? AccessTokenid { get; set; }
 
-        /*
-        [JsonIgnore]
-        public virtual List<TToken> Tokens { get; set; } = new List<TToken>();
-
-        [JsonIgnore]
+        /// <summary>
+        /// Utility property to pass the refresh id.
+        /// </summary>
         [NotMapped]
-        public virtual TToken? Token { get; set; }*/
+        public Guid? RefreshTokenId { get; set; }
+
+        #endregion
     }
 }

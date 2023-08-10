@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Dto
 {
-    public class UserTokenDto
+    public class UserTokenDto : CommonDto
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
@@ -20,8 +20,8 @@ namespace WebCommons.Dto
         [JsonProperty("expirateDate")]
         public DateTime? ExpiryDate { get; set; }
 
-        [JsonProperty("is_auth_token")]
-        public bool IsAuthToken { get; set; }
+        [JsonProperty("type")]
+        public UserTokenType Type { get; set; }
 
         [JsonProperty("userId")]
         public int? UserId { get; set; }
@@ -33,8 +33,9 @@ namespace WebCommons.Dto
             this.FormattedCode = token.FormattedCode;
             this.Duration = token.Duration;
             this.ExpiryDate = token.ExpiryDate;
-            this.IsAuthToken = token.IsAuthToken;
+            this.Type = token.Type;
             this.UserId = token.UserId;
+            this.System = new SystemDto(token);
         }
     }
 }

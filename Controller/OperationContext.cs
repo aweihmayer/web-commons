@@ -18,5 +18,7 @@ namespace WebCommons.Controllers
                 this.I18n.Locale = value;
             }
         }
+
+        public OperationContext() { }
     }
 }

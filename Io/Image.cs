@@ -40,7 +40,6 @@ namespace WebCommons.IO
             using MemoryStream ms = new(bytes, false);
             Image image = Image.FromStream(ms, useEmbeddedColorManagement: true, validateImageData: false);
             image.Save(this.Path, ImageFormat.Jpeg);
-            ms.Dispose();
         }
     }
 }

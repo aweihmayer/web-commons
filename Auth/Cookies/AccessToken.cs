@@ -2,8 +2,10 @@
 
 namespace WebCommons.Auth
 {
-    public class AccessTokenCookie : Cookie<Guid>
+    public class AccessTokenCookie : Cookie<Guid?>
     {
-        public AccessTokenCookie() : base("access_token", TimeSpan.FromDays(7)) { }
+        public static readonly TimeSpan DURATION = TimeSpan.FromMinutes(30);
+
+        public AccessTokenCookie() : base("access_token", DURATION) { }
     }
 }

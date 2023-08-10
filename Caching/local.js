@@ -28,4 +28,11 @@
         value = JSON.stringify(value);
         localStorage.setItem(this.name, value);
     }
+
+    /**
+     * Removes the value from the cache.
+     */
+    clear() {
+        localStorage.clear(this.name);
+    }
 }
