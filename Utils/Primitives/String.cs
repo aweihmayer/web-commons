@@ -3,8 +3,19 @@ using System.Text.RegularExpressions;
 
 namespace System
 {
+    public enum CharacterCasing { Lower, Normal, Upper }
+
     public static class StringUtils
     {
+        public static string ToCasing(this string str, CharacterCasing casing)
+        {
+            switch (casing) {
+                case CharacterCasing.Lower: return str.ToLower();
+                case CharacterCasing.Upper: return str.ToUpper();
+                default: return str;
+            }
+        }
+
         /// <summary>
         /// Transforms the first char of a string to lower case.
         /// </summary>

@@ -59,7 +59,12 @@ namespace WebCommons.IO
         /// <summary>
         /// Deletes the file.
         /// </summary>
-        public void Delete() => File.Delete(this.Path);
+        public void Delete()
+        {
+            try {
+                File.Delete(this.Path);
+            } catch (Exception) { }
+        }
 
         /// <summary>
         /// Determines if the file exists.

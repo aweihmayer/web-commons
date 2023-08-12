@@ -38,5 +38,11 @@ namespace WebCommons.Dto
                 this.Searchable = searchable.IsSearchable();
             }
         }
+
+        public void SetTimestamps(TimestampableEntity obj)
+        {
+            this.CreatedDate = obj.CreatedDate;
+            this.UpdatedDate = obj.UpdatedDate;
+        }
     }
 }

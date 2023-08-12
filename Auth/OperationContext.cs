@@ -8,7 +8,7 @@ namespace WebCommons.Controllers
     /// <summary>
     /// Defines how the request user identifies himself.
     /// </summary>
-    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
+    public partial class CommonOperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
         #region Request values
 

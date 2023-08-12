@@ -39,14 +39,14 @@ namespace WebCommons.Controllers
 		/// </summary>
 		/// <param name="controller">The controllers you wish the generator routes for.</param>
 		/// <returns>A list of JS routes ready to be joined toegether as JSON.</returns>
-		public static List<string> GenerateJs(Type[] controllers)
+		public static string GenerateJs(Type[] controllers)
 		{
 			List<string> routeStrings = new();
 			foreach (Type controller in controllers) {
 				routeStrings.AddRange(GenerateJs(controller));
 			}
 
-			return routeStrings;
+			return string.Join(", ", routeStrings);
 		}
 
 		/// <summary>

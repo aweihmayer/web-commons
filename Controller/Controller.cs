@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using System.Net;
+using System.Reflection;
 using WebCommons.Caching;
 using WebCommons.Db;
 using WebCommons.Web;
@@ -21,7 +22,8 @@ namespace WebCommons.Controllers
     ///     <item>Create cookies.</item>
     /// </list>
     /// </summary>
-    public class CommonController<TOperation, TUser> : Controller where TOperation : OperationContext<CommonDbContextWithAuth<TUser>, TUser>, new() where TUser : CommonUser
+    public class CommonController<TOperation> : Controller
+        where TOperation : OperationContext, new()
     {
         private bool AutoRedirect { get; set; } = true;
 
@@ -89,10 +91,8 @@ namespace WebCommons.Controllers
             // Check the user's permissions
             try {
                 // Check if the action has the RequiresAuth attribute
-                object[] permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(RequiresAuthAttribute), false);
-                if (!permissionAttributes.Any()) { return; }
-                // The action has the attribute, check that the user is authenticated
-                this.OperationContext.MustBeAuthenticated();
+                var permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttribute<RequiresAuthAttribute>();
+                if (permissionAttributes != null) { this.OperationContext.MustBeAuthenticated(); }
             } catch (Exception ex) {
                 // The user is not authenticated
                 object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);

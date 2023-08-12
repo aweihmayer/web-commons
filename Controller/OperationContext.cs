@@ -1,9 +1,16 @@
-﻿using WebCommons.Db;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebCommons.Db;
 using WebCommons.Internationalization;
 
 namespace WebCommons.Controllers
 {
-    public partial class OperationContext<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
+    public interface OperationContext
+    {
+        public Controller? Controller { get; set; }
+        bool MustBeAuthenticated();
+    }
+
+    public partial class CommonOperationContext<TDb, TUser> : OperationContext where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
         public TDb Db { get; set; } = new TDb();
         public DateTime Date { get; set; } = DateTime.UtcNow;
@@ -19,6 +26,6 @@ namespace WebCommons.Controllers
             }
         }
 
-        public OperationContext() { }
+        public CommonOperationContext() { }
     }
 }

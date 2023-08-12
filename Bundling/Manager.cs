@@ -31,7 +31,6 @@ namespace WebCommons.Bundling
 		protected List<CustomBundle> Bundles = new();
 
 		private readonly FileType Type;
-		public enum FileType { CSS, JS }
 
 		private readonly string Extension;
 

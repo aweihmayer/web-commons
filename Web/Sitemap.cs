@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿using System.Drawing;
+using System.Text;
+using System.Xml;
 
 namespace WebCommons.Data.Web
 {
@@ -64,6 +66,14 @@ namespace WebCommons.Data.Web
             urlEl.AppendChild(priorityEl);
             
             this.UrlSet.AppendChild(urlEl);
+        }
+
+        /// <summary>
+        /// Gets the memory stream of the XML.
+        /// </summary>
+        public MemoryStream ToMemoryStream()
+        {
+            return new MemoryStream(Encoding.UTF8.GetBytes(this.InnerXml));
         }
     }
 }

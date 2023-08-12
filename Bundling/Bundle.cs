@@ -15,16 +15,18 @@ namespace WebCommons.Bundling
 		/// <summary>
 		/// Utility caching value. This value does nothing. Use at your discretion.
 		/// </summary>
-		public TimeSpan CacheDuration { get; set; } = TimeSpan.Zero;
+		public TimeSpan? CacheDuration { get; set; }
 
 		/// <summary>
 		/// The file chunks of the bundle.
 		/// </summary>
 		public CustomBundleChunk[] Chunks { get; set; }
 
-		public CustomBundle(string name)
+		public CustomBundle(string name, CustomBundleChunk[] chunks, TimeSpan? cacheDuration = null)
 		{
 			this.Name = name;
+			this.Chunks = chunks;
+			this.CacheDuration = cacheDuration;
 		}
 
 		/// <summary>
