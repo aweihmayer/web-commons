@@ -99,6 +99,29 @@ const Validator = {
             int: 'Must be less than {max}',
             number: 'Must be less than {max}',
             string: 'Must be less than {max} characters long'
+        },
+        "default": {
+            "type": "Wrong type",
+                "min": "Must be bigger",
+                    "max": "Must be smaller"
+        },
+
+        "int": {
+            "type": "Must be an integer",
+                "min": "Must be more than {min}",
+                    "max": "Must be less than {max}"
+        },
+
+        "number": {
+            "type": "Must be a number",
+                "min": "Must be more than {min}",
+                    "max": "Must be less than {max}"
+        },
+
+        "string": {
+            "type": "Wrong type",
+                "min": "Must be more than {min} characters long",
+                    "max": "Must be less than {max} characters long"
         }
     }
 };

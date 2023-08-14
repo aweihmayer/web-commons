@@ -1,4 +1,4 @@
-﻿class CookieBase {
+﻿class Cookie {
     /**
      * @param {string} name
      * @param {number} duration The duration of the cookie in seconds.

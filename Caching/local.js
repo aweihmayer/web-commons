@@ -12,7 +12,7 @@
      * Retrieves a value from the cache.
      * @returns {object|null} The cache data if it exists and is not expired, otherwise null.
      */
-    get() {
+    retrieve() {
         let data = localStorage.getItem(this.name);
         let item = CacheHelper.retrieve(data, this.duration);
         if (item == null) { localStoage.removeItem(this.name); }
@@ -23,7 +23,7 @@
      * Caches an object and adds a timestamp to it.
      * @param {any} data
      */
-    set(value) {
+    cache(value) {
         value = CacheHelper.toCacheFormat(value);
         value = JSON.stringify(value);
         localStorage.setItem(this.name, value);

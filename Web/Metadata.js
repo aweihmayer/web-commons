@@ -2,8 +2,25 @@
  * Defines the HTML page metadata for search engines.
  */
 class SearchEngineMetadata {
-    constructor() {
-        this.reset();
+    constructor(string siteName, string locale, string? title = null, string? titlePrefix = null, string? titleSuffix = null, string? description = null, string? image = null) {
+        this.defaults = {
+            title: null,
+            titlePrefix: null,
+            titleSuffix: null,
+            robots: SearchEngineMetadata.robots.follow,
+            type: SearchEngineMetadata.type.website,
+            modifiedTime: null,
+            section: null,
+            description: null,
+            image: null
+        };
+
+        SiteName = siteName;
+        this.Locale = locale;
+        this.TitlePrefix = titlePrefix;
+        this.TitleSuffix = titleSuffix;
+        this.Description = description;
+        this.Image = image;
     }
 
     static type = {
@@ -21,15 +38,7 @@ class SearchEngineMetadata {
      * Default values when creating or resetting metadata.
      */
     static defaults = {
-        title: '',
-        titlePrefix: '',
-        titleSuffix: '',
-        robots: SearchEngineMetadata.robots.follow,
-        type: SearchEngineMetadata.type.website,
-        modifiedTime: null,
-        section: null,
-        description: null,
-        image: null
+
     }
 
     /**

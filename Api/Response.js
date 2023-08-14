@@ -19,18 +19,16 @@ Response.prototype.deserialize = async function (request) {
  * Mimics the deserialization of a response with a normal object.
  * Useful when you fetch things from a cache, but you still want to use the same code for your promise chains.
  * @param {object} body The data that mimics a response.
- * @param {number} code The HTTP code of the response.
  * @param {string} [method] The HTTP method of the request.
+ * @param {number} [code] The HTTP code of the response.
  * @returns {Promise<{ body: any, status: int, ok: true, method: string }>}
  */
-Response.mimic = function (body, code, method) {
-    code = code || 200;
-    method = method || null;
+Response.mimic = function (body, method, code) {
     return new Promise((resolve) => {
         resolve({
             body: body,
-            status: code,
+            status: code || 200,
             ok: true,
-            method: method });
+            method: method || 'GET' });
     });
 };

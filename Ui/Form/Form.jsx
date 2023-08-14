@@ -18,10 +18,12 @@ class Form extends FieldSet {
      * Determines if form is valid and submits it if it is.
      * This also starts prevents the default submit event and will activate/deactivate the loader components appropriately.
      * @param {Event} [ev] The submit event.
-     * @returns {boolean} True if the inputs are valid, otherwise false.
      */
     submit(ev) {
         if (ev) { ev.preventDefault(); }
+        let action = (typeof this.onSubmit === 'undefined')
+            ? data => fetch(await this.request())
+            : this.onSubmit;
 
         return new Promise(function (resolve, reject) {
                 this.startLoading();
@@ -29,18 +31,20 @@ class Form extends FieldSet {
                     resolve(this.collect());
                 } else {
                     this.stopLoading();
-                    Promise.reject('Cannot submit invalid form data');
+                    reject('Cannot submit invalid form data');
                 }
             })
-            .then(data => fetch(await this.request()))
+            .then(action)
             .then(response => {
                 if (!response.ok) { throw response; }
                 return response.deserialize();
             })
-            .then(onSuccess)
-            .catch(onError)
+            .then(this.onSubmitSuccess)
+            .catch(this.onSubmitError)
             .finally(this.stopLoading());
     }
+
+
 
     /**
      * Activates all loaders in the form.

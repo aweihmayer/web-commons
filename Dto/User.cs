@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Dto
 {
-    public class UserDto : CommonDto
+    public abstract class CommonUserDto : CommonDto
     {
         #region No details
 
@@ -42,9 +42,11 @@ namespace WebCommons.Dto
 
         #endregion
 
-        public UserDto() { }
+        public CommonUserDto() { }
 
-        public UserDto(CommonUser user, List<UserToken<CommonUser>>? tokens = null, Details details = Details.None)
+        public CommonUserDto(CommonUser user, Details details = Details.None) : this(user, null, details) { }
+
+        public CommonUserDto(CommonUser user, List<UserToken<CommonUser>>? tokens = null, Details details = Details.None)
         {
             this.Id = user.Id;
             this.FirstName = user.FirstName;

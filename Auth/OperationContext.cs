@@ -165,7 +165,9 @@ namespace WebCommons.Controllers
         /// <summary>
         /// Authenticates the user.
         /// </summary>
-        public TUser? Authenticate(SigninModel model)
+        /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
+        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
+        public TUser Authenticate(SigninModel model)
         {
             return this.Authenticate(model.Email, model.Password);
         }
@@ -174,6 +176,7 @@ namespace WebCommons.Controllers
         /// Authenticates the user.
         /// </summary>
         /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
+        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
         public TUser Authenticate(string? email, string? password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { throw new BadRequestException(); }
@@ -185,6 +188,7 @@ namespace WebCommons.Controllers
         /// <summary>
         /// Authenticates the user by creating the token if necessary and creating an auth cookie.
         /// </summary>
+        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
         public TUser Authenticate(TUser? user)
         {
             if (user == null) { throw new NotFoundException(); }
