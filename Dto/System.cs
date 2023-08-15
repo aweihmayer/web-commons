@@ -17,14 +17,14 @@ namespace WebCommons.Dto
         [JsonConverter(typeof(UnixDateTimeConverter))]
         public DateTime? UpdatedDate { get; set; }
 
-        [JsonProperty("searchable", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Searchable { get; set; }
+        [JsonProperty("isSearchable", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsSearchable { get; set; }
 
         public SystemDto(DateTime? created = null, DateTime? updated = null, bool? searchable = null)
         {
             this.CreatedDate = created;
             this.UpdatedDate = updated;
-            this.Searchable = searchable;
+            this.IsSearchable = searchable;
         }
 
         public SystemDto(object obj)
@@ -35,7 +35,7 @@ namespace WebCommons.Dto
             }
 
             if (obj is SearchableEntity searchable) {
-                this.Searchable = searchable.IsSearchable();
+                this.IsSearchable = searchable.IsSearchable();
             }
         }
 

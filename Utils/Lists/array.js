@@ -32,13 +32,20 @@ Object.defineProperty(Array.prototype, 'filterEmpty', {
 });
 
 Object.defineProperty(Array.prototype, 'replace', {
-    enumerable: falsem
+    enumerable: false,
     value: function (func, replacement) {
         let indexes = this.map((item, index) => func(item) ? index : -1).filter(index => index !== -1);
         for (let i of indexes) {
             this[i] = replacement;
         }
         return this;
+    }
+});
+
+Object.defineProperty(Array.prototype, 'take', {
+    enumerable: false,
+    value: function (amount) {
+        return this.slice(0, amount);
     }
 });
 
