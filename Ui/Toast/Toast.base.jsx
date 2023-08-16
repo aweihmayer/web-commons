@@ -150,4 +150,77 @@ class Toast extends React.Component {
         Toast.root = ReactDOM.createRoot(document.getElementById('app-toast'));
         Toast.root.render(<ToastContainer />);
     }
+
+    /**
+    * Creates a toast based on an HTTP response.
+    * @param {Response|number} response The response (or its code) that prompted the toast.
+    * @param {{ key: number, value: value }} customs Custom toast parameters object. See Toast.add for details
+    */
+    addFromResponse(response, customs) {
+        let status = typeof response == 'object' ? response.status : response;
+        let method = response.method || 'GET';
+        status = status || 500;
+        customs = customs || [];
+
+        let defaults = {
+            type: (status >= 200 && status < 300) ? 'success' : 'error'
+        };
+
+        let custom = null;
+
+        for (let c of customs) {
+            if (!c.codes.includes(status)) { continue; }
+            custom = c;
+            break;
+        }
+
+        switch (status) {
+            case 200:
+                switch (method) {
+                    case 'GET':
+                        defaults.title = 'Success';
+                        defaults.message = 'Your request was successful';
+                        break;
+                    case 'DELETE':
+                        defaults.title = 'Deleted';
+                        defaults.message = 'The item was deleted';
+                        break;
+                    case 'POST':
+                    case 'PUT':
+                        defaults.title = 'Saved';
+                        defaults.message = 'The item was saved';
+                        break;
+                }
+                break;
+            case 201:
+                defaults.title = 'Created';
+                defaults.message = 'The item was created';
+                break;
+            case 400:
+                defaults.title = 'Bad request';
+                defaults.message = 'Your request was invalid';
+                break;
+            case 401:
+                defaults.title = 'Unauthorized';
+                defaults.message = 'You need to be signed in';
+                defaults.duration = 6000;
+                defaults.actionLabel = 'Signin';
+                defaults.action = () => { Modal.open(<SigninModal />) };
+                break;
+            case 403:
+                defaults.title = 'Forbidden';
+                defaults.message = "You don't have the necessary permissions";
+                break;
+            case 404:
+                defaults.title = 'Not found';
+                defaults.message = 'The item you are looking for was not found';
+                break;
+            case 500:
+                defaults.title = 'Error';
+                defaults.message = 'Sorry, something went wrong on our end';
+                break;
+        }
+
+        Toast.add(Object.assign(defaults, custom));
+    }
 }
