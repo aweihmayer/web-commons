@@ -68,9 +68,9 @@ Element.prototype.isVisible = function () {
  * @param {string|Array} extras
  * @returns {string}
  */
-function buildClassName(className, extras) {
+document.buildClassName = (className, extras) => {
     className = Array.isArray(className) ? className.filterEmpty().join(' ').trim() : className;
     if (typeof extras === 'string') { className += ' ' + extras.trim(); }
-    else if (Array.isArray(extras)) { className += ' ' + buildClassName(extras); }
+    else if (Array.isArray(extras)) { className += ' ' + document.buildClassName(extras); }
     return className;
 }

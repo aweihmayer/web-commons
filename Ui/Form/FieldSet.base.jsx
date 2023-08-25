@@ -7,6 +7,7 @@ class FieldSet extends React.Component {
      * @param {object} data
      */
     fill(data) {
+        this.clear();
         if (typeof data == 'undefined' || data == null) { return; }
         for (let ref of this.refs) {
             if (!ref.fillName) { continue; }

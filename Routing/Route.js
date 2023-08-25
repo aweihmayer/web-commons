@@ -202,22 +202,7 @@
         }
 
         let request = this.request(payload);
-        // TODO test caching
-        if (this.cache != null) {
-            return caches.open(this.cache.name)
-                .then(cache => cache.match(request))
-                .then(response => {
-                    if (response) { return response; }
-                    return fetch(request, options);
-                })
-                .then(response => {
-                    let r = response.clone();
-                    if (response.ok) {
-                        caches.open(this.cache.name).then(cache => cache.put(request, r));
-                    }
-                    return response.deserialize(request);
-                });
-        }
+        // TODO caching with headers
 
         return fetch(request, options)
             .then(response => response.deserialize(request))

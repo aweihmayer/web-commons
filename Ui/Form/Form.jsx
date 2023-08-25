@@ -31,16 +31,10 @@ class Form extends FieldSet {
                     resolve(this.collect());
                 } else {
                     this.stopLoading();
-                    reject('Cannot submit invalid form data');
+                    reject(new Error('Cannot submit invalid data'));
                 }
             })
             .then(action)
-            .then(response => {
-                if (!response.ok) { throw response; }
-                return response.deserialize();
-            })
-            .then(this.onSubmitSuccess)
-            .catch(this.onSubmitError)
             .finally(this.stopLoading());
     }
 

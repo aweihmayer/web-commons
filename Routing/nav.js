@@ -1,7 +1,7 @@
 ﻿/**
  * Defines URL bar actions that will affect the current route.
  */
-const nav = {
+const Nav = {
     /**
      * Changes the url in the address bar,
      * adds an entry to the navigation history

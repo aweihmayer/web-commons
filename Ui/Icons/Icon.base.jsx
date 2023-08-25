@@ -20,7 +20,7 @@ class Icon extends React.Component {
 
     render(svg) {
         return <span
-            className={buildClassName(this.props.className, 'icon')}
+            className={document.buildClassName(this.props.className, 'icon')}
             title={this.props.tooltip}>
             {svg}
         </span>;
