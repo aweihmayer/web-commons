@@ -60,7 +60,10 @@ const BundleManager = {
         // Create a list of promises for each asset to be loaded
         let promises = [];
         for (let asset of assets) {
-            switch (asset.getExtension()) {
+            let extension = asset.split('.');
+            extension = extension.last();
+
+            switch (extension) {
                 case 'js':
                     // Skip if already loaded
                     if (document.querySelector('head script[src="' + asset + '"]') != null) { continue; }

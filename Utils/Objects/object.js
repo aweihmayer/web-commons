@@ -94,66 +94,46 @@ Object.defineProperty(Object.prototype, 'deleteProp', {
 });
 
 /**
- * Transform an object to a query string.
- * @returns {string}
- */
-Object.defineProperty(Object.prototype, 'toQueryString', {
-    enumerable: false,
-    value: function () {
-        if (Object.keys(this).length === 0) { return ''; }
-        let query = new URLSearchParams(this).toString();
-        return '?' + query;
-    }
-});
-
-/**
- * Determines if an object's properties are equal to another's.
- * @param {object} query
- * @returns {boolean}
- */
-Object.defineProperty(Object.prototype, 'equals', {
-    enumerable: false,
-    value: function (query) {
-        for (let k in query) {
-            if (typeof query[k] !== typeof this[k]) { return false; }
-            if (typeof this[k] == 'function') { continue; }
-            if (!this.hasOwnProperty(k)) { return false; }
-            if (typeof this[k] === 'object') {
-                if (!this[k].equals(query[k])) { return false; }
-            } else if (query[k] !== this[k]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-});
-
-/**
  * Removes empty properties.
  */
-Object.defineProperty(Object.prototype, 'deleteEmptyProps', {
-    enumerable: false,
-    value: function () {
-        let keys = Object.keys(this);
-        for (let k of keys) {
-            if (this[k] === null
-            || (typeof this[k] === 'string' && this[k].trim() === '')) {
-                delete this[k];
-            } else if (typeof this[k] === 'object') {
-                this.deleteEmptyProps();
-            }
+Object.deleteEmptyProperties = (obj) => {
+    let keys = Object.keys(obj);
+    for (let k of keys) {
+        if (this[k] === null || (typeof this[k] === 'string' && this[k].trim() === '')) {
+            delete this[k];
+        } else if (typeof this[k] === 'object') {
+            this.deleteEmptyProps();
         }
     }
-});
+};
 
 /**
  * Clones the object to remove references.
  * @returns {object}
  */
-Object.defineProperty(Object.prototype, 'cloneObject', {
-    enumerable: false,
-    value: function () {
-        return JSON.parse(JSON.stringify(this));
+Object.clone = (obj) => JSON.parse(JSON.stringify(this));
+
+/**
+ * Transforms a query string to an object.
+ * @returns {string}
+ */
+Object.fromQueryString = (query) => {
+    let params = {};
+    query = query.substring(query.indexOf('?'));
+    let queryParams = new URLSearchParams(query);
+    for (let pair of queryParams.entries()) {
+        params[pair[0]] = pair[1];
     }
-});
+
+    return params;
+};
+
+/**
+* Transform an object to a query string.
+* @returns {string}
+*/
+Object.toQueryString = (obj) => {
+    if (Object.keys(obj).length === 0) { return ''; }
+    let query = new URLSearchParams(obj).toString();
+    return '?' + query;
+};

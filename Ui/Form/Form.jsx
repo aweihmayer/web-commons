@@ -22,7 +22,7 @@ class Form extends FieldSet {
     submit(ev) {
         if (ev) { ev.preventDefault(); }
         let action = (typeof this.onSubmit === 'undefined')
-            ? data => fetch(await this.request())
+            ? data => fetch(await this.buildRequest())
             : this.onSubmit;
 
         return new Promise(function (resolve, reject) {
@@ -75,7 +75,7 @@ class Form extends FieldSet {
      */
     setAction(route, params) {
         if (!this.refs.form) { return; }
-        this.refs.form.setAttribute('action', route.path(params));
+        this.refs.form.setAttribute('action', route.uri.relative(params));
         this.refs.form.setAttribute('method', route.method);
     }
 }

@@ -55,7 +55,7 @@ class SearchEngineMetadata {
         document.title = (this.titlePrefix + ' ' + this.title + ' ' + this.titleSuffix).trim();
         let route = Router.current.route;
         let image = (this.image != null)
-            ? Routes.image.path({ id: this.image, size: 'original' })
+            ? Routes.image.uri.relative({ id: this.image, size: 'original' })
             : '/images/logo.png';
 
         let metadata = [
@@ -67,7 +67,7 @@ class SearchEngineMetadata {
             { name: 'og:section',       attribute: 'property',  value: this.section },
             { name: 'og:modified_time', attribute: 'property',  value: this.modifiedTime },
             { name: 'og:image',         attribute: 'property',  value: image },
-            { name: 'og:url',           attribute: 'property',  value: (route ? route.canonicalPath(Router.current.params) : null) }
+            { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(Router.current.params) : null) }
         ];
 
         document.applyMetadata(metadata);

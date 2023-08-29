@@ -28,7 +28,7 @@
 
     fill(v) {
         if (!v) { return; }
-        this.refs.preview.style.backgroundImage = 'url(' + Routes.image.path({ id: v, size: 'original' }) + ')';
+        this.refs.preview.style.backgroundImage = 'url(' + Routes.image.uri.relative({ id: v, size: 'original' }) + ')';
         this.refs.old.value = v;
     }
 

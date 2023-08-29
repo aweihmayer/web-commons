@@ -38,7 +38,7 @@ String.random = function (length) {
  * @param {boolean} decreaseHeadings
  * @returns {string}
  */
-String.prototype.markdownToHtml = function (decreaseHeadings) {
+String.markdownToHtml = (decreaseHeadings) => {
     let html = markdown(this);
     if (!decreaseHeadings) { return html; }
 
@@ -50,75 +50,11 @@ String.prototype.markdownToHtml = function (decreaseHeadings) {
 };
 
 /**
- * Gets the last char of a string.
- * @returns {string}
- */
-String.prototype.lastChar = function () {
-    return this.charAt(this.length - 1);
-};
-
-/**
- * Transforms the first char of a string to lower case.
- * @returns {string}
- */
-String.prototype.firstCharToLowerCase = function () {
-    return this.charAt(0).toLowerCase() + this.slice(1);
-};
-
-/**
- * Transforms the first char of a string to upper case.
- * @returns {string}
- */
-String.prototype.firstCharToUpperCase = function () {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-/**
  * Determines if a string is an int.
  * @returns {string}
  */
 String.prototype.isInt = function () {
     return /^-?\d+$/.test(this.trim());
-};
-
-/**
- * Transforms a query string to an object.
- * @returns {string}
- */
-String.prototype.queryStringToObj = function () {
-    let params = {};
-    let queryString = this.substring(this.indexOf('?'));
-    let searchParams = new URLSearchParams(queryString);
-    for (let pair of searchParams.entries()) {
-        params[pair[0]] = pair[1];
-    }
-
-    return params;
-};
-
-/**
- * Removes a query string from a URL string.
- * @returns {string}
- */
-String.prototype.removeQueryString = function () {
-    return this.split('?')[0];
-};
-
-/**
- * Gets the parts of a URL string.
- * @returns {string[]}
- */
-String.prototype.getUrlParts = function() {
-    return this.split(/\/|\./).filterEmpty();
-};
-
-/**
- * Gets the extension of a URL string.
- * @returns {string}
- */
-String.prototype.getExtension = function () {
-    let parts = this.split('.');
-    return parts.last();
 };
 
 /**

@@ -53,7 +53,7 @@ const Nav = {
         // Value is a string, it is already the path
         if (typeof value == 'string') { return value; }
         // Value is a route
-        else if (value instanceof Route) { return value.path(); }
+        else if (value instanceof Route) { return value.uri.relative(); }
         // Value is an event, we stop its normal behavior and get its href
         else if (value.target) {
             let el = value.target.closest('a[href]');
