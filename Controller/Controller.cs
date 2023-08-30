@@ -101,15 +101,6 @@ namespace WebCommons.Controllers
                 // The action is a view, show a HTML error
                 else { context.Result = this.View(ex); }
             }
-
-            // Set cache headers depending on the action's attributes
-            object[] cacheAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(CacheAttribute), false);
-            if (cacheAttributes.Length > 0) {
-                CacheAttribute cacheAttribute = (CacheAttribute)cacheAttributes[0];
-                object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
-                // Set cached headers only if the method does not have a JsRoute attribute
-                if (jsRouteAttributes.Length == 0) { Response.SetCache(cacheAttribute.Duration); }
-            }
         }
 
         #endregion

@@ -11,6 +11,7 @@ Response.prototype.deserialize = async function (request) {
             body: data,
             status: this.status,
             ok: this.ok,
+            headers: this.headers,
             method: method })
     );
 };

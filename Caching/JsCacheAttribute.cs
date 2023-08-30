@@ -6,16 +6,15 @@
     /// Other we use <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">caching headers</see>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class CacheAttribute : Attribute
+    public class JsCacheAttribute : Attribute
 	{
 		public TimeSpan Duration { get; set; }
 		public string? Name { get; set; }
 
-        public CacheAttribute(int seconds = 0, int minutes = 0, int hours = 0, int days = 0, int weeks = 0, int months = 0, string? name = null)
+        /// <param name="Duration">Duration in seconds of the cache.</param>
+        public JsCacheAttribute(int Duration = 0, string? name = null)
         {
-            days += (weeks * 7);
-            days += (months * 30);
-            this.Duration = new TimeSpan(days, hours, minutes, seconds);
+            this.Duration = new TimeSpan(0, 0, 0, Duration);
             this.Name = name;
         }
     }

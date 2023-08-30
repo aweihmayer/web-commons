@@ -77,7 +77,27 @@
         }
 
         let request = this.buildRequest(payload);
-        // TODO caching with headers
+
+        if (this.cacheName) {
+            return caches.open(cacheName)
+                .then(cache => cache.match(request))
+                .then(response => {
+                    if (response) {
+                        return response;
+                    }
+
+                    return fetch(request, options)
+                        .then(response => {
+                            if (response.ok) { cache.put(request, response); }
+                            return response;
+                        });
+                })
+                .then(response => response.deserialize(request))
+                .then(response => {
+                    if (!response.ok) { throw response; }
+                    return response;
+                });
+        }
 
         return fetch(request, options)
             .then(response => response.deserialize(request))

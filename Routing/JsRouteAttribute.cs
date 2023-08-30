@@ -89,7 +89,7 @@ namespace WebCommons.Controllers
 					options.Add("bundles", jsRouteAttr.Bundles.Split(','));
 				}
 				// Caching
-				var cacheAttribute = method.GetCustomAttribute<CacheAttribute>();
+				var cacheAttribute = method.GetCustomAttribute<JsCacheAttribute>();
 				if (cacheAttribute != null && string.IsNullOrEmpty(cacheAttribute.Name)) {
 					options.Add("cache", new { name = cacheAttribute.Name, duration = cacheAttribute.Duration.Seconds });
 				}

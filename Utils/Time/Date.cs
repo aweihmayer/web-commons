@@ -1,5 +1,10 @@
 ﻿namespace System
 {
+    public static class DateTimeUtils {
+        public const int WEEK_IN_SECONDS = 604800;
+        public const int DAY_IN_SECONDS = 86400;
+    }
+
     public static class DateTimeExtensions
     {
         /// <summary>
@@ -14,7 +19,7 @@
 
         public static DateTime GetFirstDayOfMonth(this DateTime date)
         {
-            return new DateTime(date.Year, date.Month, 1);
+            return new DateTime(date.Year, date.Month, 1, 0, 0, 0, date.Kind);
         }
     }
 }
