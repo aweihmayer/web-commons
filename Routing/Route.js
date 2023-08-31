@@ -78,12 +78,14 @@
 
         let request = this.buildRequest(payload);
 
-        if (this.cacheName) {
-            return caches.open(cacheName)
+        if (this.cache.name) {
+            return caches.open(cache.name)
                 .then(cache => cache.match(request))
                 .then(response => {
                     if (response) {
-                        return response;
+                        if (!response.headers.has('Date') || !this.cache.duration) { return response; }
+                        let responseUnixTimestamp = new Date(response.headers.get('Date')) / 1000;
+                        if ((responseUnixTimestamp + this.cache.duration) >= Date.unixTimestamp()) { return response; }
                     }
 
                     return fetch(request, options)
