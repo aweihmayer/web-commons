@@ -14,24 +14,36 @@ namespace WebCommons.Controllers
         /// Defines the front-end view.
 		/// The value will be parsed in a function returns <c>() => view</c>.
         /// </summary>
-        public string View { get; set; }
+        public string? View { get; set; }
 
 		/// <summary>
 		/// Defines a comma separated list of assets or package names to load with the route.
 		/// </summary>
-		public string Bundles { get; set; }
+		public string? Bundles { get; set; }
 
 		/// <summary>
 		/// Defines the URL template for the route.
 		/// The <see cref="RouteAttribute"/> has priority, but since it is limited to ASP syntax, you may want to change it with this property.
 		/// </summary>
-		public string Url { get; set; }
+		public string? Url { get; set; }
 
-		public JsRouteAttribute(string view = null, string bundles = null, string url = null)
+		/// <summary>
+		/// The name of the cache when fetching with the <see href="https://developer.mozilla.org/en-US/docs/Web/API/Cache">JS cache service worker</see>.
+		/// </summary>
+		public string? CacheName { get; set; }
+
+		/// <summary>
+		/// The duration in seconds of the cache.
+		/// </summary>
+		public int CacheDuration { get; set; }
+
+		public JsRouteAttribute(string? view = null, string? bundles = null, string? url = null, string? cacheName = null, int cacheDuration = 0)
 		{
 			this.View = view;
 			this.Bundles = bundles;
 			this.Url = url;
+			this.CacheName = cacheName;
+			this.CacheDuration = cacheDuration;
 		}
 
 		/// <summary>
@@ -88,10 +100,13 @@ namespace WebCommons.Controllers
 				if (!string.IsNullOrEmpty(jsRouteAttr.Bundles)) {
 					options.Add("bundles", jsRouteAttr.Bundles.Split(','));
 				}
+
 				// Caching
-				var cacheAttribute = method.GetCustomAttribute<JsCacheAttribute>();
-				if (cacheAttribute != null && string.IsNullOrEmpty(cacheAttribute.Name)) {
-					options.Add("cache", new { name = cacheAttribute.Name, duration = cacheAttribute.Duration.Seconds });
+				if (string.IsNullOrEmpty(jsRouteAttr.CacheName)) {
+					int? cacheDuration = (jsRouteAttr.CacheDuration == 0) ? null : jsRouteAttr.CacheDuration;
+					options.Add("cache", new {
+						name = jsRouteAttr.CacheName,
+						duration = cacheDuration });
 				}
 
 				// Format the route string

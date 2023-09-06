@@ -3,9 +3,7 @@ using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -16,61 +14,74 @@ namespace WebCommons.Core
     /// <summary>
     /// Initializes the project with the necessary configuration.
     /// </summary>
-    public static class CommonStartup
+    public static class StartupExtensions
     {
-        /// <summary>
-        /// Initializes the project with the necessary configuration.
-        /// </summary>
-        /// <param name="environment">The environment of the app. If the environment is dev, bundle caching will be disabled.</param>
-        public static void Init(WebApplicationBuilder builder, IWebHostEnvironment environment)
+        public static void UseReact(this IServiceCollection services)
         {
-            // Disable bundle caching if the environment is not production
-            CustomBundleManager.IsCachingEnabled = !environment.IsDevelopment();
-
-            // React
             JsEngineSwitcher.Current.DefaultEngineName = V8JsEngine.EngineName;
             JsEngineSwitcher.Current.EngineFactories.AddV8();
+        }
 
-            // View
-            builder.Services.AddRazorPages();
-            builder.Services.Configure<MvcRazorRuntimeCompilationOptions>(options => {
-                options.FileProviders.Clear();
-                options.FileProviders.Add(new PhysicalFileProvider("/path/to/custom/views"));
-            });
-            /*
-            builder.Services.AddMvc().AddViewOptions(options => {
-                options.ViewEngines.Clear();
-                options.ViewLocationFormats.Clear();
-                options.ViewLocationFormats.Add("/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
-                options.ViewLocationFormats.Add("/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
-                options.ViewEngines.Add(typeof(CommonViewEngine));
-            });*/
-
-            // Json serialization
+        public static void UseJsonEnumToIntConverter(this IServiceCollection services)
+        {
             JsonConvert.DefaultSettings = (() => {
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new StringEnumConverter { AllowIntegerValues = true });
-                return settings; });
+                return settings;
+            });
+        }
 
-            // NEW            
+        public static void SetRazorPagesRootDirectory(this IServiceCollection services, string path)
+        {
+            services.AddRazorPages(options => {
+                options.RootDirectory = path;
+            });
+        }
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+        public static void UseSinglePageApplication(this IServiceCollection services, string viewStartPath = null)
+        {
+            services.Configure<RazorViewEngineOptions>(options =>
             {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                options.ViewLocationFormats.Clear();
+                options.ViewLocationFormats.Add("/Views/{0}.cshtml");
+                options.ViewLocationFormats.Add("/Pages/{0}.cshtml");
+                options.ViewLocationFormats.Add("/Views/{1}/{0}.cshtml");
+                options.ViewLocationFormats.Add("/Pages/{1}/{0}.cshtml");
+                options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+                options.ViewLocationFormats.Add("/Pages/Shared/{0}.cshtml");
+            });
+
+
+            
+            services.Configure<RazorViewEngineOptions>(options => {
+                options.ViewLocationExpanders.Add(new CommonViewLocationExpander(viewStartPath));
+            });
+        }
+
+        public class CommonViewLocationExpander : IViewLocationExpander
+        {
+            public string[] ViewPaths { get; set; }
+
+            public CommonViewLocationExpander(string viewPath) : this(new string[] { viewPath }) { }
+
+            public CommonViewLocationExpander(string[] viewPaths)
+            {
+                this.ViewPaths = viewPaths;
             }
 
-            if (environment.IsProduction()) { app.UseHttpsRedirection(); }
+            public void PopulateValues(ViewLocationExpanderContext context) { }
 
-            app.UseStaticFiles();
+            public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
+            {
+                var locations = new[]
+                {
+                    "~/Views/{1}/{0}.cshtml",
+                    "~/Views/Shared/{0}.cshtml",
+                    "~/Ui/Layout/_ViewStart.cshtml"
+                };
 
-            app.UseRouting();
-
-            app.Run();
+                return locations.Union(this.ViewPaths);
+            }
         }
     }
 }
