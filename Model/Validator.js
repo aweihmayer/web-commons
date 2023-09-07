@@ -80,7 +80,7 @@ const Validator = {
     /**
      * The default error messages.
      */
-    messages = {
+    messages: {
         required: 'Required',
         regex: 'Invalid format',
         type: {

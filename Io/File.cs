@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -11,8 +10,9 @@ namespace WebCommons.IO
     /// </summary>
     public class SystemFile
     {
+        public static string Root { get; set; }
         public string Path { get; }
-        public FileType FileType { get; set; }
+        public FileType FileType { get; }
         public string Extension { get { return FileTypeMap.GetExtension(this.FileType); } }
         public string ContentType { get { return FileTypeMap.GetContentType(this.FileType); } }
 
@@ -38,18 +38,8 @@ namespace WebCommons.IO
         /// </summary>
         public static string MapPath(string file)
         {
-            return Host.WebRootPath + file;
+            return Root + file;
         }
-
-        private static IWebHostEnvironment host = null;
-        private static IWebHostEnvironment Host { get {
-            if (host != null) { return host; }
-            HttpContextAccessor accessor = new();
-            if (accessor.HttpContext != null) {
-                host = accessor.HttpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
-            }
-            return host;
-        } }
 
         /// <summary>
         /// Copies the file to another location.

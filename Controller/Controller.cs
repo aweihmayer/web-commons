@@ -25,8 +25,6 @@ namespace WebCommons.Controllers
     public class CommonController<TOperation> : Controller
         where TOperation : OperationContext, new()
     {
-        private bool AutoRedirect { get; set; } = true;
-
         protected TOperation OperationContext { get; set; } = new TOperation();
 
         #region Model
@@ -35,7 +33,7 @@ namespace WebCommons.Controllers
         /// Determines if the model is valid.
         /// </summary>
         /// <returns>True if the model is valid.</returns>
-        /// <exception cref="ResponseException">Thrown as a bad request (400) if the model is not valid.</exception>
+        /// <exception cref="BadRequestException">Thrown as a bad request (400) if the model is not valid.</exception>
         protected bool ModelMustBeValid()
         {
             if (ModelState.IsValid) { return true; }
@@ -61,7 +59,7 @@ namespace WebCommons.Controllers
             return this.View((int) code);
         }
 
-        protected ViewResult View(int code = 500)
+        protected ViewResult View(int code)
         {
             Response.StatusCode = code;
             return View();
@@ -70,7 +68,7 @@ namespace WebCommons.Controllers
         #endregion
 
         #region Life cycle events
-
+        
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             this.OperationContext.Controller = this;
@@ -102,7 +100,7 @@ namespace WebCommons.Controllers
                 else { context.Result = this.View(ex); }
             }
         }
-
+        
         #endregion
     }
 }

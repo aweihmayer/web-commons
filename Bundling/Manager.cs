@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using React;
-using SharpScss;
-using WebCommons.IO;
+﻿using WebCommons.IO;
 
 namespace WebCommons.Bundling
 {
@@ -30,19 +27,6 @@ namespace WebCommons.Bundling
 		/// </summary>
 		protected List<CustomBundle> Bundles = new();
 
-		private readonly FileType Type;
-
-		private readonly string Extension;
-
-		public CustomBundleManager(FileType fileType)
-		{
-			this.Type = fileType;
-			switch (fileType) {
-				case FileType.CSS: this.Extension = "css"; break;
-				case FileType.JS: this.Extension = "js"; break;
-			}
-		}
-
 		/// <summary>
 		/// Gets a bundle by name.
 		/// </summary>
@@ -60,7 +44,7 @@ namespace WebCommons.Bundling
 		/// <returns>The file stream of the bundle.</returns>
 		public FileStream Bundle(CustomBundle bundle)
 		{
-			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name + "." + this.Extension);
+			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name);
 
 			// If caching is enabled, use existing file
 			if (cachedFile.Exists() && IsCachingEnabled) {
@@ -75,20 +59,18 @@ namespace WebCommons.Bundling
 				contents = contents.Replace(v.Key, v.Value);
 			}
 
-			// Compile the contents with an extension specific strategy
-			switch (this.Type) {
-				case FileType.JS:
-					var babel = ReactEnvironment.Current.Babel;
-					contents = babel.Transform(contents);
-					break;
-				case FileType.CSS:
-					contents = Scss.ConvertToCss(contents).Css;
-					break;
-			}
-
 			// Create the bundle file and return the stream
+			contents = this.Transform(contents);
 			cachedFile.Write(contents);
 			return cachedFile.ReadAsStream();
+		}
+
+		/// <summary>
+		/// Transforms the contents before saving them.
+		/// </summary>
+		public virtual string Transform(string content)
+		{
+			return content;
 		}
 	}
 }

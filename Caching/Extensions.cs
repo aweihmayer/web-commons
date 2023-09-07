@@ -8,17 +8,13 @@ namespace WebCommons.Caching
         /// <summary>
         /// Sets the <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">caching headers</see> on the response.
         /// </summary>
-        public static void SetCache(this HttpResponse response, TimeSpan duration)
-        {
-            response.Headers.SetCache(duration);
-        }
-
-        /// <summary>
-        /// Sets the <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">caching headers</see> on the response.
-        /// </summary>
         public static void SetCache(this IHeaderDictionary headers, TimeSpan duration)
         {
-            headers.Add(HeaderNames.CacheControl, "private,max-age=" + duration.Seconds + ",must-revalidate");
+            if (headers.ContainsKey(HeaderNames.CacheControl)) {
+                headers[HeaderNames.CacheControl] = "private,max-age=" + duration.Seconds + ",must-revalidate";
+            } else {
+                headers.Add(HeaderNames.CacheControl, "private,max-age=" + duration.Seconds + ",must-revalidate");
+            }
         }
     }
 }

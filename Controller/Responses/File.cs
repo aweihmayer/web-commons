@@ -9,7 +9,7 @@ namespace WebCommons.Controllers
 
         public static FileResult AsFile(this HttpResponse response, SystemFile file)
         {
-            using FileStream stream = file.ReadAsStream();
+            FileStream stream = file.ReadAsStream();
             response.StatusCode = 200;
             return new FileStreamResult(stream, file.ContentType);
         }
