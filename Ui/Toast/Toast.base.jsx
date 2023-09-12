@@ -156,11 +156,12 @@ class Toast extends React.Component {
     * @param {Response|number} response The response (or its code) that prompted the toast.
     * @param {{ key: number, value: value }} customs Custom toast parameters object. See Toast.add for details
     */
-    addFromResponse(response, customs) {
+    static addFromResponse(response, customs) {
         let status = typeof response == 'object' ? response.status : response;
         let method = response.method || 'GET';
         status = status || 500;
         customs = customs || [];
+        if (!Array.isArray(customs)) { customs = [customs]; }
 
         let defaults = {
             type: (status >= 200 && status < 300) ? 'success' : 'error'
@@ -168,8 +169,8 @@ class Toast extends React.Component {
 
         let custom = null;
 
-        for (let c of customs) {
-            if (!c.codes.includes(status)) { continue; }
+        for (let c in customs) {
+            if ((typeof c.codes === 'undefined' || !c.codes.includes(status)) && c.code !== status) { continue; }
             custom = c;
             break;
         }

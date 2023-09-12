@@ -3,7 +3,7 @@
  * @param {any} id
  * @returns {string}
  */
-document.createUniqueId = function (id) {
+document.createUniqueId = (id) => {
     let newId = id;
     let count = 0;
     while (document.getElementById(newId)) {
@@ -18,7 +18,7 @@ document.createUniqueId = function (id) {
  * Adds or removes metadata nodes from the head.
  * @param {Array} config
  */
-document.applyMetadata = function (config) {
+document.head.applyMetadata = (config) => {
     let head = document.getElementsByTagName('head')[0];
     for (let metadata of config) {
         // Get the metadata node
@@ -43,14 +43,14 @@ document.applyMetadata = function (config) {
 /**
  * Shows an element by removing the hidden class.
  */
-Element.prototype.show = function () {
+Element.prototype.show = ()  => {
     this.classList.remove('hidden');
 };
 
 /**
  * Hides an element by adding the hidden class.
  */
-Element.prototype.hide = function () {
+Element.prototype.hide = () => {
     this.classList.add('hidden');
 };
 
@@ -58,9 +58,7 @@ Element.prototype.hide = function () {
  * Determines if an element is visible by checking if it has the hidden class or if it is contained by an element who does.
  * @returns {boolean}
  */
-Element.prototype.isVisible = function () {
-    return (this.closest('.hidden') == null);
-};
+Element.prototype.isVisible = () => (this.closest('.hidden') == null);
 
 /**
  * Builds a class name string from varying types.

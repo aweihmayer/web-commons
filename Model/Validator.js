@@ -50,6 +50,7 @@ const Validator = {
 
             // If the value is required, check if it is empty
             if (result.value === null || result.value === '') { throw new Error('required'); }
+            return result;
         } catch (ex) {
             result.error = ex.message;
             result.message = Validator.getMessage(ex.message, schema);

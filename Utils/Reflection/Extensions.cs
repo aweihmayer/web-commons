@@ -16,5 +16,10 @@ namespace System.Reflection
         {
             type.GetProperty(propertyName).SetValue(obj, value);
         }
+
+        public static bool HasCustomAttribute<T>(this Type type) where T : Attribute
+        {
+            return type.GetCustomAttribute<T>() != null;
+        }
     }
 }

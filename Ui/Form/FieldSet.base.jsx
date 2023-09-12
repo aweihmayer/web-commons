@@ -9,7 +9,8 @@ class FieldSet extends React.Component {
     fill(data) {
         this.clear();
         if (typeof data == 'undefined' || data == null) { return; }
-        for (let ref of this.refs) {
+        for (let r in this.refs) {
+            let ref = this.refs[r];
             if (!ref.fillName) { continue; }
             let value = data.getProp(ref.fillName);
             ref.fill(value);
@@ -23,7 +24,8 @@ class FieldSet extends React.Component {
     async collect() {
         let data = {};
 
-        for (let ref of this.refs) {
+        for (let r in this.refs) {
+            let ref = this.refs[r];
             if (!ref.collect || !ref.name) { continue; }
             let value = await ref.collect();
             data.setProp(ref.props.name, value);
@@ -36,7 +38,8 @@ class FieldSet extends React.Component {
      * Clears all inputs or sets their value to their default if applicable. 
      */
     clear() {
-        for (let ref of this.refs) {
+        for (let r in this.refs) {
+            let ref = this.refs[r];
             if (!ref.clear) { continue; }
             ref.clear();
             if (ref.props.defaultValue == null) { continue; }
@@ -50,7 +53,8 @@ class FieldSet extends React.Component {
      * @returns {boolean} True if all inputs are valid, otherwise false.
      */
     isValid() {
-        for (let ref of this.refs) {
+        for (let r in this.refs) {
+            let ref = this.refs[r];
             if (!ref.isValid) { continue; }
             if (!ref.isValid()) { return false; }
         }

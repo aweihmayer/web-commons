@@ -22,7 +22,7 @@ class Form extends FieldSet {
     submit(ev) {
         if (ev) { ev.preventDefault(); }
         let action = (typeof this.onSubmit === 'undefined')
-            ? data => fetch(await this.buildRequest())
+            ? async (data) => fetch(await this.buildRequest())
             : this.onSubmit;
 
         return new Promise(function (resolve, reject) {

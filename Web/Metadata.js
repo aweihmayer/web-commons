@@ -2,7 +2,7 @@
  * Defines the HTML page metadata for search engines.
  */
 class SearchEngineMetadata {
-    constructor(string siteName, string locale, string? title = null, string? titlePrefix = null, string? titleSuffix = null, string? description = null, string? image = null) {
+    constructor(siteName, locale, title, titlePrefix, titleSuffix, description, image) {
         this.defaults = {
             title: null,
             titlePrefix: null,
@@ -15,11 +15,11 @@ class SearchEngineMetadata {
             image: null
         };
 
-        SiteName = siteName;
-        this.Locale = locale;
-        this.TitlePrefix = titlePrefix;
-        this.TitleSuffix = titleSuffix;
-        this.Description = description;
+        this.siteName = siteName;
+        this.locale = locale;
+        this.titlePrefix = titlePrefix;
+        this.titleSuffix = titleSuffix;
+        this.description = description;
         this.Image = image;
     }
 
@@ -52,7 +52,7 @@ class SearchEngineMetadata {
      * Creates, updates or removes metadata nodes.
      */
     apply() {
-        document.title = (this.titlePrefix + ' ' + this.title + ' ' + this.titleSuffix).trim();
+        document.title = [this.titlePrefix, this.title, this.titleSuffix].filterEmpty().join(' ').trim();
         let route = Router.current.route;
         let image = (this.image != null)
             ? Routes.image.uri.relative({ id: this.image, size: 'original' })
@@ -70,6 +70,6 @@ class SearchEngineMetadata {
             { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(Router.current.params) : null) }
         ];
 
-        document.applyMetadata(metadata);
+        document.head.applyMetadata(metadata);
     }
 }

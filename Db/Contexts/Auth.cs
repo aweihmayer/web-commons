@@ -22,7 +22,7 @@ namespace WebCommons.Db
             UserToken<TUser>? accesstoken = this.FindToken(accessTokenId, true); // TODO check sql query generated
             if (accesstoken == null || accesstoken.IsExpired() || accesstoken.User == null) { return default; }
             TUser user = accesstoken.User;
-            user.AccessTokenid = accesstoken.Id;
+            user.AccessTokenId = accesstoken.Id;
 
             // Include refresh token if applicable
             if (!includeTokens) { return user; }
@@ -58,7 +58,7 @@ namespace WebCommons.Db
             var query = includeUsers
                 ? this.Tokens.Include(t => t.User)
                 : this.Tokens.AsQueryable();
-            query = query.Where(t => t.UserId == user.Id && !t.IsExpired());
+            query = query.Where(t => t.UserId == user.Id).WhereIsNotExpired();
             if (type.HasValue) { query = query.Where(t => t.Type == type); }
             return query;
         }
@@ -95,8 +95,7 @@ namespace WebCommons.Db
             var query = includeUser
                 ? this.Tokens.Include(t => t.User)
                 : this.Tokens.AsQueryable();
-
-            return query.FirstOrDefault(t => t.Id == id && !t.IsExpired()); // TODO check sql generated
+            return query.Where(t => t.Id == id).WhereIsNotExpired().FirstOrDefault(); // TODO check sql generated
         }
 
         #endregion

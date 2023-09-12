@@ -1,0 +1,15 @@
+﻿#modal-container {
+    article {
+        header {
+            .modal-close-btn {
+                background-color: transparent;
+                border: none;
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                margin: 0.2em;
+                cursor: pointer;
+            }
+        }
+    }
+}

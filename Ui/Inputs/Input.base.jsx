@@ -88,8 +88,7 @@
      * @returns {any} The input value.
      */
     collect() {
-        let result = Validator.validate(this.raw(), this.state.schema).value;
-        return result.value;
+        return Validator.validate(this.raw(), this.state.schema).value;
     }
 
     /**
@@ -106,9 +105,9 @@
      * @returns {boolean} True if the input is valid, otherwise false.
      */
     isValid() {
-        let result = Validator.validate(this.raw(), this.state.schema).value;
+        let result = Validator.validate(this.raw(), this.state.schema);
 
-        if (!result.isValid()) {
+        if (!result.isValid) {
             this.setError(result.getMessage());
             return false;
         }

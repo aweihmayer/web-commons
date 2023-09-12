@@ -51,7 +51,7 @@ namespace WebCommons.Db
         /// Utility property to pass the access token id.
         /// </summary>
         [NotMapped]
-        public Guid? AccessTokenid { get; set; }
+        public Guid? AccessTokenId { get; set; }
 
         /// <summary>
         /// Utility property to pass the refresh id.

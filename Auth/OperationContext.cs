@@ -205,14 +205,14 @@ namespace WebCommons.Controllers
                 user.RefreshTokenId = refreshToken.Id;
             }
 
-            if (!user.AccessTokenid.HasValue) {
+            if (!user.AccessTokenId.HasValue) {
                 UserToken<TUser>? accessToken = this.Db.FindToken(user, UserTokenType.Access);
                 if (accessToken == null) {
                     accessToken = new(user, UserTokenType.Access, AccessTokenCookie.DURATION);
                     this.Db.Tokens.Add(accessToken);
                 }
 
-                user.AccessTokenid = accessToken.Id;
+                user.AccessTokenId = accessToken.Id;
             }
 
             user.LastAuthDate = DateTime.UtcNow;
@@ -227,7 +227,7 @@ namespace WebCommons.Controllers
             }
 
             AccessTokenCookie accessTokenCookie = new AccessTokenCookie();
-            accessTokenCookie.Value = user.AccessTokenid;
+            accessTokenCookie.Value = user.AccessTokenId;
             this.Controller.Response.Cookies.Create(accessTokenCookie);
 
             return user;

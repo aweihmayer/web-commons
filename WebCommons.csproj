@@ -83,6 +83,9 @@
     <None Update="ThirdParty\React\prod.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Basic\Link.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Buttons\Button.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -203,6 +206,9 @@
     <None Update="Ui\Modal\Header.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Modal\Header.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Modal\Modal.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -227,7 +233,7 @@
     <None Update="Utils\Dom\dom.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\image.js">
+    <None Update="Utils\Dom\lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Lists\array.js">

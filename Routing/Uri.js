@@ -12,7 +12,7 @@
             let partParams = part.replace(/{|}/g, '').split('|');
             // Add each parameter to the list if it hasn't already been
             for (let p of partParams) {
-                if (!this.paramNames.includes(p)) { this.paramNames.push(partName); }
+                if (!this.paramNames.includes(p)) { this.paramNames.push(p); }
             }
         }
     }
@@ -39,7 +39,7 @@
             // If the part is a not placeholder, keep it as is
             if (!part.includes('{')) { continue; }
             // Get the possible part params
-            let partParams = pathParts[i].replace(/{|}/g, '').split('|');
+            let partParams = this.parts[i].replace(/{|}/g, '').split('|');
             // Replace it with a value
             for (let p of partParams) {
                 if (!params.hasProp(p)) { continue; }
@@ -88,7 +88,7 @@
      * @returns {string}
      */
     absolute(params, noQueryString) {
-        return window.location.protocol + '://' + window.location.hostname + this.path(params, noQueryString);
+        return window.location.protocol + '//' + window.location.hostname + this.relative(params, noQueryString);
     }
 
     /**

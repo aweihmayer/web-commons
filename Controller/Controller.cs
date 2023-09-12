@@ -74,9 +74,10 @@ namespace WebCommons.Controllers
             this.OperationContext.Controller = this;
 
             // Set default utility values
-            ViewBag.AbsolutePath = Request.Path.Value;
+            ViewBag.AbsolutePath = this.Request.Path.Value;
             ViewBag.Domain = this.Request.Host.Value;
             ViewBag.OperationContext = this.OperationContext;
+            ViewBag.Response = this.Response;
 
             ControllerActionDescriptor? controllerActionDescriptor;
             if (context.ActionDescriptor is ControllerActionDescriptor) {
@@ -86,18 +87,17 @@ namespace WebCommons.Controllers
                 return;
             }
 
+            bool isApiController = controllerActionDescriptor.ControllerTypeInfo.HasCustomAttribute<ApiControllerAttribute>();
+
             // Check the user's permissions
             try {
                 // Check if the action has the RequiresAuth attribute
                 var permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttribute<RequiresAuthAttribute>();
                 if (permissionAttributes != null) { this.OperationContext.MustBeAuthenticated(); }
+            } catch (ResponseException ex) {
+                context.Result = isApiController ? this.Response.AsJson(ex) : this.View(ex);
             } catch (Exception ex) {
-                // The user is not authenticated
-                object[] jsRouteAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttributes(typeof(JsRouteAttribute), false);
-                // The action is an API call, show a JSON error
-                if (jsRouteAttributes.Length == 0) { context.Result = this.Response.AsJson(ex); }
-                // The action is a view, show a HTML error
-                else { context.Result = this.View(ex); }
+                context.Result = isApiController ? this.Response.AsJson(ex) : this.View(ex);
             }
         }
         

@@ -11,7 +11,7 @@
      */
     constructor(template, viewOrMethod, options) {
         options = options || {};
-        this.template = template;
+        this.uri = new Uri(template);
         this.name = null;
         this.bundles = options.bundles || [];
 
@@ -38,8 +38,8 @@
         uri.removeQueryString();
 
         // We will go through the current location and the route template simultaneously
-        let parts = path.getUrlParts();
-        let parts2 = this.parts;
+        let parts = uri.parts;
+        let parts2 = this.uri.parts;
 
         // The route and the current location don't match
         if (parts.length !== parts2.length) { return params; }
@@ -117,9 +117,14 @@
     buildRequest(payload) {
         payload = payload || {};
         let path = this.uri.relative(payload);
+        let headers = new Headers();
+        headers.append("Content-Type", "application/json");
+
+
         return new Request(path, {
             method: this.method,
-            body: (this.method == 'GET') ? null : JSON.stringify(payload)
+            body: (this.method == 'GET') ? null : JSON.stringify(payload),
+            headers: headers
         });
     }
 

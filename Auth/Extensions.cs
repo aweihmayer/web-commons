@@ -11,7 +11,7 @@ namespace WebCommons.Auth
         private const string SALT = "WQ33ijFDOoyDHF41XvZQ";
 
         /// <summary>
-        /// Encrypts a value with a salt as SHA256.
+        /// Encrypts a value with a salt as SHA512.
         /// </summary>
         public static string Encrypt(this string str, string? salt = null)
         {

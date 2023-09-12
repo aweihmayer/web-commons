@@ -47,7 +47,7 @@ class App extends React.Component {
      */
     static refresh(code) {
         if (typeof code == 'undefined') { App.instance.setState({}); }
-        App.instance.setState({ code: code });
+        else { App.instance.setState({ code: code }); }
     }
 
     /**
@@ -65,7 +65,7 @@ class App extends React.Component {
             route = Router.current.route;
         } else {
             if (Routes.error[this.state.code]) { route = Routes.error[this.state.code]; }
-            else if (Route.error.default) { route = Routes.error.default; }
+            else if (Routes.error.default) { route = Routes.error.default; }
             else { throw new Error('Error view not found. Implement Route.error.default or Route.error.CODE'); }
         }
 

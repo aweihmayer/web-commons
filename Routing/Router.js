@@ -16,11 +16,10 @@ const Router = {
      * @returns {Route} The current location's route or the error route if none was found.
      */
     detect: () => {
+        let uri = new Uri(window.location.pathname);
         Router.current.params = {};
-        Router.current.route = Router.match(relativeUri);
-        let uri = new Uri(window.location.pathnam);
         for (let route of Routes._routes) {
-            if (route.method == 'GET' && route.view && !route.compare(uri)) {
+            if (route.method == 'GET' && route.view && route.uri.compare(uri)) {
                 Router.current.route = route;
             }
         }

@@ -97,12 +97,13 @@ Object.defineProperty(Object.prototype, 'deleteProp', {
  * Removes empty properties.
  */
 Object.deleteEmptyProperties = (obj) => {
+    if (typeof obj !== 'object') { return; }
     let keys = Object.keys(obj);
     for (let k of keys) {
-        if (this[k] === null || (typeof this[k] === 'string' && this[k].trim() === '')) {
-            delete this[k];
-        } else if (typeof this[k] === 'object') {
-            this.deleteEmptyProps();
+        if (obj[k] === null || (typeof obj[k] === 'string' && obj[k].trim() === '')) {
+            delete obj[k];
+        } else if (typeof obj[k] === 'object') {
+            Object.deleteEmptyProperties(obj[k]);
         }
     }
 };
@@ -111,7 +112,7 @@ Object.deleteEmptyProperties = (obj) => {
  * Clones the object to remove references.
  * @returns {object}
  */
-Object.clone = (obj) => JSON.parse(JSON.stringify(this));
+Object.clone = (obj) => JSON.parse(JSON.stringify(obj));
 
 /**
  * Transforms a query string to an object.
