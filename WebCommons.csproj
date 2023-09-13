@@ -56,7 +56,7 @@
     <None Update="Routing\App.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\nav.js">
+    <None Update="Routing\Nav.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\Route.js">

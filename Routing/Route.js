@@ -11,8 +11,8 @@
      */
     constructor(template, viewOrMethod, options) {
         options = options || {};
-        this.uri = new Uri(template);
         this.name = null;
+        this.uri = new Uri(template, options.queryStringSchema);
         this.bundles = options.bundles || [];
 
         this.cache = options.cache ? {} : null;
@@ -34,25 +34,16 @@
      */
     getParams() {
         let uri = new Uri(window.location.pathname);
-        let params = Object.fromQueryString(uri.template);
+        let params = Object.fromQueryString(uri.getQueryString());
         uri.removeQueryString();
 
-        // We will go through the current location and the route template simultaneously
-        let parts = uri.parts;
-        let parts2 = this.uri.parts;
-
         // The route and the current location don't match
-        if (parts.length !== parts2.length) { return params; }
+        if (uri.parts.length !== this.uri.parts.length) { return params; }
 
-        for (let i in parts2) {
-            let p = parts[i];
-            let p2 = parts2[i];
-
+        for (let i in uri.parts) {
             // The part is not a parameter, skip it
-            if (!p2.includes('{')) { continue; }
-            // The part is a parameter, get the value from the current location
-            let paramName = p2.replace(/{|}/g, '').split('|')[0];
-            params[paramName] = p;
+            if (!this.uri.parts[i].isParam) { continue; }
+            params[this.uri.parts[i].params[0]] = uri.parts[i].value;
         }
 
         return params;
@@ -66,10 +57,10 @@
     fetch(payload, options) {
         // If the payload is not an object, its value belongs to the first route param
         if (typeof payload !== 'object') {
-            if (this.uri.paramNames.isEmpty()) {
+            if (!this.uri.parts.some(p => p.isParam)) {
                 payload = {};
             } else {
-                let key = this.uri.paramNames[0];
+                let key = this.uri.find(p => p.isParam).params[0];
                 let value = payload;
                 payload = {};
                 payload[key] = value;

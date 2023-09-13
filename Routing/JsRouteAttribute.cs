@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Reflection;
+using WebCommons.Model;
 
 namespace WebCommons.Controllers
 {
@@ -81,7 +82,7 @@ namespace WebCommons.Controllers
 
 				// Url
 				string url = string.IsNullOrEmpty(jsRouteAttr.Url) ? routeAttr.Template : jsRouteAttr.Url;
-				url = url.Replace(":int", "");
+				url = url.Replace(":int", ""); // TODO keep type
 
 				// View or HTTP method
 				string viewOrHttpMethod = "";
@@ -107,6 +108,14 @@ namespace WebCommons.Controllers
 					options.Add("cache", new {
 						name = jsRouteAttr.CacheName,
 						duration = cacheDuration });
+				}
+
+				foreach (ParameterInfo paramInfo in method.GetParameters()) {
+					if (paramInfo.GetCustomAttribute<FromQueryAttribute>() != null) {
+						options.Add("queryStringSchema", paramInfo.ParameterType.GetSchema());
+					} else {
+						// for each prop
+					}
 				}
 
 				// Format the route string

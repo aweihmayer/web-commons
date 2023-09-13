@@ -8,8 +8,8 @@ const Nav = {
      * and rerenders the app.
      */
     link: async function (path) {
-        path = nav.getPath(path);
-        if (nav.isPathCurrentLocation(path)) { return; }
+        path = Nav.getPath(path);
+        if (Nav.isPathCurrentLocation(path)) { return; }
 
         window.history.pushState('', '', path);
         Router.detect();
@@ -23,8 +23,8 @@ const Nav = {
      * and rerenders the app.
      */
     reload: async function (path) {
-        path = nav.getPath(path);
-        if (nav.isPathCurrentLocation(path)) { return; }
+        path = Nav.getPath(path);
+        if (Nav.isPathCurrentLocation(path)) { return; }
 
         window.history.replaceState('', '', path);
         Router.detect();
@@ -37,8 +37,8 @@ const Nav = {
      * Changes the url in the address bar.
      */
     replace: function (path) {
-        path = nav.getPath(path);
-        if (nav.isPathCurrentLocation(path)) { return; }
+        path = Nav.getPath(path);
+        if (Nav.isPathCurrentLocation(path)) { return; }
 
         window.history.replaceState('', '', url);
         Router.detect();

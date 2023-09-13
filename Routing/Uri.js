@@ -1,94 +1,71 @@
 ﻿class Uri {
-    constructor(template) {
+    constructor(template, allowedQueryStringParams) {
+        if (template.length === 0 || template.charAt(0) !== '/') { template = '/' + template; }
         this.template = template;
 
-        this.parts = template.split(/\/|\./).filterEmpty();
-
-        this.paramNames = [];
-        for (let part of this.parts) {
-            // Skip if it is not a parameter
-            if (!part.includes('{')) { continue; }
-            // Read the parameters
-            let partParams = part.replace(/{|}/g, '').split('|');
-            // Add each parameter to the list if it hasn't already been
-            for (let p of partParams) {
-                if (!this.paramNames.includes(p)) { this.paramNames.push(p); }
-            }
+        this.parts = template.split(/\/|\./).filter(p => p !== '');
+        let indexOfPathExtensionStart = template.length - this.parts.length - 1;
+        if (template.charAt(indexOfPathExtensionStart) === '.') {
+            this.parts[this.parts.length - 1] = '.' + this.parts[this.parts.length - 1];
         }
+
+        for (let i in this.parts) {
+            let part = this.parts[i];
+            let isParameterPart = part.includes('{');
+            let isExtensionPart = part.charAt(0) === '.';
+            this.parts[i] = {
+                value: isExtensionPart ? part.replace('.', '') : part,
+                isExtension: isExtensionPart,
+                isParam: isParameterPart,
+                params: isParameterPart ? part.replace(/{|}/g, '').split('|') : null
+            };
+        }
+
+        this.allowedQueryStringParams = allowedQueryStringParams || [];
     }
 
     /**
      * Builds the relative path of the URI.
      * @param {object} params
-     * @param {boolean} noQueryString
+     * @param {boolean} queryStringParams TODO
      * @returns {string}
      */
-    relative(params, noQueryString) {
+    relative(params, queryStringParams) {
         params = params || {};
-        params = Object.clone(params);
-        Object.deleteEmptyProperties(params);
+        queryStringParams = (typeof queryStringParams === 'undefined') ? true : queryStringParams;
 
-        // Used to track parameters used in the route path will not be duplicated in the query string
-        let usedParams = [];
-
-        let path = this.parts;
-
-        // For each part of the path
-        for (let i in path) {
-            let part = path[i];
-            // If the part is a not placeholder, keep it as is
-            if (!part.includes('{')) { continue; }
-            // Get the possible part params
-            let partParams = this.parts[i].replace(/{|}/g, '').split('|');
-            // Replace it with a value
-            for (let p of partParams) {
-                if (!params.hasProp(p)) { continue; }
-                path[i] = params.getProp(p);
-                usedParams.push(p);
-                break;
+        let relativeUri = this.parts.map(p => {
+            if (p.isExtension) { return '.' + p.value; }
+            if (!p.isParam) { return '/' + p.value; }
+            for (let partParam of p.params) {
+                if (p.hasProp(partParam)) { return '/' + p.getProp(p); }
             }
-        }
 
-        // Join the path array back into an URL
-        let url = '';
-        for (let part of path) {
-            // If the part is an extension, it is precended by a period
-            if (['json', 'xml', 'html', 'jpg', 'png', 'gif'].includes(part)) {
-                url += '.' + part;
-            } else {
-                url += '/' + part;
+            throw new Error('Missing route parameters for ' + this.name);
+        });
+
+        relativeUri = relativeUri.join('');
+
+        if (queryStringParams === true) {
+            queryStringParams = {};
+            for (var k of this.allowedQueryStringParams) {
+                if (params.hasProp(k)) { queryStringParams.setProp(k, params.getProp(k)); }
             }
+        } else if (typeof queryStringParams === 'object') {
+            relativeUri += Object.toQueryString(queryStringParams);
         }
 
-        path = url;
-
-        // Remove parameters used in the route path so that they are no duplicated in the query string
-        for (let usedParam of usedParams) {
-            params.deleteProp(usedParam);
-        }
-
-        // Add remaining parameters as query string
-        noQueryString = (typeof noQueryString !== 'undefined') ? noQueryString : (this.method != 'GET');
-        if (!noQueryString) { path += params.toQueryString(); }
-
-        // Throw an error if some placeholder have not been replaced
-        if (path.includes('{')) { throw new Error('Missing route parameters for ' + this.name); }
-
-        // The first character of the URL should be a forward slash
-        if (path.length == 0) { return '/'; }
-        if (path.charAt(0) != '/') { return '/' + path; }
-
-        return path;
+        return (relativeUri.length == 0) ? '/' : relativeUri;
     }
 
     /**
      * Builds the full path of the route (ex: https://www.news.com/articles/new-president?id=1).
-     * @param {object} params The route parameters.
-     * @param {boolean} noQueryString
+     * @param {object} params
+     * @param {boolean} queryStringParams
      * @returns {string}
      */
-    absolute(params, noQueryString) {
-        return window.location.protocol + '//' + window.location.hostname + this.relative(params, noQueryString);
+    absolute(params, queryStringParams) {
+        return window.location.protocol + '//' + window.location.hostname + this.relative(params, queryStringParams);
     }
 
     /**
@@ -97,7 +74,7 @@
      * @returns {string}
      */
     canonical(params) {
-        return this.absolute(params, true);
+        return this.absolute(params, false);
     }
 
     /**
@@ -108,13 +85,11 @@
     compare(uri) {
         // No match if they don't have the same amount of parts
         if (uri.parts.length != this.parts.length) { return false; }
+
         // Compare each part
-        for (let i = 0; i < uri.parts.length; i++) {
-            let u = uri.parts[i];
-            let t = this.parts[i];
-            // Placeholder parts are wildcards
-            if (t.includes('{')) { continue; }
-            if (u != t) { return false; }
+        for (let i in this.parts) {
+            if (uri.parts[i].isParam || this.parts[i].isParam) { continue; }
+            if (uri.parts[i].value !== this.parts[i].value) { return false; }
         }
 
         return true;

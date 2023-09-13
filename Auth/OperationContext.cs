@@ -89,10 +89,14 @@ namespace WebCommons.Controllers
         /// </summary>
         public void PopulateAuthValueFromCookie(AccessTokenCookie accessCookie, RefreshTokenCookie refreshCookie)
         {
-            if (!accessCookie.IsEmpty()) {
-                this.RequestAccessToken = accessCookie.Value;
+            if (!accessCookie.IsEmpty() || !refreshCookie.IsEmpty())
+            {
                 this.AuthMethod = AuthMethod.Token;
                 this.AuthSource = AuthSource.Cookie;
+            }
+
+            if (!accessCookie.IsEmpty()) {
+                this.RequestAccessToken = accessCookie.Value;
             }
 
             if (!refreshCookie.IsEmpty()) {

@@ -21,21 +21,22 @@ class Form extends FieldSet {
      */
     submit(ev) {
         if (ev) { ev.preventDefault(); }
+        let that = this;
         let action = (typeof this.onSubmit === 'undefined')
             ? async (data) => fetch(await this.buildRequest())
             : this.onSubmit;
 
         return new Promise(function (resolve, reject) {
-                this.startLoading();
-                if (this.isValid()) {
-                    resolve(this.collect());
+                that.startLoading();
+                if (that.isValid()) {
+                    resolve(that.collect());
                 } else {
-                    this.stopLoading();
+                    that.stopLoading();
                     reject(new Error('Cannot submit invalid data'));
                 }
             })
             .then(action)
-            .finally(this.stopLoading());
+            .finally(that.stopLoading());
     }
 
 

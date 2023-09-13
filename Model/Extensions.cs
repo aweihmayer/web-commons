@@ -106,7 +106,7 @@ namespace WebCommons.Model
                 if (!property.PropertyType.IsPrimitive && !property.PropertyType.IsArray) { continue; }
 
                 ValueSchema schema = new();
-                schemas[property.Name] = schema;
+                schemas[property.Name.FirstCharToLowerCase()] = schema;
 
                 // Get the property type
                 string propertyType = property.PropertyType.Name.ToLower();

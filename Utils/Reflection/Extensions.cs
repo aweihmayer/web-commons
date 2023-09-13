@@ -1,7 +1,4 @@
-﻿using MartialMap.Controllers;
-using Microsoft.AspNetCore.Mvc.Controllers;
-
-namespace System.Reflection
+﻿namespace System.Reflection
 {
     public static class Extensions
     {
