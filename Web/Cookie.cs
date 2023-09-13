@@ -41,6 +41,8 @@ namespace WebCommons.Web
             }
         }
 
+        public bool HttpOnly { get; set; } = false;
+
         protected Cookie(string name, TimeSpan duration)
         {
             this.Name = name;
@@ -54,7 +56,5 @@ namespace WebCommons.Web
         {
             return (this.Value == null);
         }
-
-        // TODO Cookie options (http only, etc...)
     }
 }

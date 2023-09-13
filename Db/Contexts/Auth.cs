@@ -13,22 +13,54 @@ namespace WebCommons.Db
         public DbSet<TUser> Users { get; set; }
 
         /// <summary>
-        /// Finds a user with their auth token.
+        /// Finds a user with their access token.
         /// </summary>
-        public TUser? FindUser(Guid? accessTokenId, bool includeTokens = false)
+        public TUser? FindUserByAccessToken(Guid? token, bool includeTokens = false)
+        {
+            return this.FindUserByToken(token, UserTokenType.Access, includeTokens);
+        }
+
+        /// <summary>
+        /// Finds a user with their refresh token.
+        /// </summary>
+        public TUser? FindUserByRefreshToken(Guid? token, bool includeTokens = false)
+        {
+            return this.FindUserByToken(token, UserTokenType.Refresh, includeTokens);
+        }
+
+        /// <summary>
+        /// Finds a user with a token.
+        /// </summary>
+        protected TUser? FindUserByToken(Guid? token, UserTokenType tokenType, bool includeTokens = false)
         {
             // Find the access token with the user
-            if (!accessTokenId.HasValue) { return default; }
-            UserToken<TUser>? accesstoken = this.FindToken(accessTokenId, true); // TODO check sql query generated
-            if (accesstoken == null || accesstoken.IsExpired() || accesstoken.User == null) { return default; }
-            TUser user = accesstoken.User;
-            user.AccessTokenId = accesstoken.Id;
+            if (!token.HasValue) { return default; }
+            UserToken<TUser>? userToken = this.FindToken(token, true); // TODO check sql query generated
+            if (userToken == null || userToken.IsExpired() || userToken.User == null) { return default; }
+            TUser user = userToken.User;
 
-            // Include refresh token if applicable
+            switch (tokenType) {
+                case UserTokenType.Access: user.AccessTokenId = userToken.Id; break;
+                case UserTokenType.Refresh: user.RefreshTokenId = userToken.Id; break;
+            }
+
+            // Include alt token if applicable
             if (!includeTokens) { return user; }
-            UserToken<TUser>? refreshToken = this.FindToken(user, UserTokenType.Refresh);
-            if (refreshToken == null) { return user; }
-            user.RefreshTokenId = refreshToken.Id;
+
+            UserToken<TUser>? altToken = null;
+            switch (tokenType) {
+                case UserTokenType.Access:
+                    altToken = this.FindToken(user, UserTokenType.Refresh);
+                    if (altToken == null) { return user; }
+                    user.RefreshTokenId = altToken.Id;
+                    break;
+                case UserTokenType.Refresh:
+                    altToken = this.FindToken(user, UserTokenType.Access);
+                    if (altToken == null) { return user; }
+                    user.AccessTokenId = altToken.Id;
+                    break;
+            }
+
             return user;
         }
 

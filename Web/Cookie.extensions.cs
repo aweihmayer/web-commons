@@ -13,11 +13,12 @@ namespace WebCommons.Web
             Type type = cookie.GetType();
             var value = type.GetPropertyValue<string>(cookie, "Base64Value");
             if (string.IsNullOrEmpty(value)) { return; }
+
             CookieOptions options = new();
+            options.HttpOnly = type.GetPropertyValue<bool>(cookie, "HttpOnly");
+            options.Expires = DateTime.UtcNow.Add(type.GetPropertyValue<TimeSpan>(cookie, "Duration"));
 
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            var duration = type.GetPropertyValue<TimeSpan>(cookie, "Duration");
-            options.Expires = DateTime.UtcNow.Add(duration);
             cookies.Append(name, value, options);
         }
 

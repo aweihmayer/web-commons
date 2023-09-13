@@ -237,6 +237,18 @@ namespace WebCommons.Controllers
             return user;
         }
 
+        /// <summary>
+        /// Authenticates the user with a refresh token by creating the access token if necessary and creating an auth cookie.
+        /// </summary>
+        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
+        public TUser Authenticate(Guid? refreshToken)
+        {
+            if (!refreshToken.HasValue) { throw new BadRequestException(); }
+            TUser? user = this.Db.FindUserByRefreshToken(refreshToken);
+            if (user == null) { throw new NotFoundException(); }
+            return this.Authenticate(user);
+        }
+
         #endregion
     }
 }
