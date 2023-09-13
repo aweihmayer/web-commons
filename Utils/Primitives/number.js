@@ -4,10 +4,10 @@
  * @throws {Error} If the value could not be parsed.
  * @returns {number|number[]} Integer(s) or null(s) if the value is empty.
  */
-Number.parseInt2 = function (v) {
+Parser.toInt = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { v[i] = Number.parseInt2(v[i]); }
+        for (let i in v) { v[i] = Parser.toInt(v[i]); }
         return v;
     }
 
@@ -24,3 +24,21 @@ Number.parseInt2 = function (v) {
             throw new Error('type');
     }
 };
+
+/**
+ * Parses one or many values into numbers.
+ * @param {any} v
+ * @throws {Error} If the value could not be parsed.
+ * @returns {number|number[]} Integer(s) or null(s) if the value is empty.
+ */
+Parser.toNumber = (v) => {
+    // Recursivity for arrays
+    if (Array.isArray(v)) {
+        for (let i in v) { v[i] = Parser.toNumber(v[i]); }
+        return v;
+    }
+
+    v = Number(v);
+    if (isNaN(v)) { throw new Error('type'); }
+    return v;
+}

@@ -1,31 +1,24 @@
 ﻿class Route {
     /**
-     * 
-     * @param {any} template The URI template.
-     * @param {any} viewOrMethod The function that returns the view or the HTTP method.
+     * @param {string} name The route name which should be a JSON path. When adding with Routes.add(), you can retrieve them with that path.
+     * @param {any} uri The URI template.
+     * @param {any} method The HTTP method.
      * @param {any} [options]
+     * @param {Function} [options.view] A function that returns a view to render.
      * @param {string[]} [options.bundles] Bundles to be loaded when the route changes.
      * @param {string} [options.cache.name] The cache name. Must be defined to enable the cache.
-     * @param {number} [options.cache.duration] The cache duration in milliseconds.
-     * 
+     * @param {number} [options.cache.duration] The cache duration in milliseconds. TODO seconds
+     * @param {Array<string>} [options.allowedQueryStringParams] A list of valid query string parameters.
      */
-    constructor(template, viewOrMethod, options) {
+    constructor(name, uri, method, options) {
         options = options || {};
-        this.name = null;
-        this.uri = new Uri(template, options.queryStringSchema);
+        this.name = name;
+        this.uri = new Uri(uri, options.allowedQueryStringParams);
+        this.method = method;
+        this.view = options.view || null;
         this.bundles = options.bundles || [];
+        this.cache = options.cache || null;
 
-        this.cache = options.cache ? {} : null;
-        this.cache.name = options.cache.name || null;
-        this.cache.duration = options.cache.duration || null;
-
-        if (typeof viewOrMethod == 'function') {
-            this.view = viewOrMethod;
-            this.method = 'GET';
-        } else {
-            this.view = null;
-            this.method = viewOrMethod || 'GET';
-        }
     }
 
     /**
@@ -43,7 +36,8 @@
         for (let i in uri.parts) {
             // The part is not a parameter, skip it
             if (!this.uri.parts[i].isParam) { continue; }
-            params[this.uri.parts[i].params[0]] = uri.parts[i].value;
+            let result = Validator.validate(uri.parts[i].value, this.uri.parts[i].params[0]);
+            params[this.uri.parts[i].params[0].name] = result.value;
         }
 
         return params;

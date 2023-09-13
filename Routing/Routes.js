@@ -4,15 +4,28 @@
 const Routes = {
     /**
      * Adds routes.
-     * @param {Array<{path: string, route: Route}>} routes The key should be a JSON path and will become the name of the route. You can retrieve them with that path.
+     * @param {Array<Route|object>} routes Route instances or a plain JSON config object.
      */
-    add: function (routes) {
-        for (let name in routes) {
-            routes[name].name = name;
-            Routes.setProp(name, routes[name]);
-            Routes._routes.push(routes[name]);
+    add: (routes) => {
+        if (!Array.isArray(routes)) { routes = [routes]; }
+
+        for (let r of routes) {
+            let route = r;
+            if (!(route instanceof Route)) {
+                route = new Route(route.name, route.uri, route.method, route);
+            }
+
+            Routes.setProp(route.name, route);
+            Routes._routes.push(route);
         }
     },
+
+    /**
+     * Finds a route by name.
+     * @param {any} name
+     * @returns {Route}
+     */
+    find: (name) => Routes._routes.find(r => r.name === name),
 
     /**
      * A flattened list of all the routes.

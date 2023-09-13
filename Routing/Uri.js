@@ -13,11 +13,18 @@
             let part = this.parts[i];
             let isParameterPart = part.includes('{');
             let isExtensionPart = part.charAt(0) === '.';
+            let params = isParameterPart ? part.replace(/{|}/g, '').split('|') : [];
+            params = params.map(p => {
+                return p.includes(':')
+                    ? { name: p, type: p.split(':')[1] }
+                    : { name: p, type: 'string' };
+            });
+
             this.parts[i] = {
                 value: isExtensionPart ? part.replace('.', '') : part,
                 isExtension: isExtensionPart,
                 isParam: isParameterPart,
-                params: isParameterPart ? part.replace(/{|}/g, '').split('|') : null
+                params: params
             };
         }
 
@@ -27,18 +34,18 @@
     /**
      * Builds the relative path of the URI.
      * @param {object} params
-     * @param {boolean} queryStringParams TODO
+     * @param {boolean} queryStringParams
      * @returns {string}
      */
     relative(params, queryStringParams) {
         params = params || {};
         queryStringParams = (typeof queryStringParams === 'undefined') ? true : queryStringParams;
 
-        let relativeUri = this.parts.map(p => {
-            if (p.isExtension) { return '.' + p.value; }
-            if (!p.isParam) { return '/' + p.value; }
-            for (let partParam of p.params) {
-                if (p.hasProp(partParam)) { return '/' + p.getProp(p); }
+        let relativeUri = this.parts.map(part => {
+            if (part.isExtension) { return '.' + part.value; }
+            if (!part.isParam) { return '/' + part.value; }
+            for (let partParam of part.params) {
+                if (part.hasProp(partParam.name)) { return '/' + part.getProp(p); }
             }
 
             throw new Error('Missing route parameters for ' + this.name);
@@ -48,7 +55,7 @@
 
         if (queryStringParams === true) {
             queryStringParams = {};
-            for (var k of this.allowedQueryStringParams) {
+            for (let k of this.allowedQueryStringParams) {
                 if (params.hasProp(k)) { queryStringParams.setProp(k, params.getProp(k)); }
             }
         } else if (typeof queryStringParams === 'object') {

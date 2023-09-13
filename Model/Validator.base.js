@@ -19,24 +19,13 @@ const Validator = {
         };
 
         try {
-            // Parse and validate according to the schema type
+            result.value = Parser.parse(v, schema.type);
             switch (schema.type) {
+                case 'email': Validator.email(result.value, schema); break;
                 case 'int':
-                    result.value = Number.parseInt2(v);
-                    Number.validate(results.value, schema);
-                    break;
-                case 'number':
-                    break;
-                case 'string':
-                    result.value = String.parse(v);
-                    String.validate(v, schema);
-                    break;
-                case 'bool':
-                    result.value = Boolean.parse(v);
-                    Boolean.validate(result.value, schema);
-                    break;
-                default:
-                    throw new Error('type');
+                case 'number': Validator.number(result.value, schema); break;
+                case 'string': Validator.string(result.value, schema); break;
+                default: throw new Error('type');
             }
 
             // If the value is not required, no further validation is done

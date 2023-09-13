@@ -5,10 +5,10 @@
  * @throws {Error}
  * @returns {boolean}
  */
-String.validate = function (v, options) {
+Validator.string = function (v, options) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { String.validate(v[i], options); }
+        for (let i in v) { Validator.string(v[i], options); }
         return true;
     }
 

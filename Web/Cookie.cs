@@ -55,6 +55,6 @@ namespace WebCommons.Web
             return (this.Value == null);
         }
 
-        // TODO build options method
+        // TODO Cookie options (http only, etc...)
     }
 }

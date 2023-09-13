@@ -11,11 +11,6 @@ namespace WebCommons.Model
     /// </summary>
     public static class ModelExtensions
     {
-        // TODO remove these constants, use a custom attribute instead
-        public const int EMAIL_MAX = 255;
-        public const string EMAIL_REGEX = "^.*@.*\\..*$";
-        public const int PASSWORD_MAX = 50;
-
         /// <summary>
         /// Determines if the model is valid.
         /// </summary>
@@ -118,6 +113,8 @@ namespace WebCommons.Model
                 // Determine if it is required
                 schema.Required = (property.GetCustomAttribute<RequiredAttribute>() != null);
 
+                // TODO do lists even work?
+
                 // Determine the type and its validation rules
                 switch (propertyType) {
                     case "string":
@@ -132,7 +129,7 @@ namespace WebCommons.Model
                         
                         // Email format regex
                         var emailAttr = property.GetCustomAttribute<EmailAddressAttribute>();
-                        if (emailAttr != null) { schema.Regex = EMAIL_REGEX; } // TODO email type in front end
+                        if (emailAttr != null) { schema.Type = "email"; }
                         break;
                     case "int":
                     case "int32":

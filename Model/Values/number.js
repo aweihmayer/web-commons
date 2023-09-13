@@ -5,10 +5,10 @@
  * @throws {Error}
  * @returns {boolean}
  */
-Number.validate = function (v, options) {
+Validator.number = function (v, options) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { Number.validate(v[i], options); }
+        for (let i in v) { Validator.number(v[i], options); }
         return true;
     }
 

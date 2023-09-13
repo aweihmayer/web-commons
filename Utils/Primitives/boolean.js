@@ -4,10 +4,10 @@
  * @throws {Error} If the value could not be parsed.
  * @returns {boolean|boolean[]}
  */
-Boolean.parse = function (v) {
+Parser.toBoolean = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { v[i] = Boolean.parse(v[i]); }
+        for (let i in v) { v[i] = Parser.toBoolean(v[i]); }
         return v;
     }
 
@@ -20,7 +20,7 @@ Boolean.parse = function (v) {
             if (['false', 'no', '0'].includes(v)) { return false; }
             v = Number(v);
             if (isNaN(v)) { throw new Error('type'); }
-            return Boolean.parse(v);
+            return Parser.toBoolean(v);
         default: throw new Error('type');
     }
 };

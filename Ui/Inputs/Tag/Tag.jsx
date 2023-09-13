@@ -5,7 +5,7 @@
     }
 
     render() {
-        var $this = this;
+        let $this = this;
         return super.render(
             <div>
                 <div className="input-wrapper">
@@ -25,17 +25,17 @@
 
     search(ev) {
         if (typeof this.state.schema.options == 'function') {
-            var results = this.state.schema.options(this.refs.input.value);
+            let results = this.state.schema.options(this.refs.input.value);
         } else if (this.state.schema.options instanceof Dao) {
-            var results = this.state.schema.options.search(this.refs.input.value, { onlySearchable: false });
+            let results = this.state.schema.options.search(this.refs.input.value, { onlySearchable: false });
         } else {
             return;
         }
 
         this.refs.options.innerHTML = '';
 
-        for (var i = 0; i < results.length; i++) {
-            var option = document.createElement('li');
+        for (let i = 0; i < results.length; i++) {
+            let option = document.createElement('li');
             option.dataset.value = results[i].id;
             option.innerHTML = results[i].getLabel().full;
             option.onclick = this.add.bind(this);
@@ -62,24 +62,24 @@
         }
 
         if (ev.target) {
-            var node = ev.target;
-            var data = {
+            let node = ev.target;
+            let data = {
                 value: node.dataset.value,
                 label: node.innerHTML };
         } else if (ev.id) {
-            var data = {
+            let data = {
                 value: ev.id,
                 label: ev.name || ev.label.full };
         } else {
             return;
         }
 
-        var tag = document.createElement('li');
+        let tag = document.createElement('li');
         tag.dataset.value = data.value;
         tag.setAttribute('title', data.value);
         tag.innerHTML = data.label;
 
-        var closeButton = document.createElement('span');
+        let closeButton = document.createElement('span');
         closeButton.innerHTML = 'x';
         closeButton.onclick = this.remove.bind(this);
         tag.appendChild(closeButton);
@@ -88,7 +88,7 @@
     }
 
     remove(ev) {
-        var option = ev.target.closest('li');
+        let option = ev.target.closest('li');
         option.parentNode.removeChild(option);
     }
 
@@ -113,7 +113,7 @@
             value = [value];
         }
 
-        for (var v of value) {
+        for (let v of value) {
             if (typeof v == 'object') {
                 this.add(v);
                 continue;

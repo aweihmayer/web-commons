@@ -17,8 +17,8 @@
     }
 
     fill(v) {
-        var siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
-        for (var i = 0; i < siblings.length; i++) {
+        let siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
+        for (let i = 0; i < siblings.length; i++) {
             if (siblings[i].value == v) {
                 siblings[i].checked = true;
                 return;
@@ -32,8 +32,8 @@
     }
 
     clear() {
-        var siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
-        for (var i = 0; i < siblings.length; i++) {
+        let siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
+        for (let i = 0; i < siblings.length; i++) {
             siblings[i].checked = false;
         }
     }

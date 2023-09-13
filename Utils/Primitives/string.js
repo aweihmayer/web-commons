@@ -3,10 +3,10 @@
  * @param {any} v
  * @returns {string|string[]} Trimmed string(s) or null(s) if the string is empty.
  */
-String.parse = function (v) {
+Parser.toString = (v) => {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { v[i] = String.parse(v[i]); }
+        for (let i in v) { v[i] = Parser.toString(v[i]); }
         return v;
     }
 
@@ -21,7 +21,7 @@ String.parse = function (v) {
  * @param {number} length
  * @returns {string}
  */
-String.random = function (length) {
+String.random = (length) => {
     length = length || 25;
     let result = [];
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -53,17 +53,30 @@ String.markdownToHtml = (decreaseHeadings) => {
  * Determines if a string is an int.
  * @returns {string}
  */
-String.prototype.isInt = function () {
+String.prototype.isInt = () => {
     return /^-?\d+$/.test(this.trim());
+};
+
+/**
+ * Removes accents from a string.
+ * @returns {string}
+ */
+String.prototype.removeAccents = () => {
+    const normalizedString = input.normalize('NFD');
+    // Use a regular expression to match and replace diacritics
+    const accentRegex = /[\u0300-\u036f]/g;
+    // Replace diacritics with an empty string
+    const cleanedString = normalizedString.replace(accentRegex, '');
+    // Normalize the string back to composed form (NFC)
+    return cleanedString.normalize('NFC');
 };
 
 /**
  * Transforms a string to a slug.
  * @returns {string}
  */
-String.prototype.toSlug = function () {
-    // TODO - Remove accents
-    let v = this.toLowerCase().trim();
+String.prototype.toSlug = () => {
+    let v = this.removeAccepts().toLowerCase().trim();
     v = v.replace(/[^a-z0-9\s-]/, ''); // Invalid chars
     v = v.replace(/\s+/, ''); // Convert multiple spaces into one space
     v = v.replace(/\s/, ''); // Hyphens

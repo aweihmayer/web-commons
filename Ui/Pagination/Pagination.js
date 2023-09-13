@@ -66,8 +66,8 @@ class PaginationData {
      * @returns {number}
      */
     getIndexOfLastItemOnCurrentPage() {
-        var index = this.getOffset() + this.itemsPerPage;
-        var itemCount = this.getItemCount();
+        let index = this.getOffset() + this.itemsPerPage;
+        let itemCount = this.getItemCount();
         return (index > itemCount) ? itemCount : index;
     }
 
@@ -87,7 +87,7 @@ class PaginationData {
      */
     setItemsPerPage(itemsPerPage, preserveLocation) {
         preserveLocation = (typeof preserveLocation === 'undefined') ? true : preserveLocation;
-        var oldIndex = preserveLocation ? this.getIndexOfFirstItemOnCurrentPage() : 1;
+        let oldIndex = preserveLocation ? this.getIndexOfFirstItemOnCurrentPage() : 1;
         this.itemsPerPage = itemsPerPage;
         this.currentPage = this.getPageOfItemByIndex(oldIndex);
     }
@@ -137,9 +137,9 @@ class PaginationData {
      * @returns {number[]}
      */
     getDisplayedPages() {
-        var pageCount = this.getPageCount();
-        var left = {};
-        var right = {};
+        let pageCount = this.getPageCount();
+        let left = {};
+        let right = {};
 
         // The number of pages we take from each side
         left.take = (this.numberOfPagesDisplayed - 1) / 2;
@@ -169,9 +169,9 @@ class PaginationData {
         if (left.available < left.take) { left.take = left.available; }
 
         // Get the pages that should be displayed
-        var pages = [];
-        var startingPage = (this.currentPage - left.take);
-        var endingPage = (startingPage + left.take + right.take);
+        let pages = [];
+        let startingPage = (this.currentPage - left.take);
+        let endingPage = (startingPage + left.take + right.take);
 
         // If the starting page is not the first, add the first page and create a null placeholder
         if (startingPage !== 1) {
@@ -179,7 +179,7 @@ class PaginationData {
             pages.push(null);
         }
 
-        for (var i = startingPage; i <= endingPage; i++) {
+        for (let i = startingPage; i <= endingPage; i++) {
             pages.push(i);
         }
 

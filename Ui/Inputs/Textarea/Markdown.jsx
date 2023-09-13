@@ -6,7 +6,7 @@
 
     componentDidMount() {
         this.refs.input.editor = new Editor({ element: this.refs.input });
-        var $this = this;
+        let $this = this;
         this.refs.input.editor.codemirror.options.onKeyEvent = function () {
             $this.clearError.bind($this)
         };

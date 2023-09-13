@@ -39,7 +39,7 @@
     async raw() {
         if (this.refs.old.value) { return parseInt(this.refs.old.value); }
 
-        for (var file of this.refs.file.files) {
+        for (let file of this.refs.file.files) {
             return await this.readFile(file);
         }
 
@@ -48,7 +48,7 @@
 
     async readFile(file) {
         return new Promise(function (resolve, reject) {
-            var reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = function (res) {
                 resolve(res.target.result);

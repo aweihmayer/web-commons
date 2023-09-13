@@ -5,8 +5,8 @@
     }
 
     render() {
-        var $this = this;
-        var input = [];
+        let $this = this;
+        let input = [];
         this.state.schema.options.forEach(function(item, i) {
             input.push(<CheckboxCustomContainer key={i} id={$this.inputId + '-' + item} name={$this.name} value={item} onClick={$this.props.onClick} />);
         });
@@ -15,9 +15,9 @@
     }
 
     fill(v) {
-        var siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
-        for (var i = 0; i < siblings.length; i++) {
-            for (var y = 0; y < v.length; y++) {
+        let siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
+        for (let i = 0; i < siblings.length; i++) {
+            for (let y = 0; y < v.length; y++) {
                 if (v[y] == siblings[i].value) {
                     siblings[i].checked = true;
                     break;
@@ -33,8 +33,8 @@
     }
 
     clear() {
-        var siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
-        for (var i = 0; i < siblings.length; i++) {
+        let siblings = this.refs.container.querySelectorAll('[name="' + this.props.name + '"]');
+        for (let i = 0; i < siblings.length; i++) {
             siblings[i].checked = false;
         }
     }
