@@ -12,6 +12,8 @@ Validator.email = (v, options) => {
         return true;
     }
 
+    if (typeof v !== 'string') { throw new Error('type'); }
+
     // Validate minimum
     if (v === null || v.length < 5) {
         throw new Error('min');

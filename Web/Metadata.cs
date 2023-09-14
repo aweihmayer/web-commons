@@ -9,16 +9,16 @@
         public string? TitlePrefix { get; set; } = null;
         public string? TitleSuffix { get; set; } = null;
         public string FullTitle { get {
-                return (this.TitlePrefix + " " + this.Title + " " + this.TitleSuffix).Trim();
-            } }
+            return (this.TitlePrefix + " " + this.Title + " " + this.TitleSuffix).Trim();
+        } }
 
         public string? Section { get; set; } = null;
         public string? Description { get; set; } = null;
         public string? Image { get; set; } = null;
-        public string SiteName { get; set; } = null;
+        public string? SiteName { get; set; } = null;
         public string? Domain { get; set; } = null;
         public string? Url { get; set; } = null;
-        public string Locale { get; set; } = null;
+        public string? Locale { get; set; } = null;
         public DateTime? ModifiedTime { get; set; } = null;
         public RobotIndexing Robots { get; set; } = RobotIndexing.Follow;
         public PageType Type { get; set; } = PageType.Website;

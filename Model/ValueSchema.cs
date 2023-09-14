@@ -25,6 +25,9 @@ namespace WebCommons.Model
         [JsonProperty("regex", NullValueHandling = NullValueHandling.Ignore)]
         public string? Regex { get; set; } = null;
 
+        [JsonProperty("isEnumerable", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsEnumerable { get; set; } = null;
+
         [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
         public object[]? Options { get; set; } = null;
     }

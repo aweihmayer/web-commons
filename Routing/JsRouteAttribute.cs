@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using WebCommons.IO;
 using WebCommons.Model;
 
 namespace WebCommons.Controllers
@@ -38,6 +40,8 @@ namespace WebCommons.Controllers
 			List<JsRoute> routes = new();
 			MethodInfo[] methods = controller.GetMethods();
 
+			bool isApiController = controller.HasCustomAttribute<ApiControllerAttribute>();
+
 			// For each method in the controller
 			foreach (MethodInfo method in methods) {
 				// Skip if the method doesn't have the necessary attributes
@@ -57,6 +61,11 @@ namespace WebCommons.Controllers
 				else if (method.GetCustomAttribute<HttpPostAttribute>() != null) {	jsRouteAttr.Route.Method = "POST"; }
 				else if (method.GetCustomAttribute<HttpPutAttribute>() != null) {	jsRouteAttr.Route.Method = "PUT"; }
 				else if (method.GetCustomAttribute<HttpGetAttribute>() != null){	jsRouteAttr.Route.Method = "GET"; }
+
+				if (isApiController) {
+                    jsRouteAttr.Route.Accept = FileTypeMap.JSON_CONTENT_TYPE;
+					jsRouteAttr.Route.ContentType = FileTypeMap.JSON_CONTENT_TYPE;
+				}
 
 				// Query string
 				foreach (ParameterInfo paramInfo in method.GetParameters()) {

@@ -4,7 +4,7 @@
  * @param {Request} [request]
  * @returns {Promise<{ body: any, status: int, ok: boolean, method: string }>}
  */
-Response.prototype.deserialize = async function (request) {
+Response.prototype.deserialize = async (request) => {
     const method = request.method || null;
     return this.json().then(
         data => ({
@@ -16,6 +16,8 @@ Response.prototype.deserialize = async function (request) {
     );
 };
 
+Response.prototype.getDateTimestamp = () => Date.parse(this.headers.get('Date'));
+
 /**
  * Mimics the deserialization of a response with a normal object.
  * Useful when you fetch things from a cache, but you still want to use the same code for your promise chains.
@@ -24,7 +26,7 @@ Response.prototype.deserialize = async function (request) {
  * @param {number} [code] The HTTP code of the response.
  * @returns {Promise<{ body: any, status: int, ok: true, method: string }>}
  */
-Response.mimic = function (body, method, code) {
+Response.mimic = (body, method, code) => {
     return new Promise((resolve) => {
         resolve({
             body: body,

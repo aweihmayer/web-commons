@@ -4,6 +4,7 @@
  */
 class ValueSchema {
     constructor(params) {
+        this.name = params.name || '';
         this.type = params.type || 'string';
         this.required = params.required || false;
         this.min = (typeof params.min == 'undefined') ? null : params.min;
