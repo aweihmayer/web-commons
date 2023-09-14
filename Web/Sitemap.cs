@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Text;
+﻿using System.Text;
 using System.Xml;
 
 namespace WebCommons.Data.Web
@@ -12,7 +11,7 @@ namespace WebCommons.Data.Web
     /// </summary>
     public class Sitemap : XmlDocument
     {
-        protected string Host { get; set; } = string.Empty;
+        protected string Host { get; set; }
         protected enum ChangeFrequency { Always, Hourly, Daily, Weekly, Monthly, Yearly, Never }
         protected XmlElement UrlSet;
 

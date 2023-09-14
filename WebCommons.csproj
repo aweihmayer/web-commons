@@ -248,6 +248,9 @@
     <None Update="Utils\Primitives\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Utils\Parser.base.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Utils\Primitives\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -2,10 +2,12 @@
     /**
      * @param {string} name
      * @param {number} duration The duration of the cookie in seconds.
+     * @param {string} type TODO the type to serialize/deserialize
      */
-    constructor(name, duration) {
+    constructor(name, duration, type) {
         this.name = name;
         this.duration = duration;
+        this.type = type;
     }
 
     /**

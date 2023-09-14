@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebCommons.Model;
+using WebCommons.IO;
 using WebCommons.Utils;
 
 namespace WebCommons.Controllers
@@ -22,10 +23,22 @@ namespace WebCommons.Controllers
         public string Uri { get; set; }
 
         /// <summary>
-        /// The HTTP method of the route.
+        /// Defines the HTTP method of the route.
         /// </summary>
         [JsonProperty("method")]
         public string Method { get; set; }
+
+        /// <summary>
+        /// Defines the acceptable HTTP <see cref="FileTypeMap.GetContentType">content type</see> of the response.
+        /// </summary>
+        [JsonProperty("accept")]
+        public string Accept { get; set; }
+
+        /// <summary>
+        /// Defines the HTTP <see cref="FileTypeMap.GetContentType">content type</see> of the request.
+        /// </summary>
+        [JsonProperty("contentType")]
+        public string ContentType { get; set; }
 
         /// <summary>
         /// Defines the front-end view.
