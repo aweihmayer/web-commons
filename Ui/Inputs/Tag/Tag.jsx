@@ -5,7 +5,6 @@
     }
 
     render() {
-        let $this = this;
         return super.render(
             <div>
                 <div className="input-wrapper">
@@ -24,6 +23,7 @@
     }
 
     search(ev) {
+        // TODO
         if (typeof this.state.schema.options == 'function') {
             let results = this.state.schema.options(this.refs.input.value);
         } else if (this.state.schema.options instanceof Dao) {
@@ -114,23 +114,13 @@
         }
 
         for (let v of value) {
-            if (typeof v == 'object') {
-                this.add(v);
-                continue;
-            }
-
-            if (this.state.schema.options instanceof Dao) {
-                this.state.schema.options.find(v)
-                    .then(response => {
-                        this.add(response.body);
-                    });
-            }
+            this.add(v);
         }
     }
 
     clear() {
         this.closeSearch();
         this.refs.tags.innerHTML = '';
-        this.setState({ error: null });
+        this.setState({ error: null }); // TODO errors not using state anymore
     }
 }
