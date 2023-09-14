@@ -5,7 +5,7 @@
 Object.defineProperty(Array.prototype, 'last', {
     enumerable: false,
     value: function () {
-        return this[this.length - 1];
+        return this.length === 0 ? this[this.length - 1];
     }
 });
 
