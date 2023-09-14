@@ -58,17 +58,20 @@ namespace WebCommons.Controllers
 				else if (method.GetCustomAttribute<HttpPutAttribute>() != null) {	jsRouteAttr.Route.Method = "PUT"; }
 				else if (method.GetCustomAttribute<HttpGetAttribute>() != null){	jsRouteAttr.Route.Method = "GET"; }
 
-				// Options
-				Dictionary<string, object> options = new();
-
+				// Query string
 				foreach (ParameterInfo paramInfo in method.GetParameters()) {
 					if (paramInfo.GetCustomAttribute<FromQueryAttribute>() != null) {
-						options.Add("allowedQueryStringParams", paramInfo.ParameterType.GetSchema()); // TODO allowed query string
+						jsRouteAttr.Route.QueryStringParams.AddRange(paramInfo.ParameterType.GetSchema().Select(s => s.Value));
 					} else {
-						// for each prop
+						foreach (PropertyInfo property in paramInfo.ParameterType.GetProperties()) {
+							if (property.GetCustomAttribute<FromQueryAttribute>() != null) {
+                                jsRouteAttr.Route.QueryStringParams.Add(property.GetSchema());
+                            }
+                        }
 					}
 				}
 
+                jsRouteAttr.Route.QueryStringParams = jsRouteAttr.Route.QueryStringParams.Where(p => p != null).ToList();
                 routes.Add(jsRouteAttr.Route);
 			}
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using WebCommons.Model;
 using WebCommons.Utils;
 
 namespace WebCommons.Controllers
@@ -45,8 +46,17 @@ namespace WebCommons.Controllers
         [JsonProperty("bundles")]
         public List<string> Bundles { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Defines how the cache is handled.
+        /// </summary>
         [JsonProperty("cache")]
         public JsRouteCache Cache { get; set; }
+
+        /// <summary>
+        /// Defines the allowed parameters in the query string.
+        /// </summary>
+        [JsonProperty("queryStringParams")]
+        public List<ValueSchema> QueryStringParams { get; set; } = new();
 
         public JsRoute(string? view = null, string? bundles = null, string? uri = null, string? cacheName = null, int cacheDuration = 0)
         {

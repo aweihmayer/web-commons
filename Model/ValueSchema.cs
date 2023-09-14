@@ -7,6 +7,9 @@ namespace WebCommons.Model
     /// </summary>
     public class ValueSchema
     {
+        [JsonProperty("name")]
+        public string Name { get; set; } = string.Empty;
+
         [JsonProperty("type")]
         public string Type { get; set; } = "string";
 

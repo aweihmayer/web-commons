@@ -8,12 +8,12 @@
      * @param {string[]} [options.bundles] Bundles to be loaded when the route changes.
      * @param {string} [options.cache.name] The cache name. Must be defined to enable the cache.
      * @param {number} [options.cache.duration] The cache duration in milliseconds. TODO seconds
-     * @param {Array<string>} [options.allowedQueryStringParams] A list of valid query string parameters.
+     * @param {Array<ValueSchema>} [options.queryStringParams]
      */
     constructor(name, uri, method, options) {
         options = options || {};
         this.name = name;
-        this.uri = new Uri(uri, options.allowedQueryStringParams);
+        this.uri = new Uri(uri, options.queryStringParams);
         this.method = method;
         this.view = options.view || null;
         this.bundles = options.bundles || [];
@@ -26,9 +26,9 @@
      * @returns {object} Route parameters of the path and the query string.
      */
     getParams() {
-        let uri = new Uri(window.location.pathname);
-        let params = Object.fromQueryString(uri.getQueryString());
-        uri.removeQueryString();
+        let uri = window.location.pathname;
+        let params = Object.fromQueryString(uri);
+        uri = new Uri(uri);
 
         // The route and the current location don't match
         if (uri.parts.length !== this.uri.parts.length) { return params; }

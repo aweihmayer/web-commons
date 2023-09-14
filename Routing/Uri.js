@@ -1,7 +1,7 @@
 ﻿class Uri {
-    constructor(template, allowedQueryStringParams) {
+    constructor(template, queryStringParams) {
         if (template.length === 0 || template.charAt(0) !== '/') { template = '/' + template; }
-        this.template = template;
+        this.template = Object.removeQueryString(template);
 
         this.parts = template.split(/\/|\./).filter(p => p !== '');
         let indexOfPathExtensionStart = template.length - this.parts.length - 1;
@@ -28,18 +28,18 @@
             };
         }
 
-        this.allowedQueryStringParams = allowedQueryStringParams || [];
+        this.queryStringParams = queryStringParams || [];
     }
 
     /**
      * Builds the relative path of the URI.
      * @param {object} params
-     * @param {boolean} queryStringParams
+     * @param {boolean} queryString
      * @returns {string}
      */
-    relative(params, queryStringParams) {
+    relative(params, queryString) {
         params = params || {};
-        queryStringParams = (typeof queryStringParams === 'undefined') ? true : queryStringParams;
+        queryString = (typeof queryString === 'undefined') ? true : queryString;
 
         let relativeUri = this.parts.map(part => {
             if (part.isExtension) { return '.' + part.value; }
@@ -53,13 +53,15 @@
 
         relativeUri = relativeUri.join('');
 
-        if (queryStringParams === true) {
-            queryStringParams = {};
-            for (let k of this.allowedQueryStringParams) {
-                if (params.hasProp(k)) { queryStringParams.setProp(k, params.getProp(k)); }
+        if (queryString === true) {
+            queryString = {};
+            for (let qsp of this.queryStringParams) {
+                if (params.hasProp(qsp.name)) { queryString.setProp(qsp.name, params.getProp(qsp.name)); }
             }
-        } else if (typeof queryStringParams === 'object') {
-            relativeUri += Object.toQueryString(queryStringParams);
+        }
+
+        if (typeof queryString === 'object') {
+            relativeUri += Object.toQueryString(queryString);
         }
 
         return (relativeUri.length == 0) ? '/' : relativeUri;
@@ -68,11 +70,11 @@
     /**
      * Builds the full path of the route (ex: https://www.news.com/articles/new-president?id=1).
      * @param {object} params
-     * @param {boolean} queryStringParams
+     * @param {boolean} queryString
      * @returns {string}
      */
-    absolute(params, queryStringParams) {
-        return window.location.protocol + '//' + window.location.hostname + this.relative(params, queryStringParams);
+    absolute(params, queryString) {
+        return window.location.protocol + '//' + window.location.hostname + this.relative(params, queryString);
     }
 
     /**
@@ -102,6 +104,7 @@
         return true;
     }
 
+    // TODO wtf
     /**
      * Gets the query string from the template.
      * @returns {string}
