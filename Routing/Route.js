@@ -34,7 +34,7 @@
         /**
          * Clears the cache of an entire group of requests. 
          */
-        this.cache.clearGroup = () {
+        this.cache.clearGroup = () => {
             caches.delete(this.cache.name);
         }
         this.cache.clearGroup.bind(this);

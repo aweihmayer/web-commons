@@ -58,7 +58,7 @@ const Validator = {
         schema.type = schema.type || 'default';
 
         // Get the error type messages
-        let message = Validator.mesages[error];
+        let message = Validator.messages[error];
         // Get the error data type message
         if (!['required', 'regex'].includes(error)) {
             message = message[schema.type];

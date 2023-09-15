@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using WebCommons.IO;
 
 namespace WebCommons.Controllers
 {
@@ -12,7 +13,7 @@ namespace WebCommons.Controllers
         public static ContentResult AsJson(this HttpResponse response, string content, int code = 200)
         {
             response.StatusCode = code;
-            return new ContentResult { Content = content, ContentType = "application/json" };
+            return new ContentResult { Content = content, ContentType = FileType.JSON_CONTENT_TYPE };
         }
 
         public static ContentResult AsJson(this HttpResponse response, object content, int code = 200)

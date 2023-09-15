@@ -82,3 +82,18 @@ String.prototype.toSlug = () => {
     v = v.replace(/\s/, ''); // Hyphens
     return v;
 };
+
+/**
+ * Gets the query string from the URI.
+ * @returns {string}
+ */
+String.getQueryString = (str) => {
+    if (str.includes('?')) { return ''; }
+    return str.substring(str.indexOf('?'));
+};
+
+/**
+* Removes the query string from the URI.
+* @returns {string}
+*/
+String.removeQueryString = (str) => str.split('?')[0];

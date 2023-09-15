@@ -1,7 +1,7 @@
 ﻿class Uri {
     constructor(template, queryStringParams) {
         if (template.length === 0 || template.charAt(0) !== '/') { template = '/' + template; }
-        this.template = Object.removeQueryString(template);
+        this.template = String.removeQueryString(template);
 
         this.parts = template.split(/\/|\./).filter(p => p !== '');
         let indexOfPathExtensionStart = template.length - this.parts.length - 1;
@@ -102,23 +102,5 @@
         }
 
         return true;
-    }
-
-    // TODO wtf
-    /**
-     * Gets the query string from the template.
-     * @returns {string}
-     */
-    getQueryString() {
-        if (this.template.includes('?')) { return ''; }
-        return this.template.substring(this.template.indexOf('?'));
-    }
-
-    /**
-    * Removes the query string from the template.
-    * @returns {string}
-    */
-    removeQueryString() {
-        this.template = this.template.split('?')[0];
     }
 }

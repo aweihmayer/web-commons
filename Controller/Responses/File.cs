@@ -14,16 +14,16 @@ namespace WebCommons.Controllers
             return new FileStreamResult(stream, file.ContentType);
         }
 
-        public static FileResult AsFile(this HttpResponse response, FileStream stream, FileType fileType)
+        public static FileResult AsFile(this HttpResponse response, FileStream stream, string extension)
         {
             response.StatusCode = 200;
-            return new FileStreamResult(stream, FileTypeMap.GetContentType(fileType));
+            return new FileStreamResult(stream, FileType.GetContentType(extension));
         }
 
-        public static FileResult AsFile(this HttpResponse response, MemoryStream stream, FileType fileType)
+        public static FileResult AsFile(this HttpResponse response, MemoryStream stream, string extension)
         {
             response.StatusCode = 200;
-            return new FileStreamResult(stream, FileTypeMap.GetContentType(fileType));
+            return new FileStreamResult(stream, FileType.GetContentType(extension));
         }
 
         public static FileResult? AsFile(this HttpResponse response, Exception ex)

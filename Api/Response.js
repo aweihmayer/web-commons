@@ -4,16 +4,12 @@
  * @param {Request} [request]
  * @returns {Promise<{ body: any, status: int, ok: boolean, method: string }>}
  */
-Response.prototype.deserialize = async (request) => {
+Response.prototype.deserialize = async function (request) {
     const method = request.method || null;
-    return this.json().then(
-        data => ({
-            body: data,
-            status: this.status,
-            ok: this.ok,
-            headers: this.headers,
-            method: method })
-    );
+    return this.json().then(data => {
+        this.json = data;
+        this.body = data;
+        return this; });
 };
 
 Response.prototype.getDateTimestamp = () => Date.parse(this.headers.get('Date'));

@@ -7,26 +7,27 @@ namespace WebCommons.IO
     /// </summary>
     public class SystemFile
     {
-        public static string Root { get; set; }
+        public static string? Root { get; set; }
         public string Path { get; }
-        public FileType FileType { get; }
-        public string Extension { get { return FileTypeMap.GetExtension(this.FileType); } }
-        public string ContentType { get { return FileTypeMap.GetContentType(this.FileType); } }
+
+        private string extension = string.Empty;
+        public string Extension { get { return FileType.GetExtension(this.extension); } }
+        public string ContentType { get { return FileType.GetContentType(this.extension); } }
 
         public SystemFile(string path)
         {
             this.Path = MapPath(path);
             string[] parts = this.Path.Split('.');
-            this.FileType = FileTypeMap.GetFileType(parts[parts.Length - 1]);
+            this.extension = FileType.GetExtension(parts[parts.Length - 1]);
         }
 
-        public SystemFile(string path, FileType type)
+        public SystemFile(string path, string extension)
         {
             this.Path = MapPath(path);
-            this.FileType = type;
+            this.extension = FileType.GetExtension(extension);
             string[] parts = this.Path.Split('.');
             if (parts.Length == 1) {
-                this.Path += "." + FileTypeMap.GetExtension(type);
+                this.Path += "." + FileType.GetExtension(extension);
             }
         }
 
