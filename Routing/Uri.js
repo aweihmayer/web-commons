@@ -48,7 +48,7 @@
                 if (part.hasProp(partParam.name)) { return '/' + part.getProp(p); }
             }
 
-            throw new Error('Missing route parameters for ' + this.name);
+            throw new Error('Missing route parameters for ' + this.template);
         });
 
         relativeUri = relativeUri.join('');

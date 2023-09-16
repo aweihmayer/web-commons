@@ -1,7 +1,7 @@
 ﻿class HiddenInput extends InputContainer {
     constructor(props) {
+        props.className = 'hidden-input';
         super(props);
-        this.inputClassName = 'hidden-input';
     }
 
     render() {

@@ -18,11 +18,11 @@ const Router = {
     detect: () => {
         let uri = new Uri(window.location.pathname);
         Router.current.params = {};
-        for (let route of Routes._routes) {
-            if (route.method == 'GET' && route.view && route.uri.compare(uri)) {
-                Router.current.route = route;
-            }
-        }
+
+        // We gather all the valid routes and pick the one that has the least amount of route params
+        let validRoutes = Routes._routes.filter(r => (r.method == 'GET' && r.view && r.uri.compare(uri)));
+        validRoutes.sort((a, b) => (a.uri.routeParamsCount > b.uri.routeParamsCount));
+        if (validRoutes.length > 0) { Router.current.route = validRoutes[0]; }
 
         // No route was found. Set the current route as an error
         if (Router.current.route == null) {

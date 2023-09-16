@@ -9,37 +9,19 @@
      * @param {ValueSchema} [props.schema]
      */
     constructor(props) {
+        props.fill = props.fill || props.name
+        props.id = props.id || props.name;
+        props.containerId = document.createUniqueId(props.id + '-input');
+        props.inputId = document.createUniqueId(props.id + '-input');
         super(props);
-        this.name = props.name;
-        this.fillName = props.fill || this.name;
-        this.id = props.name;
-        this.containerId = document.createUniqueId(this.id + '-input');
-        this.inputId = document.createUniqueId(this.id + '-input');
-
-        this.state = {
-            className: props.className || '',
-            label: props.label || null,
-            i18n: props.i18n || {},
-            error: null };
-
-        if (this.state.i18n.i18n) { this.state.i18n = this.state.i18n.i18n; }
-
-        this.state.schema = props.schema || {};
-        this.state.schema.type = props.type || this.state.schema.type || 'string';
-        this.state.schema.required = props.required || this.state.schema.required || false;
-        this.state.schema.min = props.min || this.state.schema.min || false;
-        this.state.schema.max = props.max || this.state.schema.max || false;
-        this.state.schema.regex = props.regex || this.state.schema.regex || false;
-        this.state.schema.options = props.options || this.state.schema.options || {};
+        this.state = { schema: props.schema || new ValueSchema() };
     }
 
     render(input) {
-        let containerClasses = ['input', this.inputClassName, this.state.className];
-        if (this.state.error) { containerClasses.push('error'); }
-        containerClasses = containerClasses.filterEmpty().join(' ').trim();
+        let className = document.buildClassName(['input', this.props.inputClassName, this.props.className]);
 
-        return <div id={this.containerId} className={containerClasses} ref="container">
-            {this.state.label ? <label htmlFor={this.inputId}>{this.state.label.i18n()}</label> : null}
+        return <div id={this.props.containerId} className={className} ref="container">
+            {this.props.label ? <label htmlFor={this.props.inputId}>{this.props.label.i18n()}</label> : null}
             {input}
             <div className="error-message">
                 <p ref="error"></p>
@@ -54,6 +36,7 @@
      * @param {string} message
      */
     setError(message) {
+        this.refs.container.classList.add('error');
         this.refs.error.innerHTML = message;
     }
 
@@ -61,7 +44,16 @@
      * Clears the errors message.
      */
     clearError() {
+        this.refs.container.classList.remove('error');
         this.refs.error.innerHTML = '';
+    }
+
+    /**
+     * Determines if the input has an error message.
+     * @returns {boolean}
+     */
+    hasError() {
+        return this.refs.container.classList.contains('error');
     }
 
     // #endregion
@@ -85,34 +77,29 @@
 
     /**
      * Gets the value of the input and parses it to the schema's type.
-     * @returns {any} The input value.
+     * @returns {any}
      */
     collect() {
-        return Validator.validate(this.raw(), this.state.schema).value;
+        return Parser.parse(this.raw(), this.state.schema.type);
     }
 
     /**
      * Gets the raw value of the input without any parsing.
-     * @returns {any} The raw input value.
+     * @returns {any}
      */
     raw() {
         return this.refs.input.value;
     }
 
     /**
-     * Determines if the input is valid.
-     * This will also add error messages on the input.
-     * @returns {boolean} True if the input is valid, otherwise false.
+     * Determines if the input is valid and adds an error message if it is not.
+     * @returns {boolean}
      */
     isValid() {
         let result = Validator.validate(this.raw(), this.state.schema);
-
-        if (!result.isValid) {
-            this.setError(result.getMessage());
-            return false;
-        }
-
-        return true;
+        if (result.isValid) { return true; }
+        this.setError(result.message);
+        return false;
     }
 
     /**
@@ -127,7 +114,7 @@
      * @param {boolean} toggle If true or undefined, disables the inputs, otherwise enables it.
      */
     disable(toggle) {
-        if (typeof toggle == 'undefined') { toggle = true; }
+        if (typeof toggle === 'undefined') { toggle = true; }
         this.refs.input.disabled = toggle;
     }
 
@@ -145,10 +132,10 @@
 
         switch (this.state.schema.type) {
             case 'int':
-                isInputValid = v.isInt();
+                isInputValid = /^-?\d+$/.test(v);
                 break;
             case 'number':
-                isInputValid = !isNaN(v);
+                isInputValid = /^-?\d+$/.test(v);
                 break;
             default:
                 return;

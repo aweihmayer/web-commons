@@ -8,7 +8,7 @@ Response.prototype.deserialize = async function (request) {
     const method = request.method || null;
     return this.json().then(data => {
         this.json = data;
-        this.body = data;
+        this.method = method;
         return this; });
 };
 
