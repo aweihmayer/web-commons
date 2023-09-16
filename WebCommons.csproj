@@ -20,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Api\Api.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Api\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -86,16 +83,13 @@
     <None Update="Ui\Basic\Link.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Buttons\Button.jsx">
+    <None Update="Ui\Basic\Button.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Form\FieldSet.base.jsx">
+    <None Update="Ui\Basic\Form.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Form\Form.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ui\Form\Form.scss">
+    <None Update="Ui\Basic\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Icon.base.jsx">
@@ -152,10 +146,13 @@
     <None Update="Ui\Inputs\Image\Image.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Input.base.jsx">
+    <None Update="Ui\Inputs\Container.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Input.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Inputs\Manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Radio\Radio.jsx">

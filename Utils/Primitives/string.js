@@ -50,14 +50,6 @@ String.markdownToHtml = (decreaseHeadings) => {
 };
 
 /**
- * Determines if a string is an int.
- * @returns {string}
- */
-String.prototype.isInt = () => {
-    return /^-?\d+$/.test(this.trim());
-};
-
-/**
  * Removes accents from a string.
  * @returns {string}
  */

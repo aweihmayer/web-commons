@@ -1,41 +1,33 @@
 ﻿class SelectInput extends InputContainer {
     constructor(props) {
+        props.className = document.buildClassName(props.className, 'select-input');
         super(props);
-        this.inputClassName = 'select-input';
     }
 
     render() {
-        let options = [];
-        if (Array.isArray(this.state.schema.options)) {
-            for (let i = 0; i < this.state.schema.options.length; i++) {
-                let v = this.state.schema.options[i];
-                options.push(<option key={i} value={v}>{this.state.i18n[v].i18n()}</option>);
-            }
-        } else {
-            for (let k in this.state.schema.options) {
-                options.push(<option key={k} value={k}>{this.state.i18n[k].i18n()}</option>);
-            }
-        }
+        let options = this.state.schema.options.map((v, i) => <option key={i} value={v}>{thiis.props.i18n._t(v)}</option>);
 
         return super.render(<div className="input-wrapper">
             <select ref="input"
-            name={this.name}
-            id={this.inputId}
-            onFocus={this.clearError.bind(this)}
-            defaultValue={this.props.value}
-            onChange={this.props.onChange}>
-            {options}
+                name={this.props.name}
+                id={this.props.inputId}
+                onFocus={this.clearError.bind(this)}
+                defaultValue={this.props.value}
+                onChange={this.props.onChange}>
+                {options}
             </select>
         </div>);
     }
 
-    fill(v) {
-        let options = this.refs.input.getElementsByTagName('option');
-        for (let y = 0; y < options.length; y++) {
-            if (options[y].value == v) {
-                options[y].selected = true;
-                return;
-            }
-        }
+    fill(value) {
+        try {
+            let parsedValue = Parser.parse(value, this.state.schema.type);
+            this.refs.input.getElementsByTagName('option').forEach(o => {
+                if (Parser.parse(o.value, this.state.schema.type) === parsedValue) {
+                    o.selected = true;
+                    return;
+                }
+            });
+        } catch { }
     }
 }

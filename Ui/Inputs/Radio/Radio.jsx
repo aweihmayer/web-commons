@@ -1,9 +1,7 @@
 ﻿class RadioInput extends InputContainer {
-    static className = 'radio-input';
-
     constructor(props) {
+        props.className = 'radio-input';
         super(props);
-        this.inputClassName = RadioInput.className;
     }
 
     render() {
