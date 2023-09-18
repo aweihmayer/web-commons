@@ -43,6 +43,8 @@ namespace WebCommons.Web
 
         public bool HttpOnly { get; set; } = false;
 
+        public string? Path { get; set; }
+
         protected Cookie(string name, TimeSpan duration)
         {
             this.Name = name;

@@ -21,7 +21,7 @@
         let className = document.buildClassName(['input', this.props.inputClassName, this.props.className]);
 
         return <div id={this.props.containerId} className={className} ref="container">
-            {this.props.label ? <label htmlFor={this.props.inputId}>{this.props.label.i18n()}</label> : null}
+            {this.props.label ? <label htmlFor={this.props.inputId}>{this.props.label.t()}</label> : null}
             {input}
             <div className="error-message">
                 <p ref="error"></p>

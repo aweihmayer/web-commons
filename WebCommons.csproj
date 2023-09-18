@@ -92,6 +92,18 @@
     <None Update="Ui\Basic\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Component.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Form\FieldSet.base.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Form\Form.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Form\Form.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Icons\Icon.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -3,7 +3,7 @@
  * @param {any} v
  * @returns {string|string[]} Trimmed string(s) or null(s) if the string is empty.
  */
-Parser.toString = (v) => {
+Parser.string = (v) => {
     // Recursivity for arrays
     if (Array.isArray(v)) {
         for (let i in v) { v[i] = Parser.toString(v[i]); }
@@ -15,6 +15,8 @@ Parser.toString = (v) => {
     v = v.trim();
     return (v.length == 0) ? null : v;
 };
+
+Parser.email = Parser.string;
 
 /**
  * Creates a random string of a specified length.

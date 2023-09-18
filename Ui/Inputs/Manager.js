@@ -1,30 +1,30 @@
-﻿/**
- * Defines a container of inputs. 
- */
-class FieldSet extends React.Component {
+﻿const InputManager = {
     /**
      * Sets the value of the inputs.
+     * @param {React.Component} component
      * @param {object} data
      */
-    fill(data) {
-        this.clear();
+    fill: function (component, data) {
+        this.clear(component);
         if (typeof data == 'undefined' || data == null) { return; }
-        for (let r in this.refs) {
+
+        for (let r in component.getRefs()) {
             let ref = this.refs[r];
-            if (typeof ref.props.fill !== 'string') { continue; }
+            if (typeof ref.fill !== 'function' || typeof ref.props.fill !== 'string') { continue; }
             let value = data.getProp(ref.props.fill);
             ref.fill(value);
         }
-    }
+    },
 
     /**
      * Collects the input values into an object.
+     * @param {React.Component} component
      * @returns {object}
      */
-    async collect() {
+    collect: async function (component) {
         let data = {};
 
-        for (let r in this.refs) {
+        for (let r in component.getRefs()) {
             let ref = this.refs[r];
             if (typeof ref.collect !== 'function' || typeof ref.props.name !== 'string') { continue; }
             let value = await ref.collect();
@@ -32,28 +32,30 @@ class FieldSet extends React.Component {
         }
 
         return data;
-    }
+    },
 
     /**
      * Clears all inputs or sets their value to their default if applicable. 
+     * @param {React.Component} component
      */
-    clear() {
-        for (let r in this.refs) {
+    clear: function (component) {
+        for (let r in component.getRefs()) {
             let ref = this.refs[r];
             if (typeof ref.clear !== 'function') { continue; }
             ref.clear();
-            if (ref.props.defaultValue == null) { continue; }
+            if (typeof ref.props.defaultValue === 'undefined') { continue; }
             ref.fill(c.props.defaultValue);
         }
-    }
+    },
 
     /**
      * Determines if the inputs are valid.
      * This will also add error messages on the inputs.
-     * @returns {boolean} True if all inputs are valid, otherwise false.
+     * @param {React.Component} component
+     * @returns {boolean}
      */
-    isValid() {
-        for (let r in this.refs) {
+    isValid: function (component) {
+        for (let r in component.getRefs()) {
             let ref = this.refs[r];
             if (typeof ref.isValid !== 'function') { continue; }
             if (!ref.isValid()) { return false; }
@@ -61,4 +63,4 @@ class FieldSet extends React.Component {
 
         return true;
     }
-}
+};

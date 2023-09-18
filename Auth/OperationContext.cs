@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Auth;
 using WebCommons.Db;
+using WebCommons.Db.Queries;
 using WebCommons.Web;
 
 namespace WebCommons.Controllers
@@ -197,22 +198,27 @@ namespace WebCommons.Controllers
         {
             if (user == null) { throw new NotFoundException(); }
 
+            // Fetch refresh token
             if (!user.RefreshTokenId.HasValue) {
                 UserToken<TUser>? refreshToken = this.Db.FindToken(user, UserTokenType.Refresh);
+                // The user doesn't have a refresh token, we create one
                 if (refreshToken == null) {
-                    refreshToken = new(user, UserTokenType.Refresh);
+                    refreshToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
                     this.Db.Tokens.Add(refreshToken);
-                } else {
+                // The user already has a refresh token, we refresh its duration if it has a third or less of its lifespan left
+                } else if ((refreshToken.GetRemainingDuration() / UserTokenDurations.Refresh) < 0.3) {
                     refreshToken.Refresh();
                 }
                 
                 user.RefreshTokenId = refreshToken.Id;
             }
 
+            // Fetch access token
             if (!user.AccessTokenId.HasValue) {
                 UserToken<TUser>? accessToken = this.Db.FindToken(user, UserTokenType.Access);
+                // The user doesn't have an access token, we create one
                 if (accessToken == null) {
-                    accessToken = new(user, UserTokenType.Access, AccessTokenCookie.DURATION);
+                    accessToken = new(user, UserTokenType.Access, UserTokenDurations.Access);
                     this.Db.Tokens.Add(accessToken);
                 }
 

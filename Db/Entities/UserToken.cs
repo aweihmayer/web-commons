@@ -7,6 +7,12 @@ namespace WebCommons.Db
 {
     public enum UserTokenType { Access = 0, Refresh = 1, Utility = 2 }
 
+    public static class UserTokenDurations
+    {
+        public static TimeSpan Refresh = TimeSpan.FromDays(14);
+        public static TimeSpan Access = TimeSpan.FromMinutes(30);
+    }
+
     [Table("token")]
     [Index(nameof(Id), IsUnique = true)]
     public class UserToken<TUser> : TimestampableEntity where TUser : CommonUser

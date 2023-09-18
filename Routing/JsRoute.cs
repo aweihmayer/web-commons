@@ -89,11 +89,11 @@ namespace WebCommons.Controllers
             // Query string
 			foreach (ParameterInfo paramInfo in method.GetParameters()) {
 				if (paramInfo.GetCustomAttribute<FromQueryAttribute>() != null) {
-					this.QueryStringParams.AddRange(paramInfo.ParameterType.GetSchema().Select(s => s.Value));
+					this.QueryStringParams.AddRange(paramInfo.ParameterType.BuildSchema().Select(s => s.Value));
 				} else {
 					foreach (PropertyInfo property in paramInfo.ParameterType.GetProperties()) {
 						if (property.GetCustomAttribute<FromQueryAttribute>() != null) {
-                            this.QueryStringParams.Add(property.GetSchema());
+                            this.QueryStringParams.Add(property.BuildSchema());
                         }
                     }
 				}

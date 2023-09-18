@@ -6,15 +6,22 @@ Authorization is done through two different types of tokens:
 - **Access tokens** identify the user and allow them to perform operations that require credentials. These tokens are short-lived.
 - **Refresh tokens** do not allow the user to do anything. Their sole purpose is to generate new access tokens. These tokens are long-lived.
 
+## How to send cookies
+To authorize requests, tokens are passed in two ways:
+
+1. **By using cookies**, we can send tokens to the server automatically with each request. This is the preferred method to send tokens
+in a web application. These cookies are HTTP-only to protect them from being accessed by JavaScript attacks.
+2. **By using headers**, we can send tokens to the server explicitly. We use the Authentification header with a Bearer value.
+
+## When to send access and refresh tokens
+The access token should be sent to requests that require authorization.
+
+The refresh token should only be sent to one specific endpoint used to create a new access token. If the both tokens are always sent
+together, it increases the chances of an attacker stealing the refresh token. If you are using the cookie method to send the refresh token,
+make sure that the cookie's path attribute is set so that it doesn't get sent to every request.
+
 ## The benefit
 The benefit of this method is increased security. In the case where your access token is stolen, it will expire soon, therefore minimizing the damage done.
 
 If we had only one long-lasting general-purpose authorization token, it would be a much bigger security risk for it to be stolen.
 
-## How tokens are used
-To authorize requests, tokens are passed in two ways:
-
-1. **By using cookies**, we can send tokens to the server automatically with each request. This is the preferred method to send tokens in a web application. These cookies are HTTP-only to protect them from JavaScript attacks.
-2. **By using headers**, we can send tokens to the server explicitly.
-
-We should not be sending the two tokens at once. The refresh token should only be sent when the access token has expired. If the both tokens are always sent together, an attacker can just as easily steal the refresh token. However in a web application where we store both the tokens as HTTP-only cookies, I have not yet found a way to avoid this.

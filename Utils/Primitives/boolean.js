@@ -4,7 +4,7 @@
  * @throws {Error} If the value could not be parsed.
  * @returns {boolean|boolean[]}
  */
-Parser.toBoolean = function (v) {
+Parser.boolean = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
         for (let i in v) { v[i] = Parser.toBoolean(v[i]); }

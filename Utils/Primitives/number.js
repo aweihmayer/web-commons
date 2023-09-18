@@ -4,7 +4,7 @@
  * @throws {Error} If the value could not be parsed.
  * @returns {number|number[]} Integer(s) or null(s) if the value is empty.
  */
-Parser.toInt = function (v) {
+Parser.int = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
         for (let i in v) { v[i] = Parser.toInt(v[i]); }
@@ -12,6 +12,7 @@ Parser.toInt = function (v) {
     }
 
     switch (typeof v) {
+        case 'boolean': return v ? 1 : 0;
         case 'number': return parseInt(v);
         case 'string':
             v = v.trim();
@@ -20,7 +21,6 @@ Parser.toInt = function (v) {
             if (isNaN(v)) { throw new Error('type'); }
             return v;
         default:
-            if (v === null) { return null; }
             throw new Error('type');
     }
 };
@@ -31,10 +31,10 @@ Parser.toInt = function (v) {
  * @throws {Error} If the value could not be parsed.
  * @returns {number|number[]} Integer(s) or null(s) if the value is empty.
  */
-Parser.toNumber = (v) => {
+Parser.number = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { v[i] = Parser.toNumber(v[i]); }
+        for (let i in v) { v[i] = this.number(v[i]); }
         return v;
     }
 
