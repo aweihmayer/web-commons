@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebCommons.Dto;
 
 namespace WebCommons.Db
 {
@@ -50,13 +51,13 @@ namespace WebCommons.Db
         /// Utility property to pass the access token id.
         /// </summary>
         [NotMapped]
-        public Guid? AccessTokenId { get; set; }
+        public UserTokenDto? AccessToken { get; set; }
 
         /// <summary>
         /// Utility property to pass the refresh id.
         /// </summary>
         [NotMapped]
-        public Guid? RefreshTokenId { get; set; }
+        public UserTokenDto? RefreshToken { get; set; }
 
         #endregion
     }

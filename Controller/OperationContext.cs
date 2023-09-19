@@ -14,6 +14,7 @@ namespace WebCommons.Controllers
     {
         public TDb Db { get; set; } = new TDb();
         public DateTime Date { get; set; } = DateTime.UtcNow; // TODO to offset
+        public bool DryRun { get; set; } = false;
         public I18n I18n { get; set; } = new("en");
         private string locale = "en";
         public string Locale {

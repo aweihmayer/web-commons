@@ -49,8 +49,18 @@ namespace System
         /// </summary>
         public static string RemoveAccents(this string str)
 		{
-            byte[] bytes = Encoding.GetEncoding("Cyrillic").GetBytes(str);
-            return Encoding.ASCII.GetString(bytes);
+            Dictionary<char, List<char>> replacements = new() {
+                { 'e', new List<char> { 'é', 'è', 'ê' } }
+            };
+
+            Char[] chars = str.ToCharArray();
+            for(int i = 0; i < chars.Length; i++) {
+                char replacement = replacements.Where(r => r.Value.Contains(chars[i])).Select(r => r.Key).FirstOrDefault();
+                if (replacement == 0) { continue; }
+                chars[i] = Char.IsUpper(chars[i]) ? Char.ToUpper(replacement) : replacement;
+            }
+            
+            return new string(chars);
         }
 
         /// <summary>

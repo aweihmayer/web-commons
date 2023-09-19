@@ -8,7 +8,7 @@ namespace WebCommons.Dto
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
-        [JsonProperty("code")]
+        [JsonProperty("code", NullValueHandling = NullValueHandling.Ignore)]
         public int? Code { get; set; }
 
         [JsonProperty("formattedCode", NullValueHandling = NullValueHandling.Ignore)]
@@ -17,25 +17,20 @@ namespace WebCommons.Dto
         [JsonProperty("duration")]
         public TimeSpan? Duration { get; set; }
 
-        [JsonProperty("expirateDate")]
-        public DateTime? ExpiryDate { get; set; }
+        [JsonProperty("expirationDate")]
+        public DateTime? ExpirationDate { get; set; }
 
         [JsonProperty("type")]
         public UserTokenType Type { get; set; }
 
-        [JsonProperty("userId")]
-        public int? UserId { get; set; }
-
-        public UserTokenDto(UserToken<CommonUser> token)
+        public UserTokenDto(IUserToken token)
         {
             this.Id = token.Id;
             this.Code = token.Code;
             this.FormattedCode = token.FormattedCode;
             this.Duration = token.Duration;
-            this.ExpiryDate = token.ExpiryDate;
+            this.ExpirationDate = token.ExpirationDate;
             this.Type = token.Type;
-            this.UserId = token.UserId;
-            this.System = new SystemDto(token);
         }
     }
 }

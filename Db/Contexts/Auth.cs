@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebCommons.Auth;
+using WebCommons.Dto;
 
 namespace WebCommons.Db
 {
@@ -8,6 +9,10 @@ namespace WebCommons.Db
     /// </summary>
     public class CommonDbContextWithAuth<TUser> : CommonDbContext where TUser : CommonUser
     {
+        public CommonDbContextWithAuth() { }
+
+        public CommonDbContextWithAuth(DbContextOptions options) : base(options) { }
+
         #region Users
 
         public DbSet<TUser> Users { get; set; }
@@ -40,8 +45,8 @@ namespace WebCommons.Db
             TUser user = userToken.User;
 
             switch (tokenType) {
-                case UserTokenType.Access: user.AccessTokenId = userToken.Id; break;
-                case UserTokenType.Refresh: user.RefreshTokenId = userToken.Id; break;
+                case UserTokenType.Access: user.AccessToken = new UserTokenDto(userToken); break;
+                case UserTokenType.Refresh: user.RefreshToken = new UserTokenDto(userToken); break;
             }
 
             // Include alt token if applicable
@@ -52,12 +57,12 @@ namespace WebCommons.Db
                 case UserTokenType.Access:
                     altToken = this.FindToken(user, UserTokenType.Refresh);
                     if (altToken == null) { return user; }
-                    user.RefreshTokenId = altToken.Id;
+                    user.RefreshToken = new UserTokenDto(altToken);
                     break;
                 case UserTokenType.Refresh:
                     altToken = this.FindToken(user, UserTokenType.Access);
                     if (altToken == null) { return user; }
-                    user.AccessTokenId = altToken.Id;
+                    user.AccessToken = new UserTokenDto(altToken);
                     break;
             }
 

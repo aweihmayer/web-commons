@@ -164,9 +164,6 @@
     <None Update="Ui\Inputs\Input.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Manager.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Ui\Inputs\Radio\Radio.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Auth;
 using WebCommons.Db;
-using WebCommons.Db.Queries;
+using WebCommons.Dto;
 using WebCommons.Web;
 
 namespace WebCommons.Controllers
@@ -118,19 +118,13 @@ namespace WebCommons.Controllers
                 switch (this.AuthMethod) {
                     case AuthMethod.Token:
                         UserToken<TUser>? accessToken = this.Db.FindToken(this.RequestAccessToken, true);
-                        if (accessToken == null) { this._user = null; break; }
-                        if (!accessToken.IsExpired()) { return accessToken.User; }
-
-                        if (!this.RequestRefreshToken.HasValue) { this._user = null; break; }
-                        UserToken<TUser>? refreshToken = this.Db.FindToken(this.RequestRefreshToken, true);
-                        if (refreshToken == null || refreshToken.UserId != accessToken.UserId || refreshToken.IsExpired()) { this._user = null; break; }
-                        accessToken.Id = Guid.NewGuid();
-                        accessToken.Refresh();
-                        this.Db.SaveChanges();
-
-                        var cookie = this.Controller.Request.Cookies.Read<AccessTokenCookie>();
-                        cookie.Value = accessToken.Id;
-                        this.Controller.Response.Cookies.Create(cookie);
+                        if (accessToken == null) {
+                            this.wasUserFetched = true;
+                            this._user = null;
+                        } else if (!accessToken.IsExpired()) {
+                            this.wasUserFetched = true;
+                            this._user = accessToken.User;
+                        }
                         break;
                     case AuthMethod.Credentials:
                         break;
@@ -146,6 +140,11 @@ namespace WebCommons.Controllers
         }
 
         #endregion
+
+        public AuthService<TUser> CreateAuthService()
+        {
+            return new AuthService<TUser>(this.Db);
+        }
 
         #region Authentication
 
@@ -165,94 +164,6 @@ namespace WebCommons.Controllers
         {
             if (!this.IsAuthenticated()) { throw new UnauthorizedException(); }
             return true;
-        }
-
-        /// <summary>
-        /// Authenticates the user.
-        /// </summary>
-        /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
-        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
-        public TUser Authenticate(SigninModel model)
-        {
-            return this.Authenticate(model.Email, model.Password);
-        }
-
-        /// <summary>
-        /// Authenticates the user.
-        /// </summary>
-        /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
-        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
-        public TUser Authenticate(string? email, string? password)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { throw new BadRequestException(); }
-            TUser? user = this.Db.FindUser(email, password);
-            if (user == null) { throw new NotFoundException(); }
-            return this.Authenticate(user);
-        }
-
-        /// <summary>
-        /// Authenticates the user by creating the token if necessary and creating an auth cookie.
-        /// </summary>
-        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
-        public TUser Authenticate(TUser? user)
-        {
-            if (user == null) { throw new NotFoundException(); }
-
-            // Fetch refresh token
-            if (!user.RefreshTokenId.HasValue) {
-                UserToken<TUser>? refreshToken = this.Db.FindToken(user, UserTokenType.Refresh);
-                // The user doesn't have a refresh token, we create one
-                if (refreshToken == null) {
-                    refreshToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
-                    this.Db.Tokens.Add(refreshToken);
-                // The user already has a refresh token, we refresh its duration if it has a third or less of its lifespan left
-                } else if ((refreshToken.GetRemainingDuration() / UserTokenDurations.Refresh) < 0.3) {
-                    refreshToken.Refresh();
-                }
-                
-                user.RefreshTokenId = refreshToken.Id;
-            }
-
-            // Fetch access token
-            if (!user.AccessTokenId.HasValue) {
-                UserToken<TUser>? accessToken = this.Db.FindToken(user, UserTokenType.Access);
-                // The user doesn't have an access token, we create one
-                if (accessToken == null) {
-                    accessToken = new(user, UserTokenType.Access, UserTokenDurations.Access);
-                    this.Db.Tokens.Add(accessToken);
-                }
-
-                user.AccessTokenId = accessToken.Id;
-            }
-
-            user.LastAuthDate = DateTime.UtcNow;
-            this.Db.SaveChanges();
-
-            if (this.Controller == null) { return user; }
-
-            var refreshTokenCookie = this.Controller.Request.Cookies.Read<RefreshTokenCookie>();
-            if (refreshTokenCookie.IsEmpty() || refreshTokenCookie.Value != user.RefreshTokenId) {
-                refreshTokenCookie.Value = user.RefreshTokenId.Value;
-                this.Controller.Response.Cookies.Create(refreshTokenCookie);
-            }
-
-            AccessTokenCookie accessTokenCookie = new AccessTokenCookie();
-            accessTokenCookie.Value = user.AccessTokenId;
-            this.Controller.Response.Cookies.Create(accessTokenCookie);
-
-            return user;
-        }
-
-        /// <summary>
-        /// Authenticates the user with a refresh token by creating the access token if necessary and creating an auth cookie.
-        /// </summary>
-        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
-        public TUser Authenticate(Guid? refreshToken)
-        {
-            if (!refreshToken.HasValue) { throw new BadRequestException(); }
-            TUser? user = this.Db.FindUserByRefreshToken(refreshToken);
-            if (user == null) { throw new NotFoundException(); }
-            return this.Authenticate(user);
         }
 
         #endregion

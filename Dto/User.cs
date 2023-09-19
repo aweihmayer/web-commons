@@ -57,7 +57,10 @@ namespace WebCommons.Dto
             this.System = new SystemDto(user);
 
             if (details == Details.Medium) { return; }
+            this.Tokens = new();
             if (tokens != null) { this.Tokens = tokens.Select(t => new UserTokenDto(t)).ToList(); }
+            if (user.AccessToken != null) { this.Tokens.Add(user.AccessToken); }
+            if (user.RefreshToken != null) { this.Tokens.Add(user.RefreshToken); }
 
             if (details == Details.High) { return; }
             this.Password = user.Password;

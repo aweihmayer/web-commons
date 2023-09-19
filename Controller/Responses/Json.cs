@@ -52,7 +52,9 @@ namespace WebCommons.Controllers
 
         public static ContentResult AsJson(this HttpResponse response, ResponseException ex)
         {
-            return response.AsJson(new { message = ex.Message }, ex.StatusCode);
+            return (ex.HasDefaultMessage)
+                ? response.AsJson("{}", ex.StatusCode)
+                : response.AsJson(new { message = ex.Message }, ex.StatusCode);
         }
 
         #endregion

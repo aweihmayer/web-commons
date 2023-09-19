@@ -15,7 +15,7 @@ namespace WebCommons.Db
 
     [Table("token")]
     [Index(nameof(Id), IsUnique = true)]
-    public class UserToken<TUser> : TimestampableEntity where TUser : CommonUser
+    public class UserToken<TUser> : IUserToken, TimestampableEntity where TUser : CommonUser
     {
         [Column("token")]
         [Key]
@@ -33,10 +33,10 @@ namespace WebCommons.Db
         /// Formatted code as a string with at least 6 characters as leading zeros.
         /// </summary>
         [NotMapped]
-        public string FormattedCode
+        public string? FormattedCode
         {
             get {
-                return this.Code.HasValue ? this.Code.Value.ToString("000000") : "000000";
+                return this.Code.HasValue ? this.Code.Value.ToString("000000") : null;
             }
             set {
                 this.Code = int.Parse(value);
@@ -47,7 +47,7 @@ namespace WebCommons.Db
         public TimeSpan? Duration { get; set; }
 
         [Column("last_name")]
-        public DateTime? ExpiryDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         [Column("type")]
         public UserTokenType Type { get; set; }
@@ -76,7 +76,7 @@ namespace WebCommons.Db
         {
             this.Id = Guid.NewGuid();
             this.Duration = null;
-            this.ExpiryDate = null;
+            this.ExpirationDate = null;
             this.UserId = user.Id;
             this.User = user;
             this.Type = type;
@@ -101,12 +101,20 @@ namespace WebCommons.Db
         }
 
         /// <summary>
-        /// Refreshes the expiry date and extending the expiration with the token's duration.
+        /// Refreshes the expiration date and extending the expiration with the token's duration.
         /// </summary>
         public void Refresh()
         {
             if (!this.Duration.HasValue) { return; }
-            this.ExpiryDate = DateTime.UtcNow.Add(this.Duration.Value);
+            this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
+        }
+
+        /// <summary>
+        /// Expires a token by setting its expiration date to the minimum value.
+        /// </summary>
+        public void Expire()
+        {
+            this.ExpirationDate = DateTime.MinValue;
         }
 
         /// <summary>
@@ -114,8 +122,8 @@ namespace WebCommons.Db
         /// </summary>
         public bool IsExpired()
         {
-            if (!this.ExpiryDate.HasValue) { return false; }
-            return this.ExpiryDate < DateTime.UtcNow;
+            if (!this.ExpirationDate.HasValue) { return false; }
+            return this.ExpirationDate < DateTime.UtcNow;
         }
 
         /// <summary>
@@ -123,9 +131,22 @@ namespace WebCommons.Db
         /// </summary>
         public TimeSpan? GetRemainingDuration()
         {
-            if (!this.ExpiryDate.HasValue) { return null; }
+            if (!this.ExpirationDate.HasValue) { return null; }
             if (this.IsExpired()) { return TimeSpan.Zero; }
-            return this.ExpiryDate - DateTime.UtcNow;
+            return this.ExpirationDate - DateTime.UtcNow;
         }
+    }
+
+    public interface IUserToken
+    {
+        public Guid Id { get; set; }
+        public int? Code { get; set; }
+        public string? FormattedCode { get; set; }
+        public TimeSpan? Duration { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public UserTokenType Type { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public int? UserId { get; set; }
     }
 }

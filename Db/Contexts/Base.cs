@@ -7,6 +7,10 @@ namespace WebCommons.Db
     /// </summary>
     public abstract class CommonDbContext : DbContext
     {
+        public CommonDbContext() { }
+
+        public CommonDbContext(DbContextOptions options) : base(options) { }
+
         public override int SaveChanges()
         {
             var changedEntities = ChangeTracker.Entries();
