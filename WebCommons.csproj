@@ -74,7 +74,10 @@
     <None Update="ThirdParty\Fuse\fuse.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ThirdParty\React\prod.js">
+    <None Update="ThirdParty\React\dev.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ThirdParty\React\prod">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Link.jsx">

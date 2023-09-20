@@ -26,10 +26,10 @@ namespace WebCommons.Controllers
             return new FileStreamResult(stream, FileType.GetContentType(extension));
         }
 
-        public static FileResult? AsFile(this HttpResponse response, Exception ex)
+        public static FileResult? AsFile(this HttpResponse response, Exception ex, string extension)
         {
             response.StatusCode = 404;
-            return default;
+            return new FileStreamResult(FileStream.Null, FileType.GetContentType(extension));
         }
     }
 }

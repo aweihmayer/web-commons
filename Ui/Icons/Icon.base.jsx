@@ -9,13 +9,15 @@ class Icon extends React.Component {
      * @param {string} [props.color]
      */
     constructor(props) {
-        props.className = props.className || '';
-        props.tooltip = props.tooltip || '';
-        props.color = props.color || '#000';
-        if (props.color.charAt(0) != '#') { props.color = '#' + props.color; }
-        props.id = Math.floor(Math.random() * 100000);
-        props.href = '#' + props.id;
         super(props);
+        this.id = document.createUniqueId(String.random(10));
+        this.href = '#' + props.id;
+    }
+
+    static defaultProps = {
+        className: '',
+        tooltip: '',
+        color: '#000',
     }
 
     render(svg) {

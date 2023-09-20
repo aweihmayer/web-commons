@@ -1,16 +1,10 @@
 ﻿/**
  * Defines a spinning loader.
+ * @param {object} props
+ * @param {boolean} [props.active]
+ * @param {string} [props.color] Hex color code
  */
 class Loader extends React.Component {
-    /**
-     * @param {object} props
-     * @param {boolean} [props.active]
-     * @param {string} [props.color] Hex color code
-     */
-    constructor(props) {
-        super(props);
-    }
-
     /**
      * The default color of the loader.
      */
@@ -21,7 +15,7 @@ class Loader extends React.Component {
         let animateTransform = '<animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1" />';
         return <div className={this.props.active ? 'loader active' : 'loader'}>
             <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                <circle cx="50" cy="50" fill="none" stroke={color} stroke-width="5" r="44" stroke-dasharray="200" dangerouslySetInnerHTML={{ __html: animateTransform }}>
+                <circle cx="50" cy="50" fill="none" stroke={color} strokeWidth="5" r="44" strokeDasharray="200" dangerouslySetInnerHTML={{ __html: animateTransform }}>
                 </circle>
             </svg>
         </div>;

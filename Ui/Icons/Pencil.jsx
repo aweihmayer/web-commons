@@ -1,7 +1,7 @@
 ﻿class PencilIcon extends Icon {
-    constructor(props) {
-        props.tooltip = props.tooltip || 'Edit';
-        super(props);
+    static defaultProps = {
+        ...Icon.defaultProps,
+        tooltip: 'Edit'
     }
 
     render() {

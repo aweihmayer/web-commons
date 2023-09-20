@@ -4,7 +4,7 @@
         this.template = String.removeQueryString(template);
 
         this.parts = template.split(/\/|\./).filter(p => p !== '');
-        let indexOfPathExtensionStart = template.length - this.parts.length - 1;
+        let indexOfPathExtensionStart = template.length - this.parts.length;
         if (template.charAt(indexOfPathExtensionStart) === '.') {
             this.parts[this.parts.length - 1] = '.' + this.parts[this.parts.length - 1];
         }
