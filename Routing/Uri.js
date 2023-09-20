@@ -16,7 +16,7 @@
             let params = isParameterPart ? part.replace(/{|}/g, '').split('|') : [];
             params = params.map(p => {
                 return p.includes(':')
-                    ? { name: p, type: p.split(':')[1] }
+                    ? { name: p.split(':')[0], type: p.split(':')[1] }
                     : { name: p, type: 'string' };
             });
 
@@ -40,12 +40,23 @@
     relative(params, queryString) {
         params = params || {};
         queryString = (typeof queryString === 'undefined') ? true : queryString;
+        // If the payload is not an object, its value belongs to the first route param
+        if (typeof params !== 'object') {
+            if (!this.parts.some(p => p.isParam)) {
+                params = {};
+            } else {
+                let key = this.parts.find(p => p.isParam).params[0].name;
+                let value = params;
+                params = {};
+                params[key] = value;
+            }
+        }
 
         let relativeUri = this.parts.map(part => {
             if (part.isExtension) { return '.' + part.value; }
             if (!part.isParam) { return '/' + part.value; }
             for (let partParam of part.params) {
-                if (part.hasProp(partParam.name)) { return '/' + part.getProp(p); }
+                if (params.hasProp(partParam.name)) { return '/' + params.getProp(partParam.name); }
             }
 
             throw new Error('Missing route parameters for ' + this.template);

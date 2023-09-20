@@ -17,7 +17,7 @@
     retrieve() {
         let data = localStorage.getItem(this.name);
         let item = CacheHelper.retrieve(data, this.duration);
-        if (item == null) { localStoage.removeItem(this.name); }
+        if (item == null) { localStorage.removeItem(this.name); }
         return item;
     }
 

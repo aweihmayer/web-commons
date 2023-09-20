@@ -26,7 +26,7 @@
 
         public static Dictionary<string, int> ToEnumConstMap(this Type type)
         {
-            return type.ToEnumMap(CharacterCasing.Upper);
+            return type.ToEnumMap(CharacterCasing.UpperSnakeCase);
         }
     }
 }

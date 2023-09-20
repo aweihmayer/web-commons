@@ -49,3 +49,23 @@ Object.defineProperty(Array.prototype, 'take', {
     }
 });
 
+/**
+ * Gets items that match a fuzzy search query.
+ * @param {string} query
+ * @param {Array<string>} keys
+ * @param {object} [options] Fuse JS options https://fusejs.io/api/options.html.
+ */
+Object.defineProperty(Array.prototype, 'fuzzySearch', {
+    enumerable: false,
+    value: function (query, keys, options) {
+        query = query || '';
+        // Query is empty, return all items
+        if (query == '') { return this; }
+
+        options = options || {};
+        options.keys = keys || ['id'];
+        options.threshold = options.threshold || 0.4;
+        let fuse = new Fuse(this, options);
+        return fuse.search(query).map(r => r.item);
+    }
+});

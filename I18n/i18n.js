@@ -40,7 +40,7 @@ Object.defineProperty(Array.prototype, 't', {
         }
 
         // Value at index 0 is singular and plural at index 1
-        let value = plural ? value[1] : value[0];
+        let value = plural ? this[1] : this[0];
         return value.t(replacements);
     }
 });
@@ -59,7 +59,7 @@ Object.defineProperty(Object.prototype, 't', {
 
         if (typeof key !== 'undefined' && this.hasProp(key)) { value = value.getProp(key); }
         if (typeof value === 'object' && value.i18n) { value = value.i18n; }
-        if (typeof value === 'object') {
+        if (!Array.isArray(value) && typeof value === 'object') {
             if (value.hasOwnProperty(locale)) { value = value[locale]; }
             else { throw new Error('The ' + locale + ' value is missing for ' + JSON.stringify(this)); }
         }

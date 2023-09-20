@@ -71,9 +71,6 @@
     <None Update="ThirdParty\Drawdown\drawdown.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ThirdParty\Fuse\custom.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="ThirdParty\Fuse\fuse.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

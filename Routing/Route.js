@@ -81,7 +81,7 @@
             if (!this.uri.parts.some(p => p.isParam)) {
                 payload = {};
             } else {
-                let key = this.uri.find(p => p.isParam).params[0];
+                let key = this.uri.find(p => p.isParam).params[0].name;
                 let value = payload;
                 payload = {};
                 payload[key] = value;
