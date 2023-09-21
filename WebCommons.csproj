@@ -80,6 +80,9 @@
     <None Update="ThirdParty\React\prod">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Basic\basic.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Basic\Link.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
