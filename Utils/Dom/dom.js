@@ -67,8 +67,12 @@ Element.prototype.isVisible = () => (this.closest('.hidden') == null);
  * @returns {string}
  */
 document.buildClassName = (className, extras) => {
-    className = Array.isArray(className) ? className.filterEmpty().join(' ').trim() : className;
-    if (typeof extras === 'string') { className += ' ' + extras.trim(); }
-    else if (Array.isArray(extras)) { className += ' ' + document.buildClassName(extras); }
-    return className;
+    let classNames = [];
+    if (Array.isArray(className)) { classNames = classNames.concat(className); }
+    else if (typeof className === 'string') { classNames.push(className); }
+
+    if (Array.isArray(extras)) { classNames = classNames.concat(extras); }
+    else if (typeof extras === 'string') { classNames.push(extras); }
+
+    return classNames.filter(c => (c != null && c != '')).join(' ').trim();
 }
