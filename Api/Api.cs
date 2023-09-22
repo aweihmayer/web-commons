@@ -5,7 +5,7 @@ namespace WebCommons.Api
 {
     /// <summary>
     /// Defines the standard way to create an API request collection.
-    /// <see cref="ApiRequestCollection{T}">Collections</see> are available to further organize requests.
+    /// <see cref="ApiRequestCollection{T}">Collections</see> are available to organize requests.
     /// </summary>
     public abstract class Api
     {
@@ -52,7 +52,7 @@ namespace WebCommons.Api
         /// <summary>
         /// Sends a request and returns a response.
         /// </summary>
-        public async Task<ApiResponse<T>> SendRequest<T>(string endpoint, HttpMethod method, object? query = null, object? model = null)
+        public async Task<ApiResponse<T>> SendRequest<T>(string endpoint, HttpMethod method, object? query = null, object? model = null) // TODO headers
         {
             ApiRequest request = new(endpoint, method, query, model, this.DefaultQuery, this.DefaultModel);
             return await this.SendRequest<T>(request);

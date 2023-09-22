@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.VisualBasic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace System
@@ -96,6 +97,15 @@ namespace System
         {
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             return Convert.ToBase64String(bytes);
+        }
+
+        public static string Replace(this string str, Dictionary<object, object> replacements)
+        {
+            foreach (KeyValuePair<object, object> v in replacements) {
+                str = str.Replace(v.Key.ToString(), v.Value.ToString());
+            }
+
+            return str;
         }
     }
 }

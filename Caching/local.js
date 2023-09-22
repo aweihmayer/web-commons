@@ -1,9 +1,9 @@
-﻿class LocalStorageValue {
-    /**
-     * @param {string} name
-     * @param {number} duration The duration of the cookie in seconds.
-     * @param {string} type TODO the type to serialize/deserialize
-     */
+﻿/**
+ * Defines a local storage value.
+ * @param {string} name
+ * @param {number} duration The duration in milliseconds.
+ */
+class LocalStorageValue {
     constructor(name, duration, type) {
         this.name = name;
         this.duration = duration;

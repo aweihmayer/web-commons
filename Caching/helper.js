@@ -1,12 +1,11 @@
 ﻿/**
- * Defines standard functions for caching.
- * The duration is in milliseconds.
+ * Defines standard functions for caching. 
  */
 const CacheHelper = {
     /**
      * Parses and verifies the expiration of cached data.
-     * @param {{ data: any, cachedAt: number }} data
-     * @param {number} [duration]
+     * @param {string} data
+     * @param {number} [duration] The duration in milliseconds.
      * @returns {any} The data or null if it was empty or expired.
      */
     retrieve: function (data, duration) {
@@ -18,8 +17,8 @@ const CacheHelper = {
     /**
      * Determines if the data is expired.
      * @param {{ data: any, cachedAt: number }} data
-     * @param {number} [duration]
-     * @returns {boolean} True if the data is expired, otherwise false if it isn't or if there is no timestamp or duration.
+     * @param {number} [duration] The duration in milliseconds.
+     * @returns {boolean}
      */
     isExpired: function (data, duration) {
         if (!duration || !data.cachedAt) { return false; }

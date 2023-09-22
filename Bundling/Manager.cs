@@ -1,4 +1,5 @@
 ﻿using WebCommons.IO;
+using WebCommons.Utils;
 
 namespace WebCommons.Bundling
 {
@@ -33,7 +34,7 @@ namespace WebCommons.Bundling
 		/// <exception cref="Exception">Thrown if the bundle was not found.</exception>
 		public CustomBundle GetBundle(string name)
 		{
-			CustomBundle bundle = this.Bundles.FirstOrDefault(b => b.Name == name);
+			CustomBundle? bundle = this.Bundles.FirstOrDefault(b => b.Name == name);
 			if (bundle == null) { throw new Exception("Bundle not found"); }
 			return bundle;
 		}
@@ -41,7 +42,6 @@ namespace WebCommons.Bundling
 		/// <summary>
 		/// Merges the bundle's files and saves the contents.
 		/// </summary>
-		/// <returns>The file stream of the bundle.</returns>
 		public FileStream Bundle(CustomBundle bundle)
 		{
 			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name);
@@ -53,11 +53,7 @@ namespace WebCommons.Bundling
 
 			// Build the bundle
 			string contents = bundle.GetContents();
-
-			// Replace placholders with values
-			foreach (KeyValuePair<string, string> v in this.Values) {
-				contents = contents.Replace(v.Key, v.Value);
-			}
+			contents = contents.Replace(this.Values);
 
 			// Create the bundle file and return the stream
 			contents = this.Transform(contents);

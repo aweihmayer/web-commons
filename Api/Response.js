@@ -12,7 +12,10 @@ Response.prototype.deserialize = async function (request) {
         return this; });
 };
 
-Response.prototype.getDateTimestamp = () => Date.parse(this.headers.get('Date'));
+/**
+ * Gets the date header value of a response.
+ */
+Response.prototype.getDateTimestamp = function () { return Date.parse(this.headers.get('Date')); }
 
 /**
  * Mimics the deserialization of a response with a normal object.
@@ -20,14 +23,15 @@ Response.prototype.getDateTimestamp = () => Date.parse(this.headers.get('Date'))
  * @param {object} body The data that mimics a response.
  * @param {string} [method] The HTTP method of the request.
  * @param {number} [code] The HTTP code of the response.
- * @returns {Promise<{ body: any, status: int, ok: true, method: string }>}
+ * @returns {Promise<{ body: any, status: int, ok: boolean, method: string }>}
  */
 Response.mimic = (body, method, code) => {
+    code = code || 200;
     return new Promise((resolve) => {
         resolve({
             body: body,
-            status: code || 200,
-            ok: true,
+            status: code,
+            ok: (code >= 200 && code < 300),
             method: method || 'GET' });
     });
 };
