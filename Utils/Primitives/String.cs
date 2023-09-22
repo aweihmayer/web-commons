@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -99,10 +100,13 @@ namespace System
             return Convert.ToBase64String(bytes);
         }
 
-        public static string Replace(this string str, Dictionary<object, object> replacements)
+        /// <summary>
+        /// Replaces key pair values in a string.
+        /// </summary>
+        public static string Replace(this string str, Dictionary<string, string> replacements)
         {
-            foreach (KeyValuePair<object, object> v in replacements) {
-                str = str.Replace(v.Key.ToString(), v.Value.ToString());
+            foreach (var v in replacements) {
+                str = str.Replace(v.Key, v.Value.ToString());
             }
 
             return str;

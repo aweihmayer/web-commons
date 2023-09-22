@@ -11,7 +11,7 @@ class Icon extends React.Component {
     constructor(props) {
         super(props);
         this.id = document.createUniqueId(String.random(10));
-        this.href = '#' + props.id;
+        this.href = '#' + this.id;
     }
 
     static defaultProps = {
