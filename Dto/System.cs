@@ -9,12 +9,12 @@ namespace WebCommons.Dto
     public class SystemDto
     {
         [JsonProperty("createdDate", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         [JsonProperty("updatedDate", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? UpdatedDate { get; set; }
+        public DateTimeOffset? UpdatedDate { get; set; }
 
-        public SystemDto(DateTime? created = null, DateTime? updated = null)
+        public SystemDto(DateTimeOffset? created = null, DateTimeOffset? updated = null)
         {
             this.CreatedDate = created;
             this.UpdatedDate = updated;

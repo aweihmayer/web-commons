@@ -5,9 +5,9 @@
         /// <summary>
         /// Gets the int values of an enum as an object array.
         /// </summary>
-        public static object[] GetValuesAsObject(Type enumType)
+        public static object[] GetValuesAsObject(this Type type)
         {
-            int[] enumValues = (int[]) Enum.GetValues(enumType);
+            int[] enumValues = (int[]) Enum.GetValues(type);
             return enumValues.Select(v => (object)v).ToArray();
         }
 
@@ -16,15 +16,15 @@
             return (int[])Enum.GetValues(type);
         }
 
-        public static Dictionary<string, int> ToEnumMap(this Type type, CharacterCasing casing = CharacterCasing.Normal)
+        public static Dictionary<string, object> ToEnumMap(this Type type, CharacterCasing casing = CharacterCasing.Normal)
         {
-            int[] values = (int[])Enum.GetValues(type);
+            object[] values = type.GetValuesAsObject();
             return values.ToDictionary(
                 v => Enum.GetName(type, v).ToCasing(casing),
                 v => v);
         }
 
-        public static Dictionary<string, int> ToEnumConstMap(this Type type)
+        public static Dictionary<string, object> ToEnumConstMap(this Type type)
         {
             return type.ToEnumMap(CharacterCasing.UpperSnakeCase);
         }

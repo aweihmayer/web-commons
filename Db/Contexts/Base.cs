@@ -24,22 +24,22 @@ namespace WebCommons.Db
                         // Timestampable entity will have created and updated timestamps set to now
                         timestampable = changedEntity.Entity as TimestampableEntity;
                         if (timestampable == null) { break; }
-                        timestampable.CreatedDate = DateTime.UtcNow;
-                        timestampable.UpdatedDate = DateTime.UtcNow;
+                        timestampable.CreatedDate = DateTimeOffset.UtcNow;
+                        timestampable.UpdatedDate = DateTimeOffset.UtcNow;
                         break;
 
                     case EntityState.Modified:
                         // Timestampable entity will have its update timestamp set to now
                         timestampable = changedEntity.Entity as TimestampableEntity;
                         if (timestampable == null) { break; }
-                        timestampable.UpdatedDate = DateTime.UtcNow;
+                        timestampable.UpdatedDate = DateTimeOffset.UtcNow;
                         break;
 
                     case EntityState.Deleted:
                         // Soft delete entity won't be permanently deleted, but have a deleted date timestamp
                         softDelete = changedEntity.Entity as SoftDeleteEntity;
                         if (softDelete == null) { break; }
-                        softDelete.DeletedDate = DateTime.UtcNow;
+                        softDelete.DeletedDate = DateTimeOffset.UtcNow;
                         changedEntity.State = EntityState.Modified;
                         break;
 

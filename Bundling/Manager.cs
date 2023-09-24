@@ -21,7 +21,7 @@ namespace WebCommons.Bundling
 		/// <summary>
 		/// Map of placeholders and values. Values will replace the placeholders in the content.
 		/// </summary>
-		protected Dictionary<string, string> Values = new();
+		protected Dictionary<string, object> Values = new();
 
 		/// <summary>
 		/// List of bundles.

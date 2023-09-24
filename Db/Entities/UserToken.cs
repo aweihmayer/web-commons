@@ -9,8 +9,8 @@ namespace WebCommons.Db
 
     public static class UserTokenDurations
     {
-        public static TimeSpan Refresh = TimeSpan.FromDays(14);
-        public static TimeSpan Access = TimeSpan.FromMinutes(30);
+        public static TimeSpan Refresh { get; set; } = TimeSpan.FromDays(14);
+        public static TimeSpan Access { get; set; } = TimeSpan.FromMinutes(30);
     }
 
     [Table("token")]
@@ -46,17 +46,17 @@ namespace WebCommons.Db
         [Column("duration")]
         public TimeSpan? Duration { get; set; }
 
-        [Column("last_name")]
-        public DateTime? ExpirationDate { get; set; }
+        [Column("expiration_date")]
+        public DateTimeOffset? ExpirationDate { get; set; }
 
         [Column("type")]
         public UserTokenType Type { get; set; }
 
         [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         [Column("updated_date")]
-        public DateTime UpdatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
 
         #endregion
 
@@ -106,7 +106,7 @@ namespace WebCommons.Db
         public void Refresh()
         {
             if (!this.Duration.HasValue) { return; }
-            this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
+            this.ExpirationDate = DateTimeOffset.UtcNow.Add(this.Duration.Value);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace WebCommons.Db
         /// </summary>
         public void Expire()
         {
-            this.ExpirationDate = DateTime.MinValue;
+            this.ExpirationDate = DateTimeOffset.MinValue;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace WebCommons.Db
         public bool IsExpired()
         {
             if (!this.ExpirationDate.HasValue) { return false; }
-            return this.ExpirationDate < DateTime.UtcNow;
+            return this.ExpirationDate < DateTimeOffset.UtcNow;
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace WebCommons.Db
         {
             if (!this.ExpirationDate.HasValue) { return null; }
             if (this.IsExpired()) { return TimeSpan.Zero; }
-            return this.ExpirationDate - DateTime.UtcNow;
+            return this.ExpirationDate - DateTimeOffset.UtcNow;
         }
     }
 
@@ -143,10 +143,10 @@ namespace WebCommons.Db
         public int? Code { get; set; }
         public string? FormattedCode { get; set; }
         public TimeSpan? Duration { get; set; }
-        public DateTime? ExpirationDate { get; set; }
+        public DateTimeOffset? ExpirationDate { get; set; }
         public UserTokenType Type { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
         public int? UserId { get; set; }
     }
 }

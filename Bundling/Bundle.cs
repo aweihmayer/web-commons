@@ -13,7 +13,7 @@ namespace WebCommons.Bundling
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Utility caching value. This value does nothing. Use at your discretion.
+		/// Utility caching value. This value does nothing. Use at your own discretion.
 		/// </summary>
 		public TimeSpan? CacheDuration { get; set; }
 

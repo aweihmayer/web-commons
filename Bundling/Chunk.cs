@@ -33,12 +33,12 @@ namespace WebCommons.Bundling
         /// <summary>
         /// Prepends a string before the chunk contents.
         /// </summary>
-        public string Prefix { get; set; } = "";
+        public string Prefix { get; set; } = string.Empty;
 
         /// <summary>
         /// Appends a string to the chunk contents.
         /// </summary>
-        public string Suffix { get; set; } = "";
+        public string Suffix { get; set; } = string.Empty;
 
         /// <summary>
         /// Determines if the chunk will be prepended or appended to the whole of the contents merged before it.

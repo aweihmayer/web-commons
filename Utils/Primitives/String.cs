@@ -103,7 +103,7 @@ namespace System
         /// <summary>
         /// Replaces key pair values in a string.
         /// </summary>
-        public static string Replace(this string str, Dictionary<string, string> replacements)
+        public static string Replace(this string str, Dictionary<string, object> replacements)
         {
             foreach (var v in replacements) {
                 str = str.Replace(v.Key, v.Value.ToString());

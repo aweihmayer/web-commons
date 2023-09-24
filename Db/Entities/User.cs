@@ -35,13 +35,13 @@ namespace WebCommons.Db
         public bool Active { get; set; }
 
         [Column("last_auth_date")]
-        public DateTime? LastAuthDate { get; set; }
+        public DateTimeOffset? LastAuthDate { get; set; }
 
         [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         [Column("updated_date")]
-        public DateTime UpdatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
 
         #endregion
 

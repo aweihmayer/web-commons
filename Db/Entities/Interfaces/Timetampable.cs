@@ -5,7 +5,7 @@
     /// </summary>
     public interface TimestampableEntity
     {
-        DateTime CreatedDate { get; set; }
-        DateTime UpdatedDate { get; set; }
+        DateTimeOffset CreatedDate { get; set; }
+        DateTimeOffset UpdatedDate { get; set; }
     }
 }

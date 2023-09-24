@@ -10,6 +10,9 @@ namespace WebCommons.Model
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
+        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Label { get; set; }
+
         [JsonProperty("type")]
         public string Type { get; set; } = "string";
 
@@ -31,7 +34,13 @@ namespace WebCommons.Model
         [JsonProperty("isNullable")]
         public bool IsNullable { get; set; } = false; // TODO implement
 
-        [JsonProperty("options", NullValueHandling = NullValueHandling.Ignore)]
-        public object[]? Options { get; set; } = null;
+        [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
+        public object[]? Values { get; set; } = null;
+
+        [JsonProperty("const", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, object>? Constants { get; set; } = null;
+
+        [JsonProperty("i18n", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<object, object>? I18n { get; set; } = null;
     }
 }

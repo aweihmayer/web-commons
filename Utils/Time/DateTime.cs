@@ -5,16 +5,16 @@
         /// <summary>
         /// Gets the date of the previous occurence of a day.
         /// </summary>
-        public static DateTime GetPreviousDay(this DateTime date, DayOfWeek day)
+        public static DateTimeOffset GetPreviousDay(this DateTimeOffset date, DayOfWeek day)
         {
             int currentDay = (int)date.DayOfWeek;
             int targetDay = (int)day;
             return date.AddDays(targetDay - currentDay);
         }
 
-        public static DateTime GetFirstDayOfMonth(this DateTime date)
+        public static DateTimeOffset GetFirstDayOfMonth(this DateTimeOffset date)
         {
-            return new DateTime(date.Year, date.Month, 1, 0, 0, 0, date.Kind);
+            return new DateTimeOffset(date.Year, date.Month, 1, 0, 0, 0, date.Offset);
         }
     }
 }

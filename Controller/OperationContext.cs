@@ -13,7 +13,7 @@ namespace WebCommons.Controllers
     public partial class CommonOperationContext<TDb, TUser> : OperationContext where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
         public TDb Db { get; set; } = new TDb();
-        public DateTime Date { get; set; } = DateTime.UtcNow; // TODO to offset
+        public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
         public bool DryRun { get; set; } = false;
         public I18n I18n { get; set; } = new("en");
         private string locale = "en";
