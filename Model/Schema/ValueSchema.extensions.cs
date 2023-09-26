@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using WebCommons.Utils;
 
@@ -62,6 +63,9 @@ namespace WebCommons.Model
 
             // Determine if it is required
             schema.Required = (property.GetCustomAttribute<RequiredAttribute>() != null);
+
+            var displayName = property.GetCustomAttribute<DisplayNameAttribute>();
+            if (displayName != null) { schema.Label = displayName.DisplayName; }
 
             // Determine the type and its validation rules
             switch (propertyTypeName) {

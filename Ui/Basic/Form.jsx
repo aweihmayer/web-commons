@@ -16,19 +16,19 @@
 
         return new Promise(function (resolve, reject) {
             that.startLoading();
-            if (that.isValid()) {
-                resolve(that.collect());
+            if (InputManager.isValid(that.props.refs)) {
+                resolve(InputManager.collect(that.props.refs));
             } else {
                 that.stopLoading();
                 reject(new Error('Cannot submit invalid data'));
             }
         })
-        .then(data => {
-            ev.data = data;
-            return ev;
-        })
-        .then(this.props.onSubmit)
-        .finally(that.stopLoading());
+            .then(data => {
+                ev.data = data;
+                return ev;
+            })
+            .then(that.props.onSubmit)
+            .finally(that.stopLoading());
     }
 
     /**

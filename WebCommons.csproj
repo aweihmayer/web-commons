@@ -95,13 +95,10 @@
     <None Update="Ui\Basic\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Form\FieldSet.base.jsx">
+    <None Update="Ui\Inputs\Manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Form\Form.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ui\Form\Form.scss">
+    <None Update="Ui\Basic\Form.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Container.jsx">

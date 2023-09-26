@@ -14,7 +14,7 @@ String.prototype.t = function (replacements) {
     let arrayMode = Array.isArray(replacements);
     // Replace placeholders
     for (let p in placeholders) {
-        let placeholder = arrayMode ? placeholders[p] : p;
+        let placeholder = arrayMode ? p : placeholders[p];
         let replacement = arrayMode ? replacements[placeholder] : replacements.getProp(placeholder);
         if (typeof replacement === 'undefined') { throw new Error('Missing i18n replacement "' + p + '" for "' + this + '"'); }
         value = value.replaceAll('{' + placeholder + '}', replacement);

@@ -73,10 +73,18 @@
      * @returns {boolean}
      */
     isValid() {
-        let result = Validator.validate(this.raw(), this.schema);
+        let result = this.validate();
         if (result.isValid) { return true; }
         this.setError(result.message);
         return false;
+    }
+
+    /**
+     * Validates the value and returns details about the validation.
+     * @returns {object}
+     */
+    validate() {
+        return Validator.validate(this.raw(), this.schema);
     }
 
     /**
@@ -107,7 +115,7 @@
         let v = ev.key;
         let isInputValid = true;
 
-        switch (this.state.schema.type) {
+        switch (this.schema.type) {
             case 'int':
                 isInputValid = /^-?\d+$/.test(v);
                 break;

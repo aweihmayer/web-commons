@@ -56,7 +56,7 @@ const Validator = {
         schema = schema || {};
         let type = schema.type || 'default';
         let message = Validator.messages[error];
-        return (error !== 'required') ? message = message[type] : message.t(schema);
+        return (error === 'required') ? message : message[type].t(schema);
     },
 
     messages: {

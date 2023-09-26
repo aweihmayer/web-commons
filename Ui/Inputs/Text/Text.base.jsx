@@ -6,7 +6,7 @@
 
     render() {
         let className = document.buildClassName('text-input', this.props.className);
-        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        return <InputContainer label={this.schema.label} className={className} id={this.containerId} inputId={this.inputId} ref="container">
             <div className="input-wrapper">
                 <input ref="input"
                     type={this.props.textType}
