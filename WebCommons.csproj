@@ -41,7 +41,7 @@
     <None Update="Model\Validator.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\ValueSchema.js">
+    <None Update="Model\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Model\Values\email.js">
@@ -95,9 +95,6 @@
     <None Update="Ui\Basic\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Component.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Ui\Form\FieldSet.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -107,7 +104,7 @@
     <None Update="Ui\Form\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Icons\Icon.base.jsx">
+    <None Update="Ui\Icons\Container.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Icon.scss">
@@ -123,9 +120,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Status\Info.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ui\Icons\Status\Status.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Status\Success.jsx">
@@ -161,7 +155,10 @@
     <None Update="Ui\Inputs\Image\Image.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Container.base.jsx">
+    <None Update="Ui\Inputs\Container.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Inputs\Input.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Input.scss">
@@ -263,7 +260,7 @@
     <None Update="Utils\Primitives\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Web\Cookie.js">
+    <None Update="Web\Cookies\Cookie.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Web\Metadata.js">

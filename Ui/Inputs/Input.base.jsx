@@ -1,32 +1,10 @@
-﻿class InputContainer extends React.Component {
-    /**
-     * @param {object} props
-     * @param {string} props.name
-     * @param {string} [props.label]
-     * @param {object} [props.i18n]
-     * @param {string} [props.fill]
-     * @param {string} [props.className]
-     * @param {ValueSchema} [props.schema]
-     */
+﻿class BaseInput extends React.Component {
     constructor(props) {
-        props.fill = props.fill || props.name
-        props.id = props.id || props.name;
-        props.containerId = document.createUniqueId(props.id + '-input');
-        props.inputId = document.createUniqueId(props.id + '-input');
         super(props);
-        this.state = { schema: props.schema || new ValueSchema() };
-    }
-
-    render(input) {
-        let className = document.buildClassName(['input', this.props.inputClassName, this.props.className]);
-
-        return <div id={this.props.containerId} className={className} ref="container">
-            {this.props.label ? <label htmlFor={this.props.inputId}>{this.props.label.t()}</label> : null}
-            {input}
-            <div className="error-message">
-                <p ref="error"></p>
-            </div>
-        </div>;
+        this.schema = this.props.schema ? new ValueSchema(this.props.schema, this.props) : new ValueSchema(this.props);
+        this.id = this.props.id || this.props.name;
+        this.containerId = document.createUniqueId(this.id + '-container');
+        this.inputId = document.createUniqueId(this.id + '-input');
     }
 
     // #region Error
@@ -36,16 +14,14 @@
      * @param {string} message
      */
     setError(message) {
-        this.refs.container.classList.add('error');
-        this.refs.error.innerHTML = message;
+        this.refs.container.setError(message);
     }
 
     /**
      * Clears the errors message.
      */
     clearError() {
-        this.refs.container.classList.remove('error');
-        this.refs.error.innerHTML = '';
+        this.refs.container.clearError();
     }
 
     /**
@@ -53,7 +29,7 @@
      * @returns {boolean}
      */
     hasError() {
-        return this.refs.container.classList.contains('error');
+        return this.refs.container.hasError();
     }
 
     // #endregion
@@ -65,7 +41,7 @@
      * @param {any} value
      */
     fill(value) {
-        this.refs.input.value = value;
+        this.refs.input.value = Parser.parse(value, this.schema.type);
     }
 
     /**
@@ -80,7 +56,8 @@
      * @returns {any}
      */
     collect() {
-        return Parser.parse(this.raw(), this.state.schema.type);
+        let value = this.raw();
+        return Parser.parse(value, this.schema.type);
     }
 
     /**
@@ -96,7 +73,7 @@
      * @returns {boolean}
      */
     isValid() {
-        let result = Validator.validate(this.raw(), this.state.schema);
+        let result = Validator.validate(this.raw(), this.schema);
         if (result.isValid) { return true; }
         this.setError(result.message);
         return false;

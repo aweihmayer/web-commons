@@ -40,7 +40,7 @@ namespace WebCommons.Db
         {
             // Find the access token with the user
             if (!token.HasValue) { return default; }
-            UserToken<TUser>? userToken = this.FindToken(token, true); // TODO check sql query generated
+            UserToken<TUser>? userToken = this.FindToken(token, true);
             if (userToken == null || userToken.IsExpired() || userToken.User == null) { return default; }
             TUser user = userToken.User;
 
@@ -132,7 +132,7 @@ namespace WebCommons.Db
             var query = includeUser
                 ? this.Tokens.Include(t => t.User)
                 : this.Tokens.AsQueryable();
-            return query.Where(t => t.Id == id).WhereIsNotExpired().FirstOrDefault(); // TODO check sql generated
+            return query.Where(t => t.Id == id).WhereIsNotExpired().FirstOrDefault();
         }
 
         #endregion

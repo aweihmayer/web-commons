@@ -1,13 +1,12 @@
 ﻿/**
  * Defines a local storage value.
  * @param {string} name
- * @param {number} duration The duration in milliseconds.
+ * @param {number} duration
  */
 class LocalStorageValue {
-    constructor(name, duration, type) {
+    constructor(name, duration) {
         this.name = name;
         this.duration = duration;
-        this.type = type;
     }
 
     /**

@@ -63,8 +63,6 @@ namespace WebCommons.Model
             // Determine if it is required
             schema.Required = (property.GetCustomAttribute<RequiredAttribute>() != null);
 
-            // TODO do lists even work?
-
             // Determine the type and its validation rules
             switch (propertyTypeName) {
                 case "string":

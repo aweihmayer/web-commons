@@ -1,8 +1,7 @@
 ﻿class SearchInput extends TextInput {
-    constructor(props) {
-        props.autocomplete = 'off';
-        props.inputClassName = 'search-input';
-        props.textInputType = 'search';
-        super(props);
+    static defaultProps = {
+        autocomplete: 'off',
+        className: 'search-input',
+        textType: 'search'
     }
 }

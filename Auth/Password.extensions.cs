@@ -38,6 +38,7 @@ namespace WebCommons.Auth
         /// <param name="user">The user whose password we want to validate.</param>
         public static bool IsValidPassword(this string password, CommonUser user)
         {
+            if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) { return false; }
             return password.IsValidPassword(user.Password, user.Salt);
         }
 

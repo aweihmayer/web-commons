@@ -21,6 +21,7 @@ namespace WebCommons.Controllers
             }
             set {
                 this._controller = value;
+                if (value == null) { return; }
 
                 // Header
                 string? authHeader = value.Request.Headers.Authorization;
@@ -39,15 +40,15 @@ namespace WebCommons.Controllers
         public AuthSource AuthSource { get; set; } = AuthSource.None;
         public AuthMethod AuthMethod { get; set; } = AuthMethod.None;
         
-        public Guid? RequestAccessToken { get; set; }
-        public Guid? RequestRefreshToken { get; set; }
-        public string? RequestEmail { get; set; }
-        public string? RequestPassword { get; set; }
+        public Guid? AccessToken { get; set; }
+        public Guid? RefreshToken { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
 
         /// <summary>
         /// Determines the auth values from a header.
         /// </summary>
-        private void PopulateAuthValueFromHeader(string header)
+        protected void PopulateAuthValueFromHeader(string header)
         {
             // Splits the header to seperate the value from the type. For example 'Basic <TOKEN>'
             string[] values = header.Trim().Split(' ');
@@ -59,15 +60,15 @@ namespace WebCommons.Controllers
                     case "Basic":
                         string[] credentials = values[1].DecodeBase64().Split(':');
                         if (credentials.Length != 2) { return; }
-                        this.RequestEmail = credentials[0];
-                        this.RequestPassword = credentials[1];
+                        this.Email = credentials[0];
+                        this.Password = credentials[1];
                         this.AuthMethod = AuthMethod.Credentials;
                         break;
                     // Bearer type has GUID token
                     case "Bearer":
                         Guid token;
                         if (!Guid.TryParse(values[1], out token)) { return; }
-                        this.RequestAccessToken = token;
+                        this.AccessToken = token;
                         this.AuthMethod = AuthMethod.Token;
                         break;
                     default:
@@ -76,7 +77,7 @@ namespace WebCommons.Controllers
             } else if (values.Length == 1) {
                 Guid token;
                 if (!Guid.TryParse(values[0], out token)) { return; }
-                this.RequestAccessToken = token;
+                this.AccessToken = token;
                 this.AuthMethod = AuthMethod.Token;
             } else {
                 return;
@@ -88,20 +89,20 @@ namespace WebCommons.Controllers
         /// <summary>
         /// Determines the auth values from an auth cookie.
         /// </summary>
-        public void PopulateAuthValueFromCookie(AccessTokenCookie accessCookie, RefreshTokenCookie refreshCookie)
+        protected void PopulateAuthValueFromCookie(AccessTokenCookie? accessCookie, RefreshTokenCookie? refreshCookie)
         {
-            if (!accessCookie.IsEmpty() || !refreshCookie.IsEmpty())
-            {
+            if ((accessCookie != null && !accessCookie.IsEmpty())
+            || (refreshCookie != null && !refreshCookie.IsEmpty())) {
                 this.AuthMethod = AuthMethod.Token;
                 this.AuthSource = AuthSource.Cookie;
             }
 
-            if (!accessCookie.IsEmpty()) {
-                this.RequestAccessToken = accessCookie.Value;
+            if (accessCookie != null && !accessCookie.IsEmpty()) {
+                this.AccessToken = accessCookie.Value;
             }
 
-            if (!refreshCookie.IsEmpty()) {
-                this.RequestAccessToken = refreshCookie.Value;
+            if (refreshCookie != null && !refreshCookie.IsEmpty()) {
+                this.AccessToken = refreshCookie.Value;
             }
         }
 
@@ -117,7 +118,7 @@ namespace WebCommons.Controllers
 
                 switch (this.AuthMethod) {
                     case AuthMethod.Token:
-                        UserToken<TUser>? accessToken = this.Db.FindToken(this.RequestAccessToken, true);
+                        UserToken<TUser>? accessToken = this.Db.FindToken(this.AccessToken, true);
                         if (accessToken == null) {
                             this.wasUserFetched = true;
                             this._user = null;

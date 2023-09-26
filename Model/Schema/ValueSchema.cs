@@ -29,10 +29,10 @@ namespace WebCommons.Model
         public string? Regex { get; set; } = null;
 
         [JsonProperty("isEnumerable")]
-        public bool IsEnumerable { get; set; } = false; // TODO implement
+        public bool IsEnumerable { get; set; } = false;
 
         [JsonProperty("isNullable")]
-        public bool IsNullable { get; set; } = false; // TODO implement
+        public bool IsNullable { get; set; } = false;
 
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public object[]? Values { get; set; } = null;
@@ -42,5 +42,8 @@ namespace WebCommons.Model
 
         [JsonProperty("i18n", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<object, object>? I18n { get; set; } = null;
+
+        [JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<object, object>? Colors { get; set; } = null;
     }
 }

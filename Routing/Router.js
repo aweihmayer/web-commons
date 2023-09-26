@@ -2,7 +2,7 @@
  * Handles navigation.
  */
 const Router = {
-    current: { route: null, params: {} },
+    current: { route: null, params: {}, locale: 'en' },
 
     /**
      * Callback function whenever route changes.

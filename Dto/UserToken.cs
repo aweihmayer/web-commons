@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Dto
 {
-    public class UserTokenDto : CommonDto
+    public class UserTokenDto
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }

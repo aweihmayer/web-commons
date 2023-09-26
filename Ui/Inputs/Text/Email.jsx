@@ -1,7 +1,7 @@
 ﻿class EmailInput extends TextInput {
-    constructor(props) {
-        props.className = 'email-input';
-        props.textInputType = 'email';
-        super(props);
+    static defaultProps = {
+        autocomplete: 'on',
+        className: 'email-input',
+        textType: 'email'
     }
 }

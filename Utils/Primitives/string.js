@@ -3,10 +3,10 @@
  * @param {any} v
  * @returns {string|string[]} Trimmed string(s) or null(s) if the string is empty.
  */
-Parser.string = (v) => {
+Parser.string = function (v) {
     // Recursivity for arrays
     if (Array.isArray(v)) {
-        for (let i in v) { v[i] = Parser.toString(v[i]); }
+        for (let i in v) { v[i] = this.string(v[i]); }
         return v;
     }
 

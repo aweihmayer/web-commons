@@ -3,7 +3,7 @@ using WebCommons.Web;
 
 namespace WebCommons.Auth
 {
-    public class RefreshTokenCookie : Cookie<Guid?>
+    public class RefreshTokenCookie : Cookie<Guid>
     {
         public static string DefaultPath { get; set; } = "/api/auth/refresh";
 

@@ -7,7 +7,7 @@
      * @param {Function} [options.view] A function that returns a view to render.
      * @param {string[]} [options.bundles] Bundles to be loaded when the route changes.
      * @param {string} [options.cache.name] The cache name. Must be defined to enable the cache.
-     * @param {number} [options.cache.duration] The cache duration in milliseconds. TODO seconds
+     * @param {number} [options.cache.duration]
      * @param {Array<ValueSchema>} [options.queryStringParams]
      */
     constructor(name, uri, method, options) {

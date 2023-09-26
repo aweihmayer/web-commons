@@ -1,4 +1,4 @@
-﻿class TextareaInput extends InputContainer {
+﻿class TextareaInput extends BaseInput {
     constructor(props) {
         super(props);
         this.inputClassName = 'textarea-input';

@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Dto
 {
-    public abstract class CommonUserDto : CommonDto
+    public abstract class CommonUserDto : TimestampableDto
     {
         #region No details
 
@@ -22,6 +22,12 @@ namespace WebCommons.Dto
 
         [JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
         public string? Email { get; set; }
+
+        [JsonProperty("createdDate", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset? CreatedDate { get; set; }
+
+        [JsonProperty("updatedDate", NullValueHandling = NullValueHandling.Ignore)]
+        public DateTimeOffset? UpdatedDate { get; set; }
 
         #endregion
 
@@ -54,7 +60,8 @@ namespace WebCommons.Dto
 
             if (details == Details.None) { return; }
             this.Email = user.Email;
-            this.System = new SystemDto(user);
+            this.CreatedDate = user.CreatedDate;
+            this.UpdatedDate = user.UpdatedDate;
 
             if (details == Details.Medium) { return; }
             this.Tokens = new();

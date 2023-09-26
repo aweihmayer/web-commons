@@ -1,10 +1,17 @@
-﻿class Form extends FieldSet {
+﻿class Form extends React.Component {
+    render() {
+        return <form action="#" encType={this.props.encType} onSubmit={this.submit.bind(this)} ref="form">
+            {this.props.children}
+        </form>;
+    }
+
     /**
      * Determines if form is valid and submits it if it is.
      * @param {Event} [ev] The submit event.
      */
     submit(ev) {
         if (ev) { ev.preventDefault(); }
+        else { ev = {}; }
         let that = this;
 
         return new Promise(function (resolve, reject) {
@@ -20,7 +27,7 @@
             ev.data = data;
             return ev;
         })
-        .then(this.onSubmit)
+        .then(this.props.onSubmit)
         .finally(that.stopLoading());
     }
 

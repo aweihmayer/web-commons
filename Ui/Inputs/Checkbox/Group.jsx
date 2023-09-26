@@ -1,4 +1,4 @@
-﻿class CheckboxGroupInput extends InputContainer {
+﻿class CheckboxGroupInput extends BaseInput {
     constructor(props) {
         super(props);
         this.inputClassName = 'checkbox-input checkbox-group-input';
@@ -11,7 +11,10 @@
             input.push(<CheckboxCustomContainer key={i} id={$this.inputId + '-' + item} name={$this.name} value={item} onClick={$this.props.onClick} />);
         });
 
-        return super.render(input);
+        let className = document.buildClassName('text-input', this.props.className);
+        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
+            {input}
+        </InputContainer>;
     }
 
     fill(v) {

@@ -48,14 +48,5 @@ namespace WebCommons.Api
                 return new ApiResponse<T>(HttpStatusCode.InternalServerError);
             }
         }
-
-        /// <summary>
-        /// Sends a request and returns a response.
-        /// </summary>
-        public async Task<ApiResponse<T>> SendRequest<T>(string endpoint, HttpMethod method, object? query = null, object? model = null) // TODO headers
-        {
-            ApiRequest request = new(endpoint, method, query, model, this.DefaultQuery, this.DefaultModel);
-            return await this.SendRequest<T>(request);
-        }
     }
 }

@@ -8,8 +8,8 @@ namespace WebCommons.Auth
     public class AuthService<TUser> where TUser : CommonUser
     {
         public CommonDbContextWithAuth<TUser> Db { get; set; }
-        public Controller Controller { get; set; }
-        public AuthService(CommonDbContextWithAuth<TUser> db, Controller controller = null) {
+        public Controller? Controller { get; set; }
+        public AuthService(CommonDbContextWithAuth<TUser> db, Controller? controller = null) {
             this.Db = db;
             this.Controller = controller;
         }

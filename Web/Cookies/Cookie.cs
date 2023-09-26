@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net;
-using System.Reflection;
+﻿using Newtonsoft.Json;
 
 namespace WebCommons.Web
 {
@@ -25,7 +21,7 @@ namespace WebCommons.Web
         /// <summary>
         /// The value of the cookie.
         /// </summary>
-        public T? Value { get; set; }
+        public T Value { get; set; }
 
         public string Base64Value
         {

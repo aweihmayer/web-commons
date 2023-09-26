@@ -38,7 +38,7 @@ namespace WebCommons.Data.Web
         /// <param name="lastmod">The last modified date. If it is not specified, it will be the current date.</param>
         /// <param name="changefreq">The change frequency.</param>
         /// <param name="priority">The priority from 0.0 to 1.0.</param>
-        protected void AddUrl(string loc, DateTime? lastmod = null, ChangeFrequency changefreq = ChangeFrequency.Yearly, double priority = 0.5)
+        protected void AddUrl(string loc, DateOnly? lastmod = null, ChangeFrequency changefreq = ChangeFrequency.Yearly, double priority = 0.5)
         {
             XmlElement urlEl = this.CreateElement("url");
 
@@ -49,7 +49,7 @@ namespace WebCommons.Data.Web
 
             // Last modification
             XmlElement lastmodEl = this.CreateElement("lastmod");
-            lastmod = (lastmod == null) ? DateTime.UtcNow : lastmod;
+            lastmod = (lastmod == null) ? DateTime.UtcNow.ToDateOnly() : lastmod;
             lastmodEl.InnerText = lastmod.Value.ToString("yyyy-MM-dd");
             urlEl.AppendChild(lastmodEl);
 

@@ -1,4 +1,4 @@
-﻿class CheckboxInput extends InputContainer {
+﻿class CheckboxInput extends BaseInput {
     constructor(props) {
         props.type = props.type || 'bool';
         super(props);
@@ -6,11 +6,13 @@
     }
 
     render() {
-        return super.render(<Checkbox ref="input"
+        let className = document.buildClassName('text-input', this.props.className);
+        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container"><Checkbox ref="input"
             isChecked={false}
             value={this.props.value}
             name={this.name}
-            id={this.inputId} />);
+            id={this.inputId} />
+        </InputContainer>;
     }
 
     fill(v) {

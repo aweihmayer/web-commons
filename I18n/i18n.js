@@ -54,7 +54,7 @@ Object.defineProperty(Array.prototype, 't', {
 Object.defineProperty(Object.prototype, 't', {
     enumerable: false,
     value: function (replacements, plural, key) {
-        let locale = i18n.locale;
+        let locale = Router.current.locale;
         let value = this;
 
         if (typeof key !== 'undefined' && this.hasProp(key)) { value = value.getProp(key); }
@@ -67,10 +67,3 @@ Object.defineProperty(Object.prototype, 't', {
         return value.t(replacements, plural);
     }
 });
-
-/**
- * The i18n configuration.
- */
-const i18n = {
-    locale: "en"
-};

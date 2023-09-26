@@ -1,18 +1,14 @@
-﻿class Button extends React.Component {
-    /**
-     * @param {object} props
-     * @param {string|string[]} [props.className]
-     * @param {string} [props.label]
-     * @param {React.Component} [props.icon]
-     * @param {'button'|'submit'} [props.type]
-     * @param {boolean} [props.disabled]
-     * @param {boolean} [props.loadable] Determines if the button can show a loading spinner.
-     * @param {any} [props.value]
-     */
-    constructor(props) {
-        super(props);
-    }
-
+﻿/**
+ * @param {object} props
+ * @param {string|string[]} [props.className]
+ * @param {string} [props.label]
+ * @param {React.Component} [props.icon]
+ * @param {'button'|'submit'} [props.type]
+ * @param {boolean} [props.disabled]
+ * @param {boolean} [props.loadable] Determines if the button can show a loading spinner.
+ * @param {any} [props.value]
+ */
+class Button extends React.Component {
     static defaultProps = {
         className: '',
         label: '',

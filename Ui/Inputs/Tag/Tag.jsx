@@ -1,11 +1,12 @@
-﻿class TagInput extends InputContainer {
+﻿class TagInput extends BaseInput {
     constructor(props) {
         super(props);
         this.inputClassName = 'tag-input';
     }
 
     render() {
-        return super.render(
+        let className = document.buildClassName('text-input', this.props.className);
+        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
             <div>
                 <div className="input-wrapper">
                     <input type="search" ref="input"
@@ -19,7 +20,8 @@
                     <ul ref="options"></ul>
                 </div>
                 <ul ref="tags"></ul>
-            </div>);
+            </div>
+        </InputContainer>;
     }
 
     search(ev) {

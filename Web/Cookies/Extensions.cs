@@ -20,7 +20,7 @@ namespace WebCommons.Web
             options.Expires = DateTime.UtcNow.Add(type.GetPropertyValue<TimeSpan>(cookie, "Duration"));
 
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            cookies.Append(name, value, options);
+            if (!string.IsNullOrEmpty(name)) { cookies.Append(name, value, options); }
         }
 
         /// <summary>
@@ -29,20 +29,20 @@ namespace WebCommons.Web
         public static void Delete(this IResponseCookies cookies, object cookie)
         {
             var name = cookie.GetType().GetPropertyValue<string>(cookie, "Name");
-            cookies.Delete(name);
+            if (!string.IsNullOrEmpty(name)) { cookies.Delete(name); }
         }
 
         /// <summary>
         /// Reads a cookie from the request.
         /// </summary>
-        public static T Read<T>(this IRequestCookieCollection cookies) where T : new()
+        public static T? Read<T>(this IRequestCookieCollection cookies) where T : new()
         {
             T cookie = new T();
             Type type = typeof(T);
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            if (cookies[name] == null) { return cookie; }
+            if (string.IsNullOrEmpty(name) || cookies[name] == null) { return default(T); }
             string? value = cookies[name];
-            if (string.IsNullOrEmpty(value)) { return cookie; }
+            if (string.IsNullOrEmpty(value)) { return default(T); }
             type.SetPropertyValue(cookie, "Base64Value", value);
             return cookie;
         }

@@ -16,16 +16,6 @@ namespace WebCommons.Controllers
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
         public bool DryRun { get; set; } = false;
         public I18n I18n { get; set; } = new("en");
-        private string locale = "en";
-        public string Locale {
-            get {
-                return this.locale;
-            }
-            set {
-                this.locale = value;
-                this.I18n.Locale = value;
-            }
-        }
 
         public CommonOperationContext() { }
     }
