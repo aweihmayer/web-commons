@@ -9,8 +9,9 @@
         case 'number':
             return parseInt(value);
         case 'string':
-            value = value.trim();
-            if (value == '') { return null; }
+            value = value.replaceAll(',', '').trim();
+            if (value === '') { return null; }
+            if (value === '-') { value = '0'; }
             value = parseInt(value);
             if (isNaN(value)) { throw new Error('type'); }
             return value;

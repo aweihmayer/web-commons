@@ -1,34 +1,23 @@
 ﻿class CheckboxInput extends BaseInput {
     render() {
-        let className = document.buildClassName('checkbox-input checkbox-single-input', this.props.className);
-        return <InputContainer label={this.schema.label} className={className} id={this.containerId} inputId={this.inputId} ref="container">
-            <Checkbox ref="input"
-                isChecked={false}
-                value={this.props.value}
-                name={this.name}
-                id={this.inputId} />
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'checkbox-input checkbox-single-input']} ref="container">
+            <div className="input-wrapper">
+                <input ref="input"
+                    id={this.id}
+                    name={this.schema.name}
+                    type="checkbox" />
+            </div>
         </InputContainer>;
     }
 
-    fill(v) {
-        if (v == true || v == 1) {
-            this.refs.input.refs.checkbox.checked = true;
-        } else {
-            this.refs.input.refs.checkbox.checked = false;
-        }
+    fill(value) {
+        try {
+            let isChecked = Parse.bool(value);
+            this.refs.input.check = isChecked;
+        } catch { }
     }
 
     raw() {
-        let checkbox = this.refs.input.refs.checkbox;
-        if (checkbox.checked) {
-            return checkbox.value ? checkbox.value : true;
-        } else {
-            return checkbox.value ? null : false;
-        }
-    }
-
-    isDisabled() {
-        if (this.refs.input.refs.checkbox.closest('*[disabled]')) { return true; }
-        return false;
+        return this.refs.input.checked;
     }
 }

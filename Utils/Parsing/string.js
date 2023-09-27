@@ -1,12 +1,9 @@
-﻿Parser.string = function (v) {
-    // Recursivity for arrays
-    if (Array.isArray(v)) {
-        for (let i in v) { v[i] = this.string(v[i]); }
-        return v;
+﻿Parser.string = function (value) {
+    if (Array.isArray(value)) {
+        return value.map(v => this.string(v));
     }
 
-    // Trims the string and returns null if it is empty
-    v = String(v);
-    v = v.trim();
-    return (v.length == 0) ? null : v;
+    value = String(v);
+    value = value.trim();
+    return (value.length == 0) ? null : value;
 };

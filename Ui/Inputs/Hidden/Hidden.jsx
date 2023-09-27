@@ -1,12 +1,11 @@
 ﻿class HiddenInput extends BaseInput {
     render() {
-        let className = document.buildClassName('hidden-input', this.props.className);
-        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'hidden-input']} ref="container">
             <input ref="input"
                 type="hidden"
-                name={this.name}
-                defaultValue={this.props.defaultValue}
-                id={this.inputId} />
+                name={this.schema.name}
+                defaultValue={this.schema.default}
+                id={this.id} />
         </InputContainer>
     }
 }

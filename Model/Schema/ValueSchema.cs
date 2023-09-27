@@ -16,8 +16,14 @@ namespace WebCommons.Model
         [JsonProperty("type")]
         public string Type { get; set; } = "string";
 
-        [JsonProperty("required")]
-        public bool Required { get; set; } = false;
+        [JsonProperty("isRequired")]
+        public bool IsRequired { get; set; } = false;
+
+        [JsonProperty("isEnumerable")]
+        public bool IsEnumerable { get; set; } = false;
+
+        [JsonProperty("isNullable")]
+        public bool IsNullable { get; set; } = false;
 
         [JsonProperty("min", NullValueHandling = NullValueHandling.Ignore)]
         public object? Min { get; set; } = null;
@@ -28,14 +34,11 @@ namespace WebCommons.Model
         [JsonProperty("regex", NullValueHandling = NullValueHandling.Ignore)]
         public string? Regex { get; set; } = null;
 
-        [JsonProperty("isEnumerable")]
-        public bool IsEnumerable { get; set; } = false;
-
-        [JsonProperty("isNullable")]
-        public bool IsNullable { get; set; } = false;
-
         [JsonProperty("values", NullValueHandling = NullValueHandling.Ignore)]
         public object[]? Values { get; set; } = null;
+
+        [JsonProperty("default", NullValueHandling = NullValueHandling.Ignore)]
+        public object? DefaultValue { get; set; } = null;
 
         [JsonProperty("const", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object>? Constants { get; set; } = null;

@@ -20,8 +20,9 @@ namespace WebCommons.Model
 
             // For each property in the model
             PropertyInfo[] properties = model.GetProperties();
+            object instance = Activator.CreateInstance(model);
             foreach (PropertyInfo property in properties) {
-                ValueSchema? schema = property.BuildSchema();
+                ValueSchema? schema = property.BuildSchema(instance);
                 if (schema == null) { continue; }
                 schemas[schema.Name] = schema;
             }
@@ -29,14 +30,12 @@ namespace WebCommons.Model
             return schemas;
         }
 
-        /// <summary>
-        /// Generates a schema of the model to be serialized as JSON and used with JS.
-        /// This is useful because it prevents duplication of validation rules between front-end and back-end.
-        /// </summary>
-        public static ValueSchema? BuildSchema(this PropertyInfo property)
+        public static ValueSchema? BuildSchema(this PropertyInfo property, object? instance = null)
         {
-            ValueSchema schema = new();
-            schema.Name = property.Name.FirstCharToLowerCase();
+            ValueSchema schema = new() {
+                Name = property.Name.FirstCharToLowerCase(),
+                DefaultValue = (instance != null) ? property.GetValue(instance) : null
+            };
 
             // Get the property type
             Type propertyType;
@@ -62,7 +61,7 @@ namespace WebCommons.Model
             else { propertyTypeName = propertyType.Name.ToLower(); }
 
             // Determine if it is required
-            schema.Required = (property.GetCustomAttribute<RequiredAttribute>() != null);
+            schema.IsRequired = (property.GetCustomAttribute<RequiredAttribute>() != null);
 
             var displayName = property.GetCustomAttribute<DisplayNameAttribute>();
             if (displayName != null) { schema.Label = displayName.DisplayName; }

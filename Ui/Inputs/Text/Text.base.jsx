@@ -5,22 +5,22 @@
     }
 
     render() {
-        let className = document.buildClassName('text-input', this.props.className);
-        return <InputContainer label={this.schema.label} className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        // TODO is binding always good. Can i do onKeypress={(ev) => { this.handleKeypress(ev); }}
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'text-input']} ref="container">
             <div className="input-wrapper">
                 <input ref="input"
-                    type={this.props.textType}
-                    name={this.props.name}
-                    defaultValue={this.props.defaultValue}
-                    id={this.props.inputId}
-                    placeholder={this.props.placeholder}
-                    onFocus={this.clearError.bind(this)}
-                    onKeyPress={this.handleKeyPress.bind(this)}
-                    onBlur={this.isValid.bind(this)}
-                    onInput={this.props.onInput}
+                    autoComplete={this.props.autocomplete}
+                    defaultValue={this.schema.default}
+                    id={this.id}
                     maxLength={this.schema.max}
-                    autoComplete={this.autocomplete}
-                    tabIndex={this.props.tabIndex} />
+                    name={this.schema.name}
+                    placeholder={this.props.placeholder}
+                    onBlur={this.handleBlur.bind(this)}
+                    onFocus={this.handleFocus.bind(this)}
+                    onInput={this.handleInput.bind(this)}
+                    onKeyPress={this.handleKeyPress.bind(this)}
+                    tabIndex={this.props.tabIndex}
+                    type={this.props.textType} />
             </div>
         </InputContainer>;
     }

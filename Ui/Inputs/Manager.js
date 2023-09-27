@@ -45,8 +45,8 @@
             let ref = refs[r];
             if (typeof ref.clear !== 'function') { continue; }
             ref.clear();
-            if (ref.props.defaultValue == null) { continue; }
-            ref.fill(c.props.defaultValue);
+            if (ref.schema.default == null) { continue; }
+            ref.fill(ref.schema.default);
         }
     },
 

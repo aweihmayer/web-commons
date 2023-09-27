@@ -137,9 +137,6 @@
     <None Update="Ui\Icons\Video.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Checkbox\Checkbox.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Ui\Inputs\Checkbox\Checkbox.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -171,9 +168,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Radio\Radio.jsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Ui\Inputs\Radio\Radio.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Select\Select.jsx">

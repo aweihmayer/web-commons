@@ -80,8 +80,7 @@ namespace WebCommons.Controllers
                         return;
                 }
             } else if (values.Length == 1) {
-                Guid token;
-                if (!Guid.TryParse(values[0], out token)) { return; }
+                if (!Guid.TryParse(values[0], out Guid token)) { return; }
                 this.AccessToken = token;
                 this.AuthMethod = AuthMethod.Token;
             } else {

@@ -15,6 +15,11 @@ const Router = {
      */
     onUnauthorizedResponse: response => response,
 
+    /**
+     * Callback function whenever the router or a fetch response encounters a 401 unauthorized response. TODO
+     */
+    onUnauthorizedFetchResponse: response => response,
+
     /** 
      * Detects the current location of the page and sets the current route.
      * @returns {Route} The current location's route or the error route if none was found.

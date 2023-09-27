@@ -2,8 +2,7 @@
     constructor(props) {
         super(props);
         this.schema = this.props.schema ? new ValueSchema(this.props.schema, this.props) : new ValueSchema(this.props);
-        this.containerId = document.createUniqueId(this.schema.name + '-container');
-        this.inputId = document.createUniqueId(this.schema.name + '-input');
+        this.id = this.schema.name + '-input-id';
     }
 
     // #region Error
@@ -106,30 +105,38 @@
 
     // #region Events
 
-    /**
-     * Handles key press events by preventing input that doesn't match the schema type.
-     * @param {Event} ev
-     */
-    handleKeyPress(ev) {
-        return; // TODO
-        let v = ev.key;
-        let isInputValid = true;
-
-        switch (this.schema.type) {
-            case 'int':
-                isInputValid = /^-?\d+$/.test(v);
-                break;
-            case 'number':
-                isInputValid = /^-?\d+$/.test(v);
-                break;
-            default:
-                return;
+    handleBlur(ev) {
+        this.isValid();
+        if (this.props.onFocus) {
+            this.props.onFocus(ev);
         }
+    }
 
-        if (isInputValid && this.props.onKeyPress) {
-            this.props.onKeyPress(ev);
-        } else {
+    handleChange(ev) {
+        if (this.props.onChange) {
+            this.props.onChange(ev);
+        }
+    }
+
+    handleFocus(ev) {
+        this.clearError();
+        if (this.props.onFocus) {
+            this.props.onFocus(ev);
+        }
+    }
+
+    handleInput(ev) {
+        if (this.props.onInput) {
+            this.props.onInput(ev);
+        }
+    }
+
+    handleKeyPress(ev) {
+        let isValid = Validator.validate(ev.key, this.schema.type).isValid;
+        if (!isValid) {
             ev.preventDefault();
+        } else if (this.props.onKeyPress) {
+            this.props.onKeyPress(ev);
         }
     }
 

@@ -17,29 +17,12 @@
         };
 
         try {
-            result.value = Parser.parse(value, schema.type);
+            result.value = Parser.parse(value, schema.type, schema);
 
-            if (!schema.isEnumerable && Array.isArray(result.value)) {
-                if (result.value.length === 0) {
-                    result.value = null;
-                } else if (result.value.length === 1) {
-                    result.value = result.value[0];
-                } else {
-                    throw new Error('type');
-                }
-            }
-
-            if (!schema.isNullable) {
-                if (Array.isArray(result.value)) {
-                    result.value = value.filter(v => (v !== null || typeof v !== 'undefined'));
-                } else if (result.value === null || typeof result.value === 'undefined') {
-                    throw new Error('type');
-                }
-            }
-
-            if (schema.required) {
+            if (schema.isRequired) {
                 Validator.required(result.value, schema);
             }
+
             if (typeof Validator[schema.type] !== 'function') {
                 console.warn('No function has been defined to validate the type ' + schema.type);
             } else {

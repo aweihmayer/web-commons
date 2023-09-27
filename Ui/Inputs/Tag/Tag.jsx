@@ -1,17 +1,17 @@
 ﻿class TagInput extends BaseInput {
     render() {
-        let className = document.buildClassName('tag-input', this.props.className);
-        return <InputContainer label={this.schema.label}  className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'tag-input']} ref="container">
             <div>
                 <div className="input-wrapper">
-                    <input type="search" ref="input"
-                        name={this.name}
+                    <input ref="input"
+                        autoComplete="off"
+                        id={this.id}
+                        name={this.schema.name}
+                        onBlur={this.handleBlur.bind(this)}
                         onChange={this.search.bind(this)}
-                        onFocus={this.clearError.bind(this)}
-                        onBlur={this.handleOnBlur.bind(this)}
+                        onFocus={this.handleFocus.bind(this)}
                         onKeyPress={this.search.bind(this)}
-                        id={this.inputId}
-                        autoComplete="off" />
+                        type="search" />
                     <ul ref="options"></ul>
                 </div>
                 <ul ref="tags"></ul>
@@ -41,7 +41,7 @@
         this.refs.options.innerHTML = '';
     }
 
-    handleOnBlur() {
+    handleBlur() {
         // Set a small timeout because or else the blur event closes the search before we can add a tag
         setTimeout(function () { this.closeSearch(); }.bind(this), 200);
     }

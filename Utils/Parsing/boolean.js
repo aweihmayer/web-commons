@@ -9,14 +9,17 @@
         case 'number':
             return (value > 0);
         case 'string':
-            v = v.trim().toLowerCase();
-            if (v === '') { return null; }
-            if (['true', 'yes', '1'].includes(v)) { return true; }
-            if (['false', 'no', '0'].includes(v)) { return false; }
-            v = Number(v);
-            if (isNaN(v)) { throw new Error('type'); }
+            value = value.trim().toLowerCase();
+            if (value === '') { return false; }
+            if (['true', 'yes', '1'].includes(value)) { return true; }
+            if (['false', 'no', '0'].includes(value)) { return false; }
+            value = Number(value);
+            if (isNaN(value)) { throw new Error('type'); }
             return (value > 0);
+        case 'undefined':
+            return false;
         default:
+            if (value === null) { return false; }
             throw new Error('type');
     }
 };
