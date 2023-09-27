@@ -18,19 +18,31 @@
 
         try {
             result.value = Parser.parse(value, schema.type);
+
             if (!schema.isEnumerable && Array.isArray(result.value)) {
-                if (result.value.length === 0) { result.value = null; }
-                else if (result.value.length === 1) { result.value = result.value[0]; }
-                else { throw new Error('type'); }
+                if (result.value.length === 0) {
+                    result.value = null;
+                } else if (result.value.length === 1) {
+                    result.value = result.value[0];
+                } else {
+                    throw new Error('type');
+                }
             }
 
             if (!schema.isNullable) {
-                if (Array.isArray(result.value)) { result.value = value.filter(v => (v !== null || typeof v !== 'undefined')); }
-                else if (result.value === null || typeof result.value === 'undefined') { throw new Error('type'); }
+                if (Array.isArray(result.value)) {
+                    result.value = value.filter(v => (v !== null || typeof v !== 'undefined'));
+                } else if (result.value === null || typeof result.value === 'undefined') {
+                    throw new Error('type');
+                }
             }
 
-            if (schema.required) { Validator.required(result.value, schema); }
-            if (typeof Validator[schema.type] !== 'function') { throw new Error('You must define how to valide the type ' + schema.type); }
+            if (schema.required) {
+                Validator.required(result.value, schema);
+            }
+            if (typeof Validator[schema.type] !== 'function') {
+                throw new Error('You must define how to validate the type ' + schema.type);
+            }
             Validator[schema.type](result.value, schema);
             return result;
         } catch (ex) {
