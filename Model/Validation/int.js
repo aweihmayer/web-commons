@@ -6,6 +6,12 @@
     }
 
     if (options.isNullable && value === null) { return true; }
-    if (!typeof value !== 'number' || !Number.isInteger(value)) { throw new Error('type'); }
-    return this.number(v, options);
+    if (typeof value !== 'number' || !Number.isInteger(value)) { throw new Error('type'); }
+    if (typeof options.min === 'number' && value < options.min) {
+        throw new Error('min');
+    }
+    if (typeof options.max === 'number' && value > options.max) {
+        throw new Error('max');
+    }
+    return true;
 };

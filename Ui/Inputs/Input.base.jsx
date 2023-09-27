@@ -111,6 +111,7 @@
      * @param {Event} ev
      */
     handleKeyPress(ev) {
+        return; // TODO
         let v = ev.key;
         let isInputValid = true;
 

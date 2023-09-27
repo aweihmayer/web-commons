@@ -5,7 +5,11 @@
      * @param {string} type
      */
     parse: function (value, type) {
-        if (typeof this[type] !== 'function') { throw new Error('You must define how to parse the type ' + type); }
-        return this[type](value);
+        if (typeof this[type] === 'function') {
+            return this[type](value);
+        }
+
+        console.warn('You must define how to parse the type ' + type);
+        return value;
     }
 };

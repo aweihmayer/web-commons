@@ -6,6 +6,6 @@
     }
 
     if (options.isNullable && value === null) { return true; }
-    if (typeof v !== 'boolean') { throw new Error('type'); }
+    if (typeof value !== 'boolean') { throw new Error('type'); }
     return true;
 }

@@ -41,11 +41,14 @@
                 Validator.required(result.value, schema);
             }
             if (typeof Validator[schema.type] !== 'function') {
-                throw new Error('You must define how to validate the type ' + schema.type);
+                console.warn('No function has been defined to validate the type ' + schema.type);
+            } else {
+                Validator[schema.type](result.value, schema);
             }
-            Validator[schema.type](result.value, schema);
+            
             return result;
         } catch (ex) {
+            console.warn('Validation error', ex);
             result.error = ex.message;
             result.isValid = false;
             result.message = Validator.getMessage(result.error, schema);
@@ -62,8 +65,18 @@
     getMessage: function (error, schema) {
         schema = schema || {};
         let type = schema.type || 'default';
+        if (!Validator.messages.hasOwnProperty(error)) {
+            console.warn('You must define the main error message for ' + error);
+            return 'Error';
+        }
+
         let message = Validator.messages[error];
-        return (error === 'required') ? message : message[type].t(schema);
+        if (error === 'required') { return message; }
+        if (!message.hasOwnProperty(type)) {
+            console.warn('You must define the sub error message for ' + type);
+            return 'Error';
+        }
+        return message[type].t(schema);
     },
 
     messages: {
