@@ -1,17 +1,12 @@
 ﻿class CheckboxInput extends BaseInput {
-    constructor(props) {
-        props.type = props.type || 'bool';
-        super(props);
-        this.inputClassName = 'checkbox-input checkbox-single-input';
-    }
-
     render() {
-        let className = document.buildClassName('text-input', this.props.className);
-        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container"><Checkbox ref="input"
-            isChecked={false}
-            value={this.props.value}
-            name={this.name}
-            id={this.inputId} />
+        let className = document.buildClassName('checkbox-input checkbox-single-input', this.props.className);
+        return <InputContainer label={this.schema.label} className={className} id={this.containerId} inputId={this.inputId} ref="container">
+            <Checkbox ref="input"
+                isChecked={false}
+                value={this.props.value}
+                name={this.name}
+                id={this.inputId} />
         </InputContainer>;
     }
 

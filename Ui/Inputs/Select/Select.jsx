@@ -1,14 +1,9 @@
 ﻿class SelectInput extends BaseInput {
-    constructor(props) {
-        props.className = document.buildClassName(props.className, 'select-input');
-        super(props);
-    }
-
     render() {
-        let options = this.state.schema.options.map((v, i) => <option key={i} value={v}>{thiis.props.i18n._t(v)}</option>);
+        let options = this.schema.values.map((v, i) => <option key={i} value={v}>{this.schema.i18n[v].t(v)}</option>);
 
-        let className = document.buildClassName('text-input', this.props.className);
-        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        let className = document.buildClassName('select-input', this.props.className);
+        return <InputContainer label={this.schema.label} className={className} id={this.containerId} inputId={this.inputId} ref="container">
             <div className="input-wrapper">
                 <select ref="input"
                     name={this.props.name}

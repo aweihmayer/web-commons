@@ -1,32 +1,15 @@
-﻿/**
- * Validates an email value.
- * @param {string} v
- * @param {ValueSchema} options
- * @throws {Error}
- * @returns {boolean}
- */
-Validator.email = (v, options) => {
-    // Recursivity for arrays
-    if (Array.isArray(v)) {
-        for (let i in v) { Validator.email(v[i], options); }
+﻿Validator.email = function (value, options) {
+    if (Array.isArray(value)) {
+        if (!options.isEnumerable) { throw new Error('type'); }
+        this.value.forEach(v => this.email(v, options));
         return true;
     }
 
-    if (typeof v !== 'string') { throw new Error('type'); }
-
-    // Validate minimum
-    if (v === null || v.length < 5) {
-        throw new Error('min');
-    }
-
-    // Validate maximum
-    if (v.length > 255) {
-        throw new Error('max');
-    }
-
-    // Validate regex
+    if (options.isNullable && value === null) { return true; }
+    if (typeof value !== 'string') { throw new Error('type'); }
+    if (value.length < 5) { throw new Error('min'); }
+    if (value.length > 255) { throw new Error('max'); }
     let regex = new RegExp("^.*@.*\\..*$");
-    if (!regex.test(v)) { throw new Error('regex'); }
-
+    if (!regex.test(value)) { throw new Error('regex'); }
     return true;
 }

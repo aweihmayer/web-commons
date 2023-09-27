@@ -1,12 +1,7 @@
 ﻿class TagInput extends BaseInput {
-    constructor(props) {
-        super(props);
-        this.inputClassName = 'tag-input';
-    }
-
     render() {
-        let className = document.buildClassName('text-input', this.props.className);
-        return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">
+        let className = document.buildClassName('tag-input', this.props.className);
+        return <InputContainer label={this.schema.label}  className={className} id={this.containerId} inputId={this.inputId} ref="container">
             <div>
                 <div className="input-wrapper">
                     <input type="search" ref="input"
@@ -25,23 +20,17 @@
     }
 
     search(ev) {
-        // TODO
-        if (typeof this.state.schema.options == 'function') {
-            let results = this.state.schema.options(this.refs.input.value);
-        } else if (this.state.schema.options instanceof Dao) {
-            let results = this.state.schema.options.search(this.refs.input.value, { onlySearchable: false });
-        } else {
-            return;
-        }
-
         this.refs.options.innerHTML = '';
+        let results = this.props.onSearch(ev.data);
+        if (results.length === 0) { return; }
 
-        for (let i = 0; i < results.length; i++) {
-            let option = document.createElement('li');
-            option.dataset.value = results[i].id;
-            option.innerHTML = results[i].getLabel().full;
-            option.onclick = this.add.bind(this);
-            this.refs.options.appendChild(option);
+        for (let result of results) {
+            let data = result.toTag ? result.toTag : result;
+            let el = document.createElement('li');
+            el.dataset.value = data.value;
+            el.innerHTML = data.name;
+            el.onclick = this.add.bind(this);
+            this.refs.options.appendChild(el);
         }
 
         this.refs.options.classList.add('open');
@@ -58,35 +47,27 @@
     }
 
     add(ev) {
-        if (this.state.schema.max !== false && this.count() >= this.state.schema.max) {
-            this.setState({ error: 'Can only have ' + this.state.schema.max + ' items' });
+        if (typeof this.schema.max === 'number' && this.count() > this.schema.max) {
+            this.setError('Maximum of ' + this.schema.max);
             return;
         }
 
         if (ev.target) {
             let node = ev.target;
-            let data = {
-                value: node.dataset.value,
-                label: node.innerHTML };
-        } else if (ev.id) {
-            let data = {
-                value: ev.id,
-                label: ev.name || ev.label.full };
+            let data = { value: node.dataset.value, name: node.innerHTML };
         } else {
             return;
         }
 
-        let tag = document.createElement('li');
-        tag.dataset.value = data.value;
-        tag.setAttribute('title', data.value);
-        tag.innerHTML = data.label;
-
+        let el = document.createElement('li');
+        el.dataset.value = data.value;
+        el.setAttribute('title', data.value);
+        el.innerHTML = data.name;
         let closeButton = document.createElement('span');
         closeButton.innerHTML = 'x';
         closeButton.onclick = this.remove.bind(this);
-        tag.appendChild(closeButton);
-
-        this.refs.tags.appendChild(tag);
+        el.appendChild(closeButton);
+        this.refs.tags.appendChild(el);
     }
 
     remove(ev) {
@@ -99,13 +80,9 @@
     }
 
     raw() {
-        return this.refs.tags.querySelectorAll('ul li').map(tag => tag.dataset.value); // todo return one for single tag input
-        /*
-
-        if (this.state.schema.max != false && this.state.schema.max == 1) {
-            if (values.length > 0) { return values[0]; }
-            return null;
-        }*/
+        let data = Array.from(this.refs.tags.querySelectorAll('li')).map(tag => tag.dataset.value);
+        if (this.schema.isEnumerable) { return data; }
+        return (data.length > 0) ? data[0] : null;
     }
 
     fill(value) {
@@ -123,6 +100,6 @@
     clear() {
         this.closeSearch();
         this.refs.tags.innerHTML = '';
-        this.setState({ error: null }); // TODO errors not using state anymore
+        this.clearError();
     }
 }

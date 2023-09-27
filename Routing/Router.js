@@ -6,10 +6,14 @@ const Router = {
 
     /**
      * Callback function whenever route changes.
-     * By default, this does nothing, override to implement custom features.
      * Useful for things like detecting locale in a URI.
      */
     onRouteChange: () => { },
+
+    /**
+     * Callback function whenever the router or a fetch response encounters a 401 unauthorized response.
+     */
+    onUnauthorizedResponse: response => response,
 
     /** 
      * Detects the current location of the page and sets the current route.
@@ -31,7 +35,8 @@ const Router = {
             } else {
                 Router.current.route = new Route(() => <p>Implement the route "error.404" for a custom page for missing resources.</p>);
             }
-            
+
+            Router.onRouteChange();
             return Router.current.route;
         }
 

@@ -85,8 +85,8 @@ namespace WebCommons.Model
                     schema.Type = "string";
                     var lengthAttr = property.GetCustomAttribute<StringLengthAttribute>();
                     if (lengthAttr != null) {
-                        schema.Min = lengthAttr.MinimumLength;
-                        schema.Max = lengthAttr.MaximumLength;
+                        schema.Min = (lengthAttr.MinimumLength > 0) ? lengthAttr.MinimumLength : null;
+                        schema.Max = (lengthAttr.MaximumLength > 0) ? lengthAttr.MaximumLength : null;
                     }
                     
                     return schema;

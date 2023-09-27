@@ -2,9 +2,8 @@
     constructor(props) {
         super(props);
         this.schema = this.props.schema ? new ValueSchema(this.props.schema, this.props) : new ValueSchema(this.props);
-        this.id = this.props.id || this.props.name;
-        this.containerId = document.createUniqueId(this.id + '-container');
-        this.inputId = document.createUniqueId(this.id + '-input');
+        this.containerId = document.createUniqueId(this.schema.name + '-container');
+        this.inputId = document.createUniqueId(this.schema.name + '-input');
     }
 
     // #region Error

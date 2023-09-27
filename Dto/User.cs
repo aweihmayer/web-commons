@@ -24,10 +24,10 @@ namespace WebCommons.Dto
         public string? Email { get; set; }
 
         [JsonProperty("createdDate", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         [JsonProperty("updatedDate", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTimeOffset? UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         #endregion
 

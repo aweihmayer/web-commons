@@ -1,12 +1,9 @@
-﻿/** 
- * Validates and converts values.
- */
-const Validator = {
+﻿const Validator = {
     /**
      * Parses a value into the desired type and validates it.
      * @param {any} value
      * @param {ValueSchema} schema
-     * @returns {{ value: any, isValid: boolean, error: string, message: string }}
+     * @returns {{ value: any, isValid: boolean, error: string, message: string, schema: ValueSchema }}
      */
     validate: function (value, schema) {
         schema = schema || new ValueSchema();
@@ -15,22 +12,26 @@ const Validator = {
             value: value,
             isValid: true,
             error: null,
-            message: null
+            message: null,
+            schema: schema
         };
 
         try {
             result.value = Parser.parse(value, schema.type);
+            if (!schema.isEnumerable && Array.isArray(result.value)) {
+                if (result.value.length === 0) { result.value = null; }
+                else if (result.value.length === 1) { result.value = result.value[0]; }
+                else { throw new Error('type'); }
+            }
 
-            if (schema.isNullable === false) {
-                if (Array.isArray(result.value)) { result.value.filter(v => v !== null); }
-                else if (result.value === null) { throw new Error('type'); }
+            if (!schema.isNullable) {
+                if (Array.isArray(result.value)) { result.value = value.filter(v => (v !== null || typeof v !== 'undefined')); }
+                else if (result.value === null || typeof result.value === 'undefined') { throw new Error('type'); }
             }
 
             if (schema.required) { Validator.required(result.value, schema); }
-
-            if (typeof Validator[schema.type] === 'function') { Validator[schema.type](result.value, schema); }
-            else { throw new Error('You must define how to valide the type ' + schema.type); }
-
+            if (typeof Validator[schema.type] !== 'function') { throw new Error('You must define how to valide the type ' + schema.type); }
+            Validator[schema.type](result.value, schema);
             return result;
         } catch (ex) {
             result.error = ex.message;
@@ -40,16 +41,10 @@ const Validator = {
         }
     },
 
-    required: (value) => {
-        if (Array.isArray() && value.length === 0) { throw new Error('required'); }
-        else if (value === null || value === '' || typeof value === 'undefined') { throw new Error('required'); }
-        return true;
-    },
-
     /**
      * Returns an error message.
-     * @param {'required'|'type'|'min'|'max'|'regex'} error
-     * @param {ValueSchema} [schema] Used for replacing placeholders.
+     * @param {string} error
+     * @param {ValueSchema} [schema]
      * @returns {string}
      */
     getMessage: function (error, schema) {

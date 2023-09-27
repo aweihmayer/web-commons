@@ -63,7 +63,7 @@
         for (let i in uri.parts) {
             // The part is not a parameter, skip it
             if (!this.uri.parts[i].isParam) { continue; }
-            let result = Validator.validate(uri.parts[i].value, this.uri.parts[i].params[0]);
+            let result = Parser.parse(uri.parts[i].value, this.uri.parts[i].params[0].type); // TODO parse for all params that make fit type
             params[this.uri.parts[i].params[0].name] = result.value;
         }
 
@@ -113,10 +113,7 @@
         }
 
         return fetch(request)
-            .then(response => {
-                if (!Routes._refreshAuth) { return response; }
-                return (response.status == 401) ? Routes._refreshAuth.fetch() : response;
-            })
+            .then(response => (response.status == 401) ? Router.onUnauthorizedResponse(response) : response)
             .then(response => response.deserialize(request))
             .then(response => {
                 if (!response.ok) { throw response; }
@@ -134,6 +131,7 @@
         let path = this.uri.relative(payload);
 
         let headers = new Headers();
+        headers.append('Time-Offset', new Date().getTimezoneOffset() * -1);
         if (this.accept) { headers.append("Accept", this.accept); }
         if (this.contentType) { headers.append("Content-Type", this.contentType); }
 

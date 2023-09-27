@@ -1,6 +1,6 @@
 ﻿class Checkbox extends React.Component {
     render() {
-        return <div class="input-wrapper">
+        return <div className="input-wrapper">
             <input type="checkbox" ref="checkbox"
                 value={this.props.value}
                 name={this.props.name}

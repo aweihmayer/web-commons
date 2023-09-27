@@ -1,5 +1,5 @@
 ﻿class MarkdownTextareaInput extends TextareaInput {
-    constructor(props) {
+    /*constructor(props) {
         super(props);
         this.inputClassName = 'textarea-input markdown-input';
     }
@@ -21,5 +21,5 @@
 
     raw() {
         return this.refs.input.editor.codemirror.getValue();
-    }
+    }*/
 }

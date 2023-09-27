@@ -38,19 +38,19 @@
     <None Update="I18n\i18n.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validator.base.js">
+    <None Update="Model\Validation\Validator.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Model\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Values\email.js">
+    <None Update="Model\Validation\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Values\number.js">
+    <None Update="Model\Validation\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Values\string.js">
+    <None Update="Model\Validation\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\App.jsx">

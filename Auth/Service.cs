@@ -72,7 +72,7 @@ namespace WebCommons.Auth
                 user.AccessToken = new UserTokenDto(accessToken);
             }
 
-            user.LastAuthDate = DateTimeOffset.UtcNow;
+            user.LastAuthDate = DateTime.UtcNow;
             this.Db.SaveChanges();
 
             this.SetTokenCookies(user);

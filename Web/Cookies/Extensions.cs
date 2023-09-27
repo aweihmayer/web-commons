@@ -16,7 +16,8 @@ namespace WebCommons.Web
 
             CookieOptions options = new();
             options.HttpOnly = type.GetPropertyValue<bool>(cookie, "HttpOnly");
-            options.Path = type.GetPropertyValue<string?>(cookie, "Path");
+            var path = type.GetPropertyValue<string?>(cookie, "Path");
+            if (!string.IsNullOrEmpty(path)) { options.Path = path; }
             options.Expires = DateTime.UtcNow.Add(type.GetPropertyValue<TimeSpan>(cookie, "Duration"));
 
             var name = type.GetPropertyValue<string>(cookie, "Name");

@@ -47,16 +47,16 @@ namespace WebCommons.Db
         public TimeSpan? Duration { get; set; }
 
         [Column("expiration_date")]
-        public DateTimeOffset? ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         [Column("type")]
         public UserTokenType Type { get; set; }
 
         [Column("created_date")]
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [Column("updated_date")]
-        public DateTimeOffset UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
         #endregion
 
@@ -106,7 +106,7 @@ namespace WebCommons.Db
         public void Refresh()
         {
             if (!this.Duration.HasValue) { return; }
-            this.ExpirationDate = DateTimeOffset.UtcNow.Add(this.Duration.Value);
+            this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace WebCommons.Db
         /// </summary>
         public void Expire()
         {
-            this.ExpirationDate = DateTimeOffset.MinValue;
+            this.ExpirationDate = DateTime.MinValue;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace WebCommons.Db
         public bool IsExpired()
         {
             if (!this.ExpirationDate.HasValue) { return false; }
-            return this.ExpirationDate < DateTimeOffset.UtcNow;
+            return this.ExpirationDate < DateTime.UtcNow;
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace WebCommons.Db
         {
             if (!this.ExpirationDate.HasValue) { return null; }
             if (this.IsExpired()) { return TimeSpan.Zero; }
-            return this.ExpirationDate - DateTimeOffset.UtcNow;
+            return this.ExpirationDate - DateTime.UtcNow;
         }
     }
 
@@ -143,10 +143,10 @@ namespace WebCommons.Db
         public int? Code { get; set; }
         public string? FormattedCode { get; set; }
         public TimeSpan? Duration { get; set; }
-        public DateTimeOffset? ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
         public UserTokenType Type { get; set; }
-        public DateTimeOffset CreatedDate { get; set; }
-        public DateTimeOffset UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public int? UserId { get; set; }
     }
 }

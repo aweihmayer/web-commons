@@ -11,7 +11,7 @@
                 <input ref="input"
                     type={this.props.textType}
                     name={this.props.name}
-                    defaultValue={this.props.value}
+                    defaultValue={this.props.defaultValue}
                     id={this.props.inputId}
                     placeholder={this.props.placeholder}
                     onFocus={this.clearError.bind(this)}

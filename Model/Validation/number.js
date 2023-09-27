@@ -1,29 +1,17 @@
-﻿/**
- * Validates a number value.
- * @param {number} v
- * @param {ValueSchema} options
- * @throws {Error}
- * @returns {boolean}
- */
-Validator.number = function (v, options) {
-    // Recursivity for arrays
-    if (Array.isArray(v)) {
-        for (let i in v) { Validator.number(v[i], options); }
+﻿Validator.number = function (value, options) {
+    if (Array.isArray(value)) {
+        if (!options.isEnumerable) { throw new Error('type'); }
+        this.value.forEach(v => this.number(v, options));
         return true;
     }
 
-    // Validate minimum
-    if (typeof options.min === 'number'
-    && (v === null || v < options.min)) {
+    if (options.isNullable && value === null) { return true; }
+    if (typeof value !== 'number') { throw new Error('type'); }
+    if (typeof options.min === 'number' && value < options.min) {
         throw new Error('min');
     }
-
-    // Validate maximum
-    if (typeof options.max === 'number'
-    && v !== null
-    && v > options.max) {
+    if (typeof options.max === 'number' && value > options.max) {
         throw new Error('max');
     }
-
     return true;
 };

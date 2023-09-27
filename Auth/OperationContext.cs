@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Auth;
 using WebCommons.Db;
-using WebCommons.Dto;
 using WebCommons.Web;
 
 namespace WebCommons.Controllers
@@ -22,6 +21,12 @@ namespace WebCommons.Controllers
             set {
                 this._controller = value;
                 if (value == null) { return; }
+
+                string timeOffsetHeader = value.Request.Headers["Time-Offset"];
+                if (!string.IsNullOrEmpty(timeOffsetHeader)) {
+                    TimeSpan timeOffset = TimeSpan.FromMinutes(Int32.Parse(timeOffsetHeader));
+                    this.Date = new DateTimeOffset(DateTime.UtcNow.Add(timeOffset));
+                }
 
                 // Header
                 string? authHeader = value.Request.Headers.Authorization;
@@ -144,7 +149,7 @@ namespace WebCommons.Controllers
 
         public AuthService<TUser> CreateAuthService()
         {
-            return new AuthService<TUser>(this.Db);
+            return new AuthService<TUser>(this.Db, this.Controller);
         }
 
         #region Authentication

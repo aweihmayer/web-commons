@@ -1,6 +1,5 @@
 ﻿/**
  * Defines how a value will be validated.
- * Using this class is an optional reference. You can just use a generic object.
  */
 class ValueSchema {
     constructor(params, secondaryParams) {

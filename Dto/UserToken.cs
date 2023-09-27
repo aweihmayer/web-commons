@@ -18,7 +18,7 @@ namespace WebCommons.Dto
         public TimeSpan? Duration { get; set; }
 
         [JsonProperty("expirationDate")]
-        public DateTimeOffset? ExpirationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         [JsonProperty("type")]
         public UserTokenType Type { get; set; }

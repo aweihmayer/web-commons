@@ -4,9 +4,11 @@
         this.template = String.removeQueryString(template);
 
         this.parts = template.split(/\/|\./).filter(p => p !== '');
-        let indexOfPathExtensionStart = template.length - this.parts.length;
-        if (template.charAt(indexOfPathExtensionStart) === '.') {
-            this.parts[this.parts.length - 1] = '.' + this.parts[this.parts.length - 1];
+        if (this.parts.length > 0) {
+            let indexOfPathExtensionStart = template.length - this.parts.last().length - 1;
+            if (template.charAt(indexOfPathExtensionStart) === '.') {
+                this.parts[this.parts.length - 1] = '.' + this.parts[this.parts.length - 1];
+            }
         }
 
         for (let i in this.parts) {
@@ -18,6 +20,9 @@
                 return p.includes(':')
                     ? { name: p.split(':')[0], type: p.split(':')[1] }
                     : { name: p, type: 'string' };
+            });
+            params.forEach(p => {
+                if (p.name.charAt(0) === '.') { p.name = p.name.substring(1); }
             });
 
             this.parts[i] = {
@@ -53,10 +58,15 @@
         }
 
         let relativeUri = this.parts.map(part => {
-            if (part.isExtension) { return '.' + part.value; }
-            if (!part.isParam) { return '/' + part.value; }
+            if (!part.isParam) {
+                return part.isExtension ? '.' + part.value : '/' + part.value;
+            }
+
             for (let partParam of part.params) {
-                if (params.hasProp(partParam.name)) { return '/' + params.getProp(partParam.name); }
+                if (params.hasProp(partParam.name)) {
+                    let v = params.getProp(partParam.name);
+                    return part.isExtension ? '.' + v : '/' + v;
+                }
             }
 
             throw new Error('Missing route parameters for ' + this.template);

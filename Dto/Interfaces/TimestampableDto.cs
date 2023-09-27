@@ -5,7 +5,7 @@
     /// </summary>
     public interface TimestampableDto
     {
-        DateTimeOffset? CreatedDate { get; set; }
-        DateTimeOffset? UpdatedDate { get; set; }
+        DateTime? CreatedDate { get; set; }
+        DateTime? UpdatedDate { get; set; }
     }
 }

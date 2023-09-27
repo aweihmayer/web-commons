@@ -64,6 +64,7 @@ class App extends React.Component {
         if (this.state.code > 199 && this.state.code < 300) {
             route = Router.current.route;
         } else {
+            if (this.state.code == 401) { Router.onUnauthorizedResponse(); }
             if (Routes.error[this.state.code]) { route = Routes.error[this.state.code]; }
             else if (Routes.error.default) { route = Routes.error.default; }
             else { throw new Error('Error view not found. Implement Route.error.default or Route.error.CODE'); }

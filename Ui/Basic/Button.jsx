@@ -10,13 +10,10 @@
  */
 class Button extends React.Component {
     static defaultProps = {
-        className: '',
-        label: '',
         icon: null,
         type: 'button',
         disabled: false,
         loadable: false,
-        value: null
     };
 
     render() {
