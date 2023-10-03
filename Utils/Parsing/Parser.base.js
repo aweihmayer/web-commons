@@ -9,7 +9,7 @@
         schema = schema || new ValueSchema();
 
         if (typeof this[type] !== 'function') {
-            console.warn('You must define how to parse the type ' + type);
+            console.warn('No function defined to parse the type ' + type);
             return value;
         }
 

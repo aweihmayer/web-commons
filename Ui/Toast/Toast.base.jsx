@@ -3,6 +3,10 @@
  */
 class Toast extends React.Component {
     static root = null;
+    static custom = {
+        response: {},
+        routes: []
+    }
 
     render() {
         let icon = null;
@@ -15,7 +19,7 @@ class Toast extends React.Component {
             case 'info':
                 icon = <div className="toast-icon"><svg viewBox="0 0 500 500" stroke="#000" strokeLinecap="round" strokeLinejoin="round" fill="#9C28B1" fillRule="evenodd">
                     <path d="M229.9999 0C102.975 0 0 102.975 0 230s102.975 230 229.9999 230 230-102.974 230-230-102.9749-230-230-230zm38.333 377.36c0 8.676-7.0339 15.7101-15.71 15.7101h-43.1008c-8.676 0-15.7102-7.0341-15.7102-15.7101V202.477c0-8.676 7.0332-15.71 15.7102-15.71h43.1008c8.6761 0 15.71 7.033 15.71 15.71V377.36zM229.9999 157c-21.5388 0-39-17.461-39-39s17.4612-39 39-39 39 17.461 39 39-17.461 39-39 39z" stroke="none" fillRule="nonzero" />
-                    </svg></div>;
+                </svg></div>;
                 break;
             case 'error':
                 icon = <div className="toast-icon"><svg viewBox="0 0 55 55" stroke="#000" strokeLinecap="round" strokeLinejoin="round" fill="#E51C24" fillRule="evenodd">
@@ -119,7 +123,7 @@ class Toast extends React.Component {
 
     /**
      * Shows a toast.
-     * @param {object} toast The toast configuration.
+     * @param {object|Response} toast The toast configuration.
      * @param {'success'|'error'|'info'|'warning'} [toast.type] The type of the toast.
      * @param {string} [toast.title] The title of the toast. Appears above the message as bigger text.
      * @param {string} [toast.message] The message of the toast. Appears below the title as smaller text.
@@ -128,6 +132,21 @@ class Toast extends React.Component {
      * @param {Function} [toast.action] The on click event of the action button.
      */
     static add(toast) {
+        if (toast instanceof Response || toast.isResponse) {
+            let responseToast = { type: toast.ok ? 'success' : 'error' };
+
+            let config = Toast.custom.response[toast.status] ?? {};
+            if (config.default) { Object.assign(responseToast, config.default); }
+            if (config[toast.method]) { Object.assign(responseToast, config[toast.method]); }
+
+            config = Toast.custom.routes[toast.route] ?? {};
+            config = config[toast.status] ?? {};
+            if (config.default) { Object.assign(responseToast, config.default); }
+            if (config[toast.method]) { Object.assign(responseToast, config[toast.method]); }
+
+            toast = responseToast;
+        }
+
         toast.id = String.random();
         toast.duration = toast.duration || 3500;
         toast.timeout = setTimeout(
@@ -149,79 +168,5 @@ class Toast extends React.Component {
 
         Toast.root = ReactDOM.createRoot(document.getElementById('app-toast'));
         Toast.root.render(<ToastContainer />);
-    }
-
-    /**
-    * Creates a toast based on an HTTP response.
-    * @param {Response|number} response The response (or its code) that prompted the toast.
-    * @param {{ key: number, value: value }} customs Custom toast parameters object. See Toast.add for details
-    */
-    static addFromResponse(response, customs) {
-        let status = typeof response == 'object' ? response.status : response;
-        let method = response.method || 'GET';
-        status = status || 500;
-        customs = customs || [];
-        if (!Array.isArray(customs)) { customs = [customs]; }
-
-        let defaults = {
-            type: (status >= 200 && status < 300) ? 'success' : 'error'
-        };
-
-        let custom = null;
-
-        for (let c in customs) {
-            if ((typeof c.codes === 'undefined' || !c.codes.includes(status)) && c.code !== status) { continue; }
-            custom = c;
-            break;
-        }
-
-        switch (status) {
-            case 200:
-                switch (method) {
-                    case 'GET':
-                        defaults.title = 'Success';
-                        defaults.message = 'Your request was successful';
-                        break;
-                    case 'DELETE':
-                        defaults.title = 'Deleted';
-                        defaults.message = 'The item was deleted';
-                        break;
-                    case 'POST':
-                    case 'PUT':
-                        defaults.title = 'Saved';
-                        defaults.message = 'The item was saved';
-                        break;
-                }
-                break;
-            case 201:
-                defaults.title = 'Created';
-                defaults.message = 'The item was created';
-                break;
-            case 400:
-                defaults.title = 'Bad request';
-                defaults.message = 'Your request was invalid';
-                break;
-            case 401:
-                defaults.title = 'Unauthorized';
-                defaults.message = 'You need to be signed in';
-                defaults.duration = 6000;
-                defaults.actionLabel = 'Signin';
-                defaults.action = () => { Modal.open(<SigninModal />) };
-                break;
-            case 403:
-                defaults.title = 'Forbidden';
-                defaults.message = "You don't have the necessary permissions";
-                break;
-            case 404:
-                defaults.title = 'Not found';
-                defaults.message = 'The item you are looking for was not found';
-                break;
-            case 500:
-                defaults.title = 'Error';
-                defaults.message = 'Sorry, something went wrong on our end';
-                break;
-        }
-
-        Toast.add(Object.assign(defaults, custom));
     }
 }

@@ -1,7 +1,7 @@
 ﻿Validator.email = function (value, options) {
     if (Array.isArray(value)) {
         if (!options.isEnumerable) { throw new Error('type'); }
-        this.value.forEach(v => this.email(v, options));
+        value.forEach(v => this.email(v, options));
         return true;
     }
 

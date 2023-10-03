@@ -27,7 +27,7 @@ Object.defineProperty(Array.prototype, 'isEmpty', {
 Object.defineProperty(Array.prototype, 'filterEmpty', {
     enumerable: false,
     value: function () {
-        return this.filter(v => (v !== null && v !== ''));
+        return this.filter(v => (v !== null && v !== '' && typeof v !== 'undefined'));
     }
 });
 

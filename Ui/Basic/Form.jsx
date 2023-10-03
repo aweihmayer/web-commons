@@ -31,6 +31,10 @@
             .finally(that.stopLoading());
     }
 
+    fill(data) {
+        InputManager.fill(this.props.refs, data);
+    }
+
     /**
      * Activates all loaders in the form.
      */

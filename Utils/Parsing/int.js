@@ -3,6 +3,8 @@
         return value.map(v => this.int(v));
     }
 
+    if (value === null) { return null; }
+
     switch (typeof value) {
         case 'boolean':
             return value ? 1 : 0;

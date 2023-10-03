@@ -1,7 +1,7 @@
 ﻿Validator.int = function (value, options) {
     if (Array.isArray(value)) {
         if (!options.isEnumerable) { throw new Error('type'); }
-        this.value.forEach(v => this.int(v, options));
+        value.forEach(v => this.int(v, options));
         return true;
     }
 

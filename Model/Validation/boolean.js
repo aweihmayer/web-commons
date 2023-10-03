@@ -1,7 +1,7 @@
 ﻿Validator.bool = function (value, options) {
     if (Array.isArray(value)) {
         if (!options.isEnumerable) { throw new Error('type'); }
-        this.value.forEach(v => this.bool(v, options));
+        value.forEach(v => this.bool(v, options));
         return true;
     }
 

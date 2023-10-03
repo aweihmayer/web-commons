@@ -7,10 +7,10 @@
     fill: function (component, data) {
         this.clear(component);
         if (typeof data === 'undefined' || data == null) { return; }
-        let refs = component.refs ? component.refs : component;
+        let refs = component.refs ?? component;
         for (let r in refs) {
             let ref = refs[r];
-            if (typeof ref.schema.fill !== 'string') { continue; }
+            if (typeof ref.schema !== 'object' || typeof ref.schema.fill !== 'string') { continue; }
             let value = data.getProp(ref.schema.fill);
             ref.fill(value);
         }
@@ -27,7 +27,7 @@
         let refs = component.refs ? component.refs : component;
         for (let r in refs) {
             let ref = refs[r];
-            if (typeof ref.collect !== 'function' || typeof ref.schema.name !== 'string') { continue; }
+            if (typeof ref.collect !== 'function' || typeof ref.schema !== 'object' || typeof ref.schema.name !== 'string') { continue; }
             let value = await ref.collect();
             data.setProp(ref.schema.name, value);
         }
@@ -39,7 +39,7 @@
      * Clears all inputs or sets their value to their default if applicable. 
      * @param {React.Component} component
      */
-    clear: function () {
+    clear: function (component) {
         let refs = component.refs ? component.refs : component;
         for (let r in refs) {
             let ref = refs[r];

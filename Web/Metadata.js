@@ -2,25 +2,20 @@
  * Defines the HTML page metadata for search engines.
  */
 class SearchEngineMetadata {
-    constructor(siteName, locale, title, titlePrefix, titleSuffix, description, image) {
-        this.defaults = {
-            title: null,
-            titlePrefix: null,
-            titleSuffix: null,
-            robots: SearchEngineMetadata.robots.follow,
-            type: SearchEngineMetadata.type.website,
-            modifiedTime: null,
-            section: null,
-            description: null,
-            image: null
-        };
+    constructor(defaults) {
+        if (typeof defaults !== 'undefined') { this.defaults = defaults; }
 
-        this.siteName = siteName;
-        this.locale = locale;
-        this.titlePrefix = titlePrefix;
-        this.titleSuffix = titleSuffix;
-        this.description = description;
-        this.Image = image;
+        this.description = null;
+        this.image = null;
+        this.title = null;
+        this.titlePrefix = null;
+        this.titleSuffix = null;
+        this.robots = SearchEngineMetadata.robots.follow;
+        this.type = SearchEngineMetadata.type.website;
+        this.modifiedTime = null;
+        this.section = null;
+        this.siteName = null;
+        this.locale = 'en_US';
     }
 
     static type = {
@@ -35,17 +30,11 @@ class SearchEngineMetadata {
     }
 
     /**
-     * Default values when creating or resetting metadata.
-     */
-    static defaults = {
-
-    }
-
-    /**
-     * Reset the metadata to default values.
+     * Resets the values to their defaults.
      */
     reset() {
-        Object.assign(this, SearchEngineMetadata.defaults);
+        if (typeof this.defaults === 'undefined') { return; }
+        Object.assign(this, this.defaults);
     }
 
     /**
@@ -54,9 +43,6 @@ class SearchEngineMetadata {
     apply() {
         document.title = [this.titlePrefix, this.title, this.titleSuffix].filterEmpty().join(' ').trim();
         let route = Router.current.route;
-        let image = (this.image != null)
-            ? Routes.image.uri.relative({ id: this.image, size: 'original' })
-            : '/images/logo.png';
 
         let metadata = [
             { name: 'og:title',         attribute: 'property',  value: document.title },
@@ -66,10 +52,13 @@ class SearchEngineMetadata {
             { name: 'og:type',          attribute: 'property',  value: this.type },
             { name: 'og:section',       attribute: 'property',  value: this.section },
             { name: 'og:modified_time', attribute: 'property',  value: this.modifiedTime },
-            { name: 'og:image',         attribute: 'property',  value: image },
+            { name: 'og:image',         attribute: 'property',  value: this.image },
             { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(Router.current.params) : null) }
         ];
 
         document.head.applyMetadata(metadata);
     }
 }
+
+if (typeof document.head === 'undefined') { document.head = {}; }
+document.head.metadata = new SearchEngineMetadata(new SearchEngineMetadata());

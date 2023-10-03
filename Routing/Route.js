@@ -63,12 +63,14 @@
         for (let i in uri.parts) {
             // The part is not a parameter, skip it
             if (!this.uri.parts[i].isParam) { continue; }
-            let result = Parser.parse(uri.parts[i].value, this.uri.parts[i].params[0].type); // TODO parse for all params that make fit type
-            params[this.uri.parts[i].params[0].name] = result.value;
+            let value = Parser.parse(uri.parts[i].value, this.uri.parts[i].params[0].type); // TODO parse for all params that make fit type
+            params[this.uri.parts[i].params[0].name] = value;
         }
 
         return params;
     }
+
+    static onFetchResponse = response => response;
 
     /**
      * Sends a request and returns the response.
@@ -113,13 +115,24 @@
         }
 
         return fetch(request)
-            .then(response => (response.status == 401) ? Router.onUnauthorizedResponse(response) : response)
-            .then(response => response.deserialize(request))
+            .then(response => {
+                response.route = this.name;
+                return Route.onFetchResponse(response)
+            })
+            .then(response => {
+                if (response.retry) { return this.fetch(payload); }
+                return response.deserialize(request);
+            })
             .then(response => {
                 if (!response.ok) { throw response; }
                 return response;
             });
     }
+
+    /**
+     * Callback function fetch responses.
+     */
+    static onFetchResponse = response => response;
 
     /**
      * Builds a request.
@@ -132,8 +145,8 @@
 
         let headers = new Headers();
         headers.append('Time-Offset', new Date().getTimezoneOffset() * -1);
-        if (this.accept) { headers.append("Accept", this.accept); }
-        if (this.contentType) { headers.append("Content-Type", this.contentType); }
+        if (this.accept) { headers.append('Accept', this.accept); }
+        if (this.contentType) { headers.append('Content-Type', this.contentType); }
 
         return new Request(path, {
             method: this.method,

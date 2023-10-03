@@ -1,7 +1,7 @@
 ﻿Validator.string = function (value, options) {
     if (Array.isArray(value)) {
         if (!options.isEnumerable) { throw new Error('type'); }
-        this.value.forEach(v => this.string(v, options));
+        value.forEach(v => this.string(v, options));
         return true;
     }
 

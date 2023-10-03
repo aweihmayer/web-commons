@@ -25,11 +25,10 @@ class App extends React.Component {
             App.refresh(200);
         });
 
-        // Detect the route and load assets
+        document.head.metadata.reset();
         Router.detect();
         await BundleManager.loadRouteBundles(Router.current.route);
 
-        // Render the app
         App.root = ReactDOM.createRoot(root);
         App.root.render(component);
     }
@@ -55,21 +54,26 @@ class App extends React.Component {
      * @returns {React.Component}
      */
     render() {
-        // Set code on body
-        document.body.dataset.code = this.state.code;
-        document.body.setAttribute('data-code', this.state.code);
+        document.setCode(this.state.code);
 
-        let route;
-        // If the DOM tells us there is an error, we pick the error route
-        if (this.state.code > 199 && this.state.code < 300) {
-            route = Router.current.route;
-        } else {
-            if (this.state.code == 401) { Router.onUnauthorizedResponse(); }
-            if (Routes.error[this.state.code]) { route = Routes.error[this.state.code]; }
-            else if (Routes.error.default) { route = Routes.error.default; }
-            else { throw new Error('Error view not found. Implement Route.error.default or Route.error.CODE'); }
+        if (!document.hasErrorCode()) {
+            return Router.current.route.view();
         }
 
-        return route.view();
+        if (Routes.error[this.state.code]) { return Routes.error[this.state.code].view(); }
+        else if (Routes.error.default) { return Routes.error.default.view(); }
+        else { throw new Error('Error view not found. Implement Route.error.default or Route.error.CODE'); }
+    }
+
+    componentDidMount() {
+        document.head.metadata.apply();
+    }
+
+    componentWillUpdate() {
+        document.head.metadata.reset();
+    }
+
+    componentDidUpdate() {
+        document.head.metadata.apply();
     }
 }

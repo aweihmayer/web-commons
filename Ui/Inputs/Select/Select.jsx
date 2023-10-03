@@ -18,9 +18,9 @@
 
     fill(value) {
         try {
-            let parsedValue = Parser.parse(value, this.state.schema.type);
-            this.refs.input.getElementsByTagName('option').forEach(o => {
-                if (Parser.parse(o.value, this.state.schema.type) === parsedValue) {
+            let parsedValue = Parser.parse(value, this.schema.type);
+            Array.from(this.refs.input.getElementsByTagName('option')).forEach(o => {
+                if (Parser.parse(o.value, this.schema.type) === parsedValue) {
                     o.selected = true;
                     return;
                 }

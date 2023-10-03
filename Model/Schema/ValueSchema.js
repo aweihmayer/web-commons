@@ -17,7 +17,7 @@ class ValueSchema {
         this.regex          = params.regex || secondary.regex || null;
         this.isEnumerable   = [params.isEnumerable, secondary.isEnumerable, false].find(v => (typeof v !== 'undefined'));
         this.isNullable     = [params.isNullable, secondary.isNullable, true].find(v => (typeof v !== 'undefined'));
-        this.values         = params.values || secondary.value || null;
+        this.values         = params.values || secondary.values || null;
         this.const          = params.const || secondary.const || null;
         this.i18n           = params.i18n || secondary.i18n || null;
     }

@@ -3,6 +3,8 @@
         return value.map(v => this.bool(v));
     }
 
+    if (value === null) { return false; }
+
     switch (typeof value) {
         case 'boolean':
             return value;
@@ -19,7 +21,6 @@
         case 'undefined':
             return false;
         default:
-            if (value === null) { return false; }
             throw new Error('type');
     }
 };

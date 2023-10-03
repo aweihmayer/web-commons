@@ -21,7 +21,7 @@ namespace WebCommons.Dto
         public DateTime? ExpirationDate { get; set; }
 
         [JsonProperty("type")]
-        public UserTokenType Type { get; set; }
+        public string Type { get; set; }
 
         public UserTokenDto(IUserToken token)
         {
@@ -30,7 +30,7 @@ namespace WebCommons.Dto
             this.FormattedCode = token.FormattedCode;
             this.Duration = token.Duration;
             this.ExpirationDate = token.ExpirationDate;
-            this.Type = token.Type;
+            this.Type = token.Type.ToString().ToLower();
         }
     }
 }

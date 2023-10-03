@@ -82,7 +82,7 @@
      * @returns {object}
      */
     validate() {
-        return Validator.validate(this.raw(), this.schema);
+        return Validator.validate(this.raw(), this.schema.type, this.schema);
     }
 
     /**
@@ -132,10 +132,7 @@
     }
 
     handleKeyPress(ev) {
-        let isValid = Validator.validate(ev.key, this.schema.type).isValid;
-        if (!isValid) {
-            ev.preventDefault();
-        } else if (this.props.onKeyPress) {
+        if (this.props.onKeyPress) {
             this.props.onKeyPress(ev);
         }
     }

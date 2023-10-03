@@ -2,10 +2,11 @@
     /**
      * Parses a value into the desired type and validates it.
      * @param {any} value
-     * @param {ValueSchema} schema
+     * @param {string} type
+     * @param {ValueSchema} [schema]
      * @returns {{ value: any, isValid: boolean, error: string, message: string, schema: ValueSchema }}
      */
-    validate: function (value, schema) {
+    validate: function (value, type, schema) {
         schema = schema || new ValueSchema();
 
         let result = {
@@ -17,21 +18,21 @@
         };
 
         try {
-            result.value = Parser.parse(value, schema.type, schema);
+            result.value = Parser.parse(value, type, schema);
 
             if (schema.isRequired) {
                 Validator.required(result.value, schema);
             }
 
-            if (typeof Validator[schema.type] !== 'function') {
-                console.warn('No function has been defined to validate the type ' + schema.type);
+            if (typeof Validator[type] !== 'function') {
+                console.warn('No function defined to validate the type ' + type);
             } else {
                 Validator[schema.type](result.value, schema);
             }
             
             return result;
         } catch (ex) {
-            console.warn('Validation error', ex);
+            console.warn('Validation error', value, schema, ex);
             result.error = ex.message;
             result.isValid = false;
             result.message = Validator.getMessage(result.error, schema);
@@ -49,14 +50,14 @@
         schema = schema || {};
         let type = schema.type || 'default';
         if (!Validator.messages.hasOwnProperty(error)) {
-            console.warn('You must define the main error message for ' + error);
+            console.warn('No main error message defined for ' + error);
             return 'Error';
         }
 
         let message = Validator.messages[error];
         if (error === 'required') { return message; }
         if (!message.hasOwnProperty(type)) {
-            console.warn('You must define the sub error message for ' + type);
+            console.warn('No sub error message defined for ' + type);
             return 'Error';
         }
         return message[type].t(schema);

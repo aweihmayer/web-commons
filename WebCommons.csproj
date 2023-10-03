@@ -104,6 +104,9 @@
     <None Update="Ui\Basic\Form.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Icons\Filter.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Inputs\Manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -233,10 +236,13 @@
     <None Update="Ui\Toast\Toast.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\View.jsx">
+    <None Update="Utils\Dom\document.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\dom.js">
+    <None Update="Utils\Dom\element.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Utils\Dom\head.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Dom\lazyload.js">

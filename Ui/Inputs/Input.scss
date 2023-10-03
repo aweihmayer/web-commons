@@ -1,16 +1,35 @@
 ﻿.input-container {
-    font-size: 60px;
+    font-size: 45px;
 
     > label {
         display: block;
-        font-size: 0.3em;
+        font-size: 0.5em;
         margin-bottom: 0.1em;
+    }
+
+    .input-message {
+        min-height: 0.3em;
+
+        p {
+            display: block;
+            font-size: 0.3em;
+            margin: 0px;
+            vertical-align: top;
+        }
     }
 
     .input-wrapper {
         display: block;
         height: 1em;
         width: 100%;
+    }
+
+    &.one-line {
+        > label, .input-wrapper {
+            display: inline-block;
+            height: auto;
+            width: auto;
+        }
     }
 
     &.select-input select,
@@ -24,28 +43,22 @@
         display: block;
         font-size: 0.3em;
         height: 100%;
-        padding-bottom: 0.5em;
+        padding-bottom: 0.3em;
         padding-left: 10px;
         padding-right: 5px;
-        padding-top: 0.5em;
+        padding-top: 0.3em;
         width: 100%;
     }
 
-    &.error.text-input input,
-    &.error.textarea-input textarea,
-    &.error select-input select {
-        border-color: $RED$;
-    }
-}
+    &.error {
+        &.text-input input,
+        &.textarea-input textarea,
+        &.select-input select {
+            border-color: $RED$;
+        }
 
-.error-message {
-    min-height: 0.3em;
-
-    p {
-        color: $RED$;
-        display: block;
-        font-size: 0.3em;
-        margin: 0px;
-        vertical-align: top;
+        .input-message {
+            color: $RED$;
+        }
     }
 }

@@ -10,8 +10,9 @@ const CacheHelper = {
      */
     retrieve: function (data, duration) {
         if (data == null) { return null; }
-        data = JSON.parse(data);
-        return CacheHelper.isExpired(data, duration) ? null : data;
+        if (typeof data === 'string') { data = JSON.parse(data); }
+        if (CacheHelper.isExpired(data, duration)) { return null; }
+        return data.data ?? data;
     },
 
     /**
