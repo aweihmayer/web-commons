@@ -48,24 +48,30 @@
         if (Router.current.route.name !== this.name) { throw new Error('Can only call get params on the current route'); }
 
         let uri = window.location.pathname;
-        let params = Object.fromQueryString(uri);
-        for (let k in params) {
-            let queryParamSchema = this.uri.queryStringParams.find(q => q.name === k);
-            if (queryParamSchema === null) { continue; }
 
-        }
+        let params = Object.fromQueryString(uri);
+        params.forEach(p => {
+            let queryParamSchema = this.uri.params.getQuery(k);
+            if (queryParamSchema === null) { return; }
+            params[k] = Parser.parse(params[k], queryParamSchema.type);
+        });
 
         uri = new Uri(uri);
 
         // The route and the current location don't match
-        if (uri.parts.length !== this.uri.parts.length) { return params; }
+        if (uri.parts.length !== this.uri.parts.length) { return {}; }
 
-        for (let i in uri.parts) {
+        uri.parts.forEach((p, i) => {
             // The part is not a parameter, skip it
-            if (!this.uri.parts[i].isParam) { continue; }
-            let value = Parser.parse(uri.parts[i].value, this.uri.parts[i].params[0].type); // TODO parse for all params that make fit type
-            params[this.uri.parts[i].params[0].name] = value;
-        }
+            if (!this.uri.parts[i].isParam) { return; }
+            this.uri.parts[i].params.forEach(p2 => {
+                try {
+                    let paramSchema = this.uri.params.getUri(p2);
+                    let v = Parser.parse(p.value, paramSchema.type);
+                    params.setProp(p2, v);
+                } catch { }
+            });
+        });
 
         return params;
     }
@@ -80,11 +86,11 @@
     fetch(payload) {
         // If the payload is not an object, its value belongs to the first route param
         if (typeof payload !== 'object') {
-            if (!this.uri.parts.some(p => p.isParam)) {
+            if (!this.uri.params.hasUriParams()) {
                 payload = {};
             } else {
-                let key = this.uri.find(p => p.isParam).params[0].name;
-                let value = payload;
+                let key = this.uri.params.getFirstUriParam().name;
+                let value = params;
                 payload = {};
                 payload[key] = value;
             }

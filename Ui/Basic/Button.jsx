@@ -58,5 +58,6 @@ class Button extends React.Component {
      */
     enable() {
         this.refs.button.disabled = false;
+        this.refs.button.removeAttribute('disabled');
     }
 }

@@ -10,6 +10,9 @@ namespace WebCommons.Model
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
+        [JsonProperty("fill", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Fill { get; set; }
+
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string? Label { get; set; }
 

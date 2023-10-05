@@ -63,6 +63,9 @@ namespace WebCommons.Model
             // Determine if it is required
             schema.IsRequired = (property.GetCustomAttribute<RequiredAttribute>() != null);
 
+            var fillName = property.GetCustomAttribute<FillNameAttribute>();
+            if (fillName != null) { schema.Fill = fillName.Name; }
+
             var displayName = property.GetCustomAttribute<DisplayNameAttribute>();
             if (displayName != null) { schema.Label = displayName.DisplayName; }
 

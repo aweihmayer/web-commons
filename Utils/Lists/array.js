@@ -1,4 +1,26 @@
 ﻿/**
+ * Determines if the array has any elements
+ * @returns {boolean}
+ */
+Object.defineProperty(Array.prototype, 'any', {
+    enumerable: false,
+    value: function () {
+        return (this.length !== 0);
+    }
+});
+
+/**
+ * Gets the first element of the array.
+ * @returns {any}
+ */
+Object.defineProperty(Array.prototype, 'first', {
+    enumerable: false,
+    value: function () {
+        return (this.length === 0) ? undefined : this[0];
+    }
+});
+
+/**
  * Gets the last element of the array.
  * @returns {any}
  */

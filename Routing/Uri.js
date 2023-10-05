@@ -1,39 +1,71 @@
 ﻿class Uri {
     constructor(template, queryStringParams) {
+        // Initialize properties
         if (template.length === 0 || template.charAt(0) !== '/') { template = '/' + template; }
         this.template = String.removeQueryString(template);
+        this.parts = [];
+        this.params = [];
+        this.params.getUri = function (name) { return this.filter(p => p.name === name && p.location === 'uri'); }
+        this.params.getUriParams = function () { return this.filter(p => p.location === 'uri'); }
+        this.params.hasUriParams = function () { return this.getUriParams().any(); }
+        this.params.getFirstUriParam = function () { return this.getUriParams().first(); }
+        this.params.getQuery = function (name) { return this.filter(p => p.name === name && p.location === 'query'); }
+        this.params.getQueryParams = function () { return this.filter(p => p.location === 'query'); }
+        this.params.hasQueryParams = function () { return this.getQueryParams().any(); }
+        this.params.getFirstQueryParam = function () { return this.getQueryParams().first(); }
 
-        this.parts = template.split(/\/|\./).filter(p => p !== '');
-        if (this.parts.length > 0) {
-            let indexOfPathExtensionStart = template.length - this.parts.last().length - 1;
+        // Build parts
+        let parts = template.split(/\/|\./).filter(p => p !== '');
+
+        // Since we split the parts with slashes and dots, we need to readd a dot at the
+        // last part in order to detect if it is an extension
+        if (parts.length > 0) {
+            let indexOfPathExtensionStart = template.length - parts.last().length - 1;
             if (template.charAt(indexOfPathExtensionStart) === '.') {
-                this.parts[this.parts.length - 1] = '.' + this.parts[this.parts.length - 1];
+                parts[parts.length - 1] = '.' + parts[parts.length - 1];
             }
         }
 
-        for (let i in this.parts) {
-            let part = this.parts[i];
-            let isParameterPart = part.includes('{');
-            let isExtensionPart = part.charAt(0) === '.';
-            let params = isParameterPart ? part.replace(/{|}/g, '').split('|') : [];
-            params = params.map(p => {
-                return p.includes(':')
-                    ? { name: p.split(':')[0], type: p.split(':')[1] }
-                    : { name: p, type: 'string' };
-            });
-            params.forEach(p => {
-                if (p.name.charAt(0) === '.') { p.name = p.name.substring(1); }
-            });
-
-            this.parts[i] = {
-                value: isExtensionPart ? part.replace('.', '') : part,
-                isExtension: isExtensionPart,
-                isParam: isParameterPart,
-                params: params
+        parts.forEach(part => {
+            let newPart = {
+                isExtension: part.charAt(0) === '.',
+                isParam: part.includes('{'),
+                params: []
             };
-        }
 
-        this.queryStringParams = queryStringParams || [];
+            newPart.value = newPart.isExtension ? part.replace('.', '') : part;
+
+            if (!newPart.isParam) {
+                this.parts.push(newPart);
+                return;
+            }
+
+            part.replace(/{|}/g, '').split('|').forEach(p => {
+                let newParam = { name: p, type: 'string', location: 'uri' };
+
+                if (p.includes(':')) {
+                    newParam.name = p.split(':')[0];
+                    newParam.type = p.split(':')[1];
+                }
+
+                if (newParam.name.charAt(0) === '.') {
+                    newParam.name = newParam.name.substring(1);
+                }
+
+                newPart.params.push(newParam.name);
+                this.params.push(newParam);
+            });
+
+            this.parts.push(newPart);
+        });
+
+        if (typeof queryStringParams !== 'undefined') {
+            queryStringParams.forEach(p => {
+                this.params.push({
+                    name: p.name, type: p.type, location: 'query'
+                });
+            });
+        }
     }
 
     /**
@@ -42,15 +74,16 @@
      * @param {boolean} queryString
      * @returns {string}
      */
-    relative(params, queryString) {
+    relative(params, queryStringParams) {
         params = params || {};
-        queryString = (typeof queryString === 'undefined') ? true : queryString;
+        queryStringParams = queryStringParams || {};
+
         // If the payload is not an object, its value belongs to the first route param
         if (typeof params !== 'object') {
-            if (!this.parts.some(p => p.isParam)) {
+            if (!this.params.hasUriParams()) {
                 params = {};
             } else {
-                let key = this.parts.find(p => p.isParam).params[0].name;
+                let key = this.params.getFirstUriParam().name;
                 let value = params;
                 params = {};
                 params[key] = value;
@@ -63,29 +96,35 @@
             }
 
             for (let partParam of part.params) {
-                if (params.hasProp(partParam.name)) {
-                    let v = params.getProp(partParam.name);
+                if (params.hasProp(partParam)) {
+                    let v = params.getProp(partParam);
+                    v = Parser.parse(v, 'string');
                     return part.isExtension ? '.' + v : '/' + v;
                 }
             }
-
-            throw new Error('Missing route parameters for ' + this.template);
+            
+            throw new Error('Missing route parameter ' + this.params.getFirstUriParam().name + ' for ' + this.template);
         });
 
         relativeUri = relativeUri.join('');
 
-        if (queryString === true) {
-            queryString = {};
-            for (let qsp of this.queryStringParams) {
-                if (params.hasProp(qsp.name)) { queryString.setProp(qsp.name, params.getProp(qsp.name)); }
+        let queryString = {};
+        if (typeof queryStringParams === 'string') {
+            relativeUri += queryStringParams;
+        } else if (typeof queryStringParams === 'object') {
+            this.params.getQueryParams().forEach(p => {
+                if (!queryStringParams.hasProp(p.name)) { return; }
+                let v = queryStringParams.getProp(p.name);
+                v = Parser.parse(v, 'string');
+                queryString.setProp(p.name, v);
+            });
+
+            if (Object.keys(queryString).any()) {
+                relativeUri += Object.toQueryString(queryString);
             }
         }
 
-        if (typeof queryString === 'object') {
-            relativeUri += Object.toQueryString(queryString);
-        }
-
-        return (relativeUri.length == 0) ? '/' : relativeUri;
+        return (relativeUri.length === 0) ? '/' : relativeUri;
     }
 
     /**

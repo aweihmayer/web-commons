@@ -11,6 +11,7 @@
         for (let r in refs) {
             let ref = refs[r];
             if (typeof ref.schema !== 'object' || typeof ref.schema.fill !== 'string') { continue; }
+            if (!data.hasProp(ref.schema.fill)) { continue; }
             let value = data.getProp(ref.schema.fill);
             ref.fill(value);
         }
