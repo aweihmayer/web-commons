@@ -86,10 +86,10 @@
     fetch(payload) {
         // If the payload is not an object, its value belongs to the first route param
         if (typeof payload !== 'object') {
-            if (!this.uri.params.hasUriParams()) {
+            if (!this.uri.params.hasUri()) {
                 payload = {};
             } else {
-                let key = this.uri.params.getFirstUriParam().name;
+                let key = this.uri.params.getFirstUri().name;
                 let value = params;
                 payload = {};
                 payload[key] = value;

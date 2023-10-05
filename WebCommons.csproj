@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Api\Response.js">
+    <None Update="Http\Api\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Bundling\Manager.js">
@@ -272,13 +272,13 @@
     <None Update="Utils\Parsing\Parser.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Primitives\string.js">
+    <None Update="Utils\String\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Web\Cookies\Cookie.js">
+    <None Update="Http\Cookies\Cookie.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Web\Metadata.js">
+    <None Update="Ui\Metadata\Metadata.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

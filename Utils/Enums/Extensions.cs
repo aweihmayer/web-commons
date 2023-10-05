@@ -16,17 +16,17 @@
             return (int[])Enum.GetValues(type);
         }
 
-        public static Dictionary<string, object> ToEnumMap(this Type type, CharacterCasing casing = CharacterCasing.Normal)
+        public static Dictionary<string, object> ToEnumMap(this Type type)
         {
             object[] values = type.GetValuesAsObject();
             return values.ToDictionary(
-                v => Enum.GetName(type, v).ToCasing(casing),
+                v => Enum.GetName(type, v).ToUpperSnakeCase(),
                 v => v);
         }
 
         public static Dictionary<string, object> ToEnumConstMap(this Type type)
         {
-            return type.ToEnumMap(CharacterCasing.UpperSnakeCase);
+            return type.ToEnumMap();
         }
     }
 }

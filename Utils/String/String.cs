@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Newtonsoft.Json.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
 namespace System
@@ -9,49 +7,8 @@ namespace System
 
     public static class StringUtils
     {
-        public static string ToCasing(this string str, CharacterCasing casing)
-        {
-            switch (casing) {
-                case CharacterCasing.Lower:
-                    return str.ToLower();
-                case CharacterCasing.Upper:
-                    return str.ToUpper();
-                case CharacterCasing.UpperSnakeCase:
-                    var chars = str.ToCharArray();
-                    string newStr = "";
+        #region Casings
 
-                    for (int i = 0; i < chars.Length; i++) {
-                        var c = chars[i];
-                        newStr += (i != 0 && Char.IsUpper(c) && Char.IsLower(chars[i - 1]))
-                            ? "_" + c
-                            : c.ToString();
-                    }
-
-                    return newStr.ToUpper();
-                default:
-                    return str;
-            }
-        }
-
-        /// <summary>
-        /// Transforms the first char of a string to lower case.
-        /// </summary>
-        public static string FirstCharToLowerCase(this string str)
-        {
-            return char.ToLower(str[0]) + str.Substring(1);
-        }
-
-        /// <summary>
-        /// Transforms the first char of a string to upper case.
-        /// </summary>
-        public static string FirstCharToUpperCase(this string str)
-        {
-            return char.ToUpper(str[0]) + str.Substring(1);
-        }
-
-        /// <summary>
-        /// Transforms a string into a slug.
-        /// </summary>
         public static string ToSlug(this string str)
         {
             str = str.Trim().ToLower();
@@ -60,6 +17,31 @@ namespace System
             str = Regex.Replace(str, @"\s+", " "); // Convert multiple spaces into one space   
             return Regex.Replace(str, @"\s", "-"); // Hyphens   
         }
+
+        public static string ToSnakeCase(this string str)
+        {
+            var chars = str.ToCharArray();
+            return string.Join("", chars.Select((c, i) => {
+                return (i != 0 && Char.IsUpper(c) && Char.IsLower(chars[i - 1]))
+                    ? "_" + c
+                    : c.ToString();
+            }));
+        }
+
+        public static string ToUpperSnakeCase(this string str) => str.ToSnakeCase().ToUpper();
+
+        #endregion
+
+        /// <summary>
+        /// Transforms the first char of a string to lower case.
+        /// </summary>
+        public static string FirstCharToLower(this string str) => char.ToLower(str[0]) + str.Substring(1);
+
+        /// <summary>
+        /// Transforms the first char of a string to upper case.
+        /// </summary>
+        public static string FirstCharToUpper(this string str) => char.ToUpper(str[0]) + str.Substring(1);
+
 
         /// <summary>
         /// Removes accents from a string, leaving only plain letters.

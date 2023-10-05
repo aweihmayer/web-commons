@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace WebCommons.Web
+namespace WebCommons.Http
 {
     /// <summary>
     /// Defines a cookie. To manipulate cookies, see <see cref="CookieExtensions">extensions</see>.

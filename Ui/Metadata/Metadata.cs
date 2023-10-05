@@ -1,4 +1,4 @@
-﻿namespace WebCommons.Web
+﻿namespace WebCommons.UI
 {
     /// <summary>
     /// Defines the HTML page metadata for search engines.

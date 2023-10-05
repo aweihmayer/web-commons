@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Reflection;
 
-namespace WebCommons.Web
+namespace WebCommons.Http
 {
     public static class CookieExtensions
     {

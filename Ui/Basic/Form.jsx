@@ -1,51 +1,51 @@
 ﻿class Form extends React.Component {
+    static defaultProps = {
+        encType: null,
+        onError: (ev) => ev,
+        onSubmit: (ev) => ev,
+        refs: {}
+    };
+
     render() {
-        return <form action="#" encType={this.props.encType} onSubmit={this.submit.bind(this)} ref="form">
+        return <form action="#" encType={this.props.encType} onSubmit={(ev) => { this.submit(ev); }} ref="form">
             {this.props.children}
         </form>;
     }
 
-    /**
-     * Determines if form is valid and submits it if it is.
-     * @param {Event} [ev] The submit event.
-     */
     submit(ev) {
         if (ev) { ev.preventDefault(); }
         else { ev = {}; }
-        let that = this;
 
-        return new Promise(function (resolve, reject) {
-            that.startLoading();
-            if (InputManager.isValid(that.props.refs)) {
-                resolve(InputManager.collect(that.props.refs));
+        return new Promise((resolve, reject) => {
+            this.startLoading();
+            if (InputManager.isValid(this.props.refs)) {
+                resolve(InputManager.collect(this.props.refs));
             } else {
-                that.stopLoading();
-                reject(new Error('Cannot submit invalid data'));
+                reject(new Error('Cannot submit invalid form data'));
             }
         })
-            .then(data => {
-                ev.data = data;
-                return ev;
-            })
-            .then(that.props.onSubmit)
-            .finally(that.stopLoading());
+        .then(data => {
+            ev.data = data;
+            return ev;
+        })
+        .then(this.props.onSubmit)
+        .catch(this.props.onError)
+        .finally(this.stopLoading());
     }
 
     fill(data) {
         InputManager.fill(this.props.refs, data);
     }
 
-    /**
-     * Activates all loaders in the form.
-     */
     startLoading() {
-        Loader.start(this.refs.form);
+        for (let r in this.refs) {
+            Loader.start(this.refs[r]);
+        }
     }
 
-    /**
-     * Deactivates all loaders in the form. 
-     */
     stopLoading() {
-        Loader.stop(this.refs.form);
+        for (let r in this.refs) {
+            Loader.stop(this.refs[r]);
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace WebCommons.Api
         {
             List<string> query = new();
             foreach (KeyValuePair<string, object> param in parameters) {
-                query.Add(param.Key.FirstCharToLowerCase() + "=" + HttpUtility.UrlEncode(param.Value.ToString()));
+                query.Add(param.Key.FirstCharToLower() + "=" + HttpUtility.UrlEncode(param.Value.ToString()));
             }
 
             return (query.Count == 0) ? "" : "?" + String.Join("&", query.ToArray());

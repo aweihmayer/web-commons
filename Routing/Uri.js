@@ -5,14 +5,14 @@
         this.template = String.removeQueryString(template);
         this.parts = [];
         this.params = [];
-        this.params.getUri = function (name) { return this.filter(p => p.name === name && p.location === 'uri'); }
-        this.params.getUriParams = function () { return this.filter(p => p.location === 'uri'); }
-        this.params.hasUriParams = function () { return this.getUriParams().any(); }
-        this.params.getFirstUriParam = function () { return this.getUriParams().first(); }
-        this.params.getQuery = function (name) { return this.filter(p => p.name === name && p.location === 'query'); }
-        this.params.getQueryParams = function () { return this.filter(p => p.location === 'query'); }
-        this.params.hasQueryParams = function () { return this.getQueryParams().any(); }
-        this.params.getFirstQueryParam = function () { return this.getQueryParams().first(); }
+        this.params.getUri = function (name) { return this.getAllUri().find(p => p.name); }
+        this.params.getAllUri = function () { return this.filter(p => p.location === 'uri'); }
+        this.params.hasUri = function (name) { return (typeof name === 'undefined') ? this.getAllUri().any() : this.getUri(name); }
+        this.params.getFirstUri = function () { return this.getAllUri().first(); }
+        this.params.getQuery = function (name) { return this.getAllQuery().find(p => p.name); }
+        this.params.getAllQuery = function () { return this.filter(p => p.location === 'query'); }
+        this.params.hasQuery = function (name) { return (typeof name === 'undefined') ? this.getAllQuery().any() : this.getQuery(name); }
+        this.params.getFirstQuery = function () { return this.getAllQuery().first(); }
 
         // Build parts
         let parts = template.split(/\/|\./).filter(p => p !== '');
@@ -80,10 +80,10 @@
 
         // If the payload is not an object, its value belongs to the first route param
         if (typeof params !== 'object') {
-            if (!this.params.hasUriParams()) {
+            if (!this.params.hasUri()) {
                 params = {};
             } else {
-                let key = this.params.getFirstUriParam().name;
+                let key = this.params.getFirstUri().name;
                 let value = params;
                 params = {};
                 params[key] = value;
@@ -103,7 +103,7 @@
                 }
             }
             
-            throw new Error('Missing route parameter ' + this.params.getFirstUriParam().name + ' for ' + this.template);
+            throw new Error('Missing route parameter ' + this.params.getFirstUri().name + ' for ' + this.template);
         });
 
         relativeUri = relativeUri.join('');
@@ -112,7 +112,7 @@
         if (typeof queryStringParams === 'string') {
             relativeUri += queryStringParams;
         } else if (typeof queryStringParams === 'object') {
-            this.params.getQueryParams().forEach(p => {
+            this.params.getAllQuery().forEach(p => {
                 if (!queryStringParams.hasProp(p.name)) { return; }
                 let v = queryStringParams.getProp(p.name);
                 v = Parser.parse(v, 'string');

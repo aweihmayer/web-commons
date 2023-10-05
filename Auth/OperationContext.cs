@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Auth;
 using WebCommons.Db;
-using WebCommons.Web;
+using WebCommons.Http;
 
 namespace WebCommons.Controllers
 {

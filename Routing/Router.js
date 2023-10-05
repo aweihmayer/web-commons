@@ -11,7 +11,7 @@ const Router = {
     onRouteChange: () => { },
 
     /**
-     * Callback function whenever the router or a fetch response encounters a 401 unauthorized response.
+     * Callback function whenever the router or a fetch response encounters a 401 unauthorized response. TODO is this used
      */
     onUnauthorizedResponse: response => response,
 

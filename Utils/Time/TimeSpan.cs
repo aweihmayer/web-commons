@@ -5,7 +5,7 @@
         public const int DAY_IN_SECONDS = 86400;
     }
 
-    public static class TimeExtensions
+    public static class TimeSpanExtensions
     {
 
     }

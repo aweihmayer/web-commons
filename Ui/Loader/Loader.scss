@@ -1,5 +1,5 @@
-﻿.loader {
-    display: none;
+﻿div.loader {
+    display: block;
     height: 75%;
     margin: auto;
     max-width: 150px;
@@ -8,12 +8,4 @@
         height: 100%;
         vertical-align: top;
     }
-
-    &.active {
-        display: block;
-    }
-}
-
-.hidden-while-loading {
-    display: none !important;
 }

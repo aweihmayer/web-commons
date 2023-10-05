@@ -1,4 +1,11 @@
 ﻿class Link extends React.Component {
+    static defaultProps = {
+        className: null,
+        href: null,
+        route: null,
+        params: null
+    };
+
     render() {
         let href = null;
         if (typeof this.props.href !== 'undefined') {

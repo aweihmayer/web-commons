@@ -1,63 +1,51 @@
-﻿/**
- * @param {object} props
- * @param {string|string[]} [props.className]
- * @param {string} [props.label]
- * @param {React.Component} [props.icon]
- * @param {'button'|'submit'} [props.type]
- * @param {boolean} [props.disabled]
- * @param {boolean} [props.loadable] Determines if the button can show a loading spinner.
- * @param {any} [props.value]
- */
-class Button extends React.Component {
+﻿class Button extends React.Component {
     static defaultProps = {
-        icon: null,
-        type: 'button',
+        className: null,
         disabled: false,
+        icon: null,
+        isLoading: false,
+        label: null,
         loadable: false,
+        onClick: null,
+        type: 'button',
+        value: null
     };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            disabled: props.disabled,
+            isLoading: props.isLoading
+        };
+    }
 
     render() {
         return <button ref="button"
             className={document.buildClassName(this.props.className, 'btn')}
+            disabled={this.state.disabled}
             type={this.props.type}
-            onClick={this.handleClick.bind(this)}
-            disabled={this.props.disabled}
+            onClick={(ev) => { this.handleClick(ev); }}
             data-value={this.props.value}>
-            {this.props.icon}
-            {this.props.label ? <span>{this.props.label}</span> : null}
-            {this.props.loadable ? <Loader></Loader> : null}
+            {this.state.isLoading ? <Loader></Loader> : this.props.children}
         </button>;
     }
 
-    /**
-     * Handles the on click event.
-     * @param {Event} ev
-     */
     async handleClick(ev) {
-        // Do nothing if there is no event attached
         if (!this.props.onClick) { return; }
-        // Disable the button to prevent multiple unwanted triggers by double clicking
         this.disable();
-        // Execute the on click event
         await this.props.onClick(ev);
-        // Renable the button
         this.enable();
     }
 
-    /**
-     * Disables the button.
-     * @param {boolean} [toggle] True to disable, false to enable. True by default.
-     */
     disable(toggle) {
         if (typeof toggle === 'undefined') { toggle = true; }
         this.refs.button.disabled = toggle;
+        this.setState({ disabled: toggle });
     }
 
-    /**
-     * Enables the button.
-     */
     enable() {
         this.refs.button.disabled = false;
         this.refs.button.removeAttribute('disabled');
+        this.setState({ disabled: false });
     }
 }

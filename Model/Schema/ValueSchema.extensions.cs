@@ -33,7 +33,7 @@ namespace WebCommons.Model
         public static ValueSchema? BuildSchema(this PropertyInfo property, object? instance = null)
         {
             ValueSchema schema = new() {
-                Name = property.Name.FirstCharToLowerCase(),
+                Name = property.Name.FirstCharToLower(),
                 DefaultValue = (instance != null) ? property.GetValue(instance) : null
             };
 
