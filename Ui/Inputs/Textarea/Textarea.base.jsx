@@ -6,8 +6,8 @@
                     id={this.id}
                     maxLength={this.schema.max}
                     name={this.schema.name}
-                    onBlur={this.handleBlur.bind(this)}
-                    onFocus={this.handleFocus.bind(this)}>
+                    onBlur={ev => this.handleBlur(ev)}
+                    onFocus={ev => this.handleFocus(ev)}>
                     {this.schema.default}
                 </textarea>
             </div>

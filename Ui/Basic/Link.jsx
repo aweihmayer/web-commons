@@ -1,8 +1,6 @@
 ﻿class Link extends React.Component {
     static defaultProps = {
         className: null,
-        href: null,
-        route: null,
         params: null
     };
 
@@ -15,8 +13,8 @@
         }
 
         return <a
-            onClick={Router.goTo}
-            className={document.buildClassName(this.props.className)}
+            onClick={ev => Router.goTo(ev)}
+            className={toClassName(this.props.className)}
             href={href}>
             {this.props.children}
         </a>;

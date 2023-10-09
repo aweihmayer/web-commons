@@ -42,7 +42,7 @@ class SearchEngineMetadata {
      */
     apply() {
         document.title = [this.titlePrefix, this.title, this.titleSuffix].filterEmpty().join(' ').trim();
-        let route = Router.current.route;
+        let route = App.state.route;
 
         let metadata = [
             { name: 'og:title',         attribute: 'property',  value: document.title },
@@ -53,7 +53,7 @@ class SearchEngineMetadata {
             { name: 'og:section',       attribute: 'property',  value: this.section },
             { name: 'og:modified_time', attribute: 'property',  value: this.modifiedTime },
             { name: 'og:image',         attribute: 'property',  value: this.image },
-            { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(Router.current.params) : null) }
+            { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(App.state.params) : null) }
         ];
 
         document.head.applyMetadata(metadata);

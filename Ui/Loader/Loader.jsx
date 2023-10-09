@@ -1,12 +1,6 @@
-﻿/**
- * Defines a spinning loader.
- * @param {object} props
- * @param {boolean} [props.active]
- * @param {string} [props.color] Hex color code
- */
-class Loader extends React.Component {
+﻿class Loader extends React.Component {
     static defaultProps = {
-        color = '#014c86'
+        color: '#014c86'
     };
 
     render() {
@@ -20,36 +14,52 @@ class Loader extends React.Component {
     }
 
     static start(component) {
-        if (typeof component.startLoading === 'function') { 
-            component.startLoading();
-        }
+        component = Loader.collectComponents(component);
+        component.forEach(c => {
+            if (typeof component.startLoading === 'function') {
+                component.startLoading();
+            }
 
-        for (let r in component.refs) {
-            Loader.start(component.refs[r]);
-        }
+            for (let r in component.refs) {
+                Loader.start(component.refs[r]);
+            }
 
-        // Show cursor loading animation if there are active loaders
-        if (Loader.documentHasLoaders()) {
-            document.body.style.cursor = 'progress';
-        }
+            // Show cursor loading animation if there are active loaders
+            if (Loader.documentHasLoaders()) {
+                document.body.style.cursor = 'progress';
+            }
+        });
     }
 
     static stop(component) {
-        if (typeof component.stopLoading === 'function') {
-            component.stopLoading();
-        }
+        component = Loader.collectComponents(component);
+        component.forEach(c => {
+            if (typeof component.stopLoading === 'function') {
+                component.stopLoading();
+            }
 
-        for (let r in component.refs) {
-            Loader.stop(component.refs[r]);
-        }
+            for (let r in component.refs) {
+                Loader.stop(component.refs[r]);
+            }
 
-        // Remove cursor progress animation if there are no more active loaders
-        if (!Loader.documentHasLoaders()) {
-            document.body.style.cursor = 'auto';
-        }
+            // Remove cursor progress animation if there are no more active loaders
+            if (!Loader.documentHasLoaders()) {
+                document.body.style.cursor = 'auto';
+            }
+        });
     }
 
     static documentHasLoaders() {
         return document.querySelectorAll('.loader').length > 0;
+    }
+
+    static collectComponents(component) {
+        if (component instanceof React.Component) {
+            return [component];
+        } else if (typeof component === 'object' && !Array.isArray(component)) {
+            return Object.keys(component).map(k => component[k]);
+        } else {
+            return [component];
+        }
     }
 };

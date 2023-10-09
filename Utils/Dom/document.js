@@ -20,7 +20,7 @@ document.createUniqueId = (id) => {
  * @param {string|Array} extras
  * @returns {string}
  */
-document.buildClassName = (className, extras) => {
+function toClassName(className, extras) {
     let classNames = [];
     if (Array.isArray(className)) { classNames = classNames.concat(className); }
     else if (typeof className === 'string') { classNames.push(className); }
@@ -29,7 +29,7 @@ document.buildClassName = (className, extras) => {
     else if (typeof extras === 'string') { classNames.push(extras); }
 
     return classNames.filter(c => (c != null && c != '')).join(' ').trim();
-};
+}
 
 document.getCode = () => {
     return parseInt(document.body.dataset.code);

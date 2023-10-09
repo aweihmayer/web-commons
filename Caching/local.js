@@ -24,7 +24,7 @@ class LocalStorageValue {
      * Caches an object and adds a timestamp to it.
      * @param {any} data
      */
-    cache(value) {
+    put(value) {
         value = CacheHelper.toCacheFormat(value);
         value = JSON.stringify(value);
         localStorage.setItem(this.name, value);

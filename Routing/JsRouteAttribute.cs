@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-using WebCommons.IO;
-using WebCommons.Model;
-
-namespace WebCommons.Controllers
+﻿namespace WebCommons.Controllers
 {
     /// <summary>
     /// Placed on action and used to generate JS routing.

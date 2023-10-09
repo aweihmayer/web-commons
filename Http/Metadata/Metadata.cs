@@ -1,4 +1,4 @@
-﻿namespace WebCommons.UI
+﻿namespace WebCommons.Http
 {
     /// <summary>
     /// Defines the HTML page metadata for search engines.
@@ -8,9 +8,11 @@
         public string? Title { get; set; } = null;
         public string? TitlePrefix { get; set; } = null;
         public string? TitleSuffix { get; set; } = null;
-        public string FullTitle { get {
-            return (this.TitlePrefix + " " + this.Title + " " + this.TitleSuffix).Trim();
-        } }
+        public string FullTitle {
+            get {
+                return (this.TitlePrefix + " " + this.Title + " " + this.TitleSuffix).Trim();
+            }
+        }
 
         public string? Section { get; set; } = null;
         public string? Description { get; set; } = null;
@@ -22,7 +24,6 @@
         public DateTime? ModifiedTime { get; set; } = null;
         public RobotIndexing Robots { get; set; } = RobotIndexing.Follow;
         public PageType Type { get; set; } = PageType.Website;
-
 
         #region Enums
 
@@ -37,30 +38,30 @@
 
         public SearchEngineMetadata(string siteName, string locale, string? title = null, string? titlePrefix = null, string? titleSuffix = null, string? description = null, string? image = null)
         {
-            this.SiteName = siteName;
-            this.Locale = locale;
-            this.TitlePrefix = titlePrefix;
-            this.TitleSuffix = titleSuffix;
-            this.Description = description;
-            this.Image = image;
+            SiteName = siteName;
+            Locale = locale;
+            TitlePrefix = titlePrefix;
+            TitleSuffix = titleSuffix;
+            Description = description;
+            Image = image;
         }
 
         public string Html
         {
             get
             {
-                string html = "<title>" + this.FullTitle + "</title>";
-                html += this.createMetadataElement("og:title", "property", this.FullTitle);
-                html += this.createMetadataElement("description", "name", this.Description);
-                html += this.createMetadataElement("og:description", "property", this.Description);
-                html += this.createMetadataElement("og:type", "property", (this.Type == PageType.Other) ? null : Enum.GetName(typeof(PageType), this.Type).ToLower());
-                html += this.createMetadataElement("og:section", "property", this.Section);
-                html += this.createMetadataElement("og:site_name", "property", this.SiteName);
-                html += this.createMetadataElement("og:locale", "property", this.Locale);
-                html += this.createMetadataElement("og:modified_time", "property", (this.ModifiedTime == null) ? null : this.ModifiedTime.Value.ToString("yyyy-MM-dd"));
-                html += this.createMetadataElement("og:image", "property", this.Domain + this.Image);
-                html += this.createMetadataElement("robots", "name", RobotsMap[this.Robots]);
-                html += this.createMetadataElement("url", "name", this.Domain + this.Url);
+                string html = "<title>" + FullTitle + "</title>";
+                html += createMetadataElement("og:title", "property", FullTitle);
+                html += createMetadataElement("description", "name", Description);
+                html += createMetadataElement("og:description", "property", Description);
+                html += createMetadataElement("og:type", "property", Type == PageType.Other ? null : Enum.GetName(typeof(PageType), Type).ToLower());
+                html += createMetadataElement("og:section", "property", Section);
+                html += createMetadataElement("og:site_name", "property", SiteName);
+                html += createMetadataElement("og:locale", "property", Locale);
+                html += createMetadataElement("og:modified_time", "property", ModifiedTime == null ? null : ModifiedTime.Value.ToString("yyyy-MM-dd"));
+                html += createMetadataElement("og:image", "property", Domain + Image);
+                html += createMetadataElement("robots", "name", RobotsMap[Robots]);
+                html += createMetadataElement("url", "name", Domain + Url);
                 return html;
             }
         }

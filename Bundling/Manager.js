@@ -5,15 +5,13 @@ const BundleManager = {
     bundles: {},
 
     /**
-     * Loads all bundles or assets for a route.
-     * @param {Route} route
+     * Loads all bundles.
+     * @param {string[]} bundles
      */
-    loadRouteBundles: async function(route) {
-        for (let b of route.bundles) {
-            // Load the bundle if it exists
+    loadBundles: async function(bundles) {
+        for (let b of bundles) {
             if (this.bundles.hasOwnPropert(b)) {
                 await this.loadBundle(b);
-            // Otherwise it is a single asset
             } else {
                 await this.load(b);
             }

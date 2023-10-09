@@ -32,17 +32,6 @@ Object.defineProperty(Array.prototype, 'last', {
 });
 
 /**
- * Determines if the array has any values.
- * @returns {boolean}
- */
-Object.defineProperty(Array.prototype, 'isEmpty', {
-    enumerable: false,
-    value: function () {
-        return (this.length === 0);
-    }
-});
-
-/**
  * Returns a new array with no null or empty string values.
  * @returns {Array}
  */

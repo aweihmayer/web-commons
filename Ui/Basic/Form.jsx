@@ -1,13 +1,18 @@
 ﻿class Form extends React.Component {
     static defaultProps = {
         encType: null,
-        onError: (ev) => ev,
-        onSubmit: (ev) => ev,
+        onValidationFail: ev => ev,
+        onSubmit: ev => ev,
         refs: {}
     };
 
+    constructor(props) {
+        super(props);
+        this._isLoading = false;
+    }
+
     render() {
-        return <form action="#" encType={this.props.encType} onSubmit={(ev) => { this.submit(ev); }} ref="form">
+        return <form action="#" encType={this.props.encType} onSubmit={ev => { this.submit(ev) }} ref="form">
             {this.props.children}
         </form>;
     }
@@ -16,12 +21,14 @@
         if (ev) { ev.preventDefault(); }
         else { ev = {}; }
 
-        return new Promise((resolve, reject) => {
+        if (this.isLoading()) { return; }
+
+        new Promise((resolve, reject) => {
             this.startLoading();
             if (InputManager.isValid(this.props.refs)) {
-                resolve(InputManager.collect(this.props.refs));
+                resolve(this.collect());
             } else {
-                reject(new Error('Cannot submit invalid form data'));
+                reject(ev);
             }
         })
         .then(data => {
@@ -29,23 +36,51 @@
             return ev;
         })
         .then(this.props.onSubmit)
-        .catch(this.props.onError)
+        .catch(this.props.onValidationFail)
         .finally(this.stopLoading());
     }
 
-    fill(data) {
-        InputManager.fill(this.props.refs, data);
+    fill(data, filter) {
+        let refs = this.getChildrenRefs();
+        InputManager.fill(refs, data, filter);
+    }
+
+    async collect(filter) {
+        let refs = this.getChildrenRefs();
+        return InputManager.collect(refs, filter);
+    }
+
+    clear(filter) {
+        let refs = this.getChildrenRefs();
+        InputManager.clear(refs, filter);
     }
 
     startLoading() {
-        for (let r in this.refs) {
-            Loader.start(this.refs[r]);
+        this._isLoading = true;
+        for (let r in this.refs) { Loader.start(this.refs[r]); }
+        let childRefs = this.getChildrenRefs();
+        for (let r in childRefs) {
+            Loader.start(childRefs[r]);
         }
     }
 
     stopLoading() {
-        for (let r in this.refs) {
-            Loader.stop(this.refs[r]);
+        this._isLoading = false;
+        for (let r in this.refs) { Loader.stop(this.refs[r]); }
+        let childRefs = this.getChildrenRefs();
+        for (let r in childRefs) {
+            Loader.stop(childRefs[r]);
         }
+    }
+
+    isLoading() { return this._isLoading; }
+
+    getChildrenRefs() {
+        let refs = {};
+        if (this.props.refs) {
+            refs = this.props.refs.refs ?? this.props.refs;
+        }
+
+        return Object.keys(refs).map(r => refs[r]).filter(r => !(r instanceof Form));
     }
 }

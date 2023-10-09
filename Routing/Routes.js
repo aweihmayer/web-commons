@@ -28,6 +28,16 @@ const Routes = {
     find: function (name) { this._routes.find(r => r.name === name) },
 
     /**
+     * Finds a match for a view route. We pick the route that has the least amount of uri parameters.
+     * @param {any} uri
+     */
+    matchViewRoute: function (uri) {
+        let matches = this._routes.filter(r => (r.method == 'GET' && r.view && r.uri.compare(uri)));
+        if (!matches.any()) { return null; }
+        return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.getAllUri().length)).first();
+    },
+
+    /**
      * A flattened list of all the routes.
      */
     _routes: []

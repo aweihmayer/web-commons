@@ -55,7 +55,7 @@
      */
     collect() {
         let value = this.raw();
-        return Parser.parse(value, this.schema.type);
+        return Parser.parse(value, this.schema.type, this.schema);
     }
 
     /**

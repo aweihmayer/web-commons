@@ -6,7 +6,7 @@
 
     render() {
         // TODO is binding always good. Can i do onKeypress={(ev) => { this.handleKeypress(ev); }}
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'text-input']} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'text-input']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
                 <input ref="input"
                     autoComplete={this.props.autocomplete}
@@ -15,10 +15,10 @@
                     maxLength={this.schema.max}
                     name={this.schema.name}
                     placeholder={this.props.placeholder}
-                    onBlur={this.handleBlur.bind(this)}
-                    onFocus={this.handleFocus.bind(this)}
-                    onInput={this.handleInput.bind(this)}
-                    onKeyPress={this.handleKeyPress.bind(this)}
+                    onBlur={ev => this.handleBlur(ev)}
+                    onFocus={ev => this.handleFocus(ev)}
+                    onInput={ev => this.handleInput(ev)}
+                    onKeyPress={ev => this.handleKeyPress(ev)}
                     tabIndex={this.props.tabIndex}
                     type={this.props.textType} />
             </div>

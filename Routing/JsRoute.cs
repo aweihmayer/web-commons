@@ -49,7 +49,7 @@ namespace WebCommons.Controllers
         [JsonProperty("view", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(JsonNoQuotesConverter))]
         public string? View {
-            get { return string.IsNullOrEmpty(this.view) ? null :string.Format("() => <{0} ref=\"view\" />", this.view); }
+            get { return string.IsNullOrEmpty(this.view) ? null :string.Format("() => <{0} key={{window.location.pathname + window.location.search}} ref=\"view\" />", this.view); }
             set { this.view = value; }
         }
 

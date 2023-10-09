@@ -32,6 +32,9 @@
     <None Update="Caching\local.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Http\Metadata\Metadata.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="I18n\http.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -102,6 +105,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Form.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Help\Tooltip.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Help\Tooltip.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Icons\Filter.jsx">
@@ -230,7 +239,7 @@
     <None Update="Ui\Toast\Container.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Toast\Toast.base.jsx">
+    <None Update="Ui\Toast\Toast.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Toast\Toast.scss">
@@ -278,7 +287,7 @@
     <None Update="Http\Cookies\Cookie.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Metadata\Metadata.js">
+    <None Update="Utils\Time\date.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

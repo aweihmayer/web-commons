@@ -1,0 +1,38 @@
+﻿/* Add a tooltip when the user hovers or taps on the element */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer; /* Optional: Change cursor to pointer for better mobile usability */
+}
+
+.tooltip {
+    border: 1px solid black;
+    border-radius: 1em;
+    cursor: pointer;
+    font-size: 0.65em;
+    font-weight: bold;
+    height: 1.2em;
+    text-align: center;
+    width: 1.2em;
+}
+
+.tooltip:hover::after,
+.tooltip:focus::after {
+    content: attr(data-tooltip); /* Display the data-tooltip attribute as tooltip text */
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.tooltip:hover::after,
+.tooltip:focus::after {
+    opacity: 1;
+}

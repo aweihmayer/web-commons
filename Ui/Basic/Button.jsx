@@ -21,12 +21,12 @@
 
     render() {
         return <button ref="button"
-            className={document.buildClassName(this.props.className, 'btn')}
+            className={toClassName(this.props.className, 'btn')}
             disabled={this.state.disabled}
             type={this.props.type}
-            onClick={(ev) => { this.handleClick(ev); }}
+            onClick={ev => { this.handleClick(ev) }}
             data-value={this.props.value}>
-            {this.state.isLoading ? <Loader></Loader> : this.props.children}
+            {this.state.isLoading ? <Loader /> : this.props.children}
         </button>;
     }
 
@@ -39,13 +39,18 @@
 
     disable(toggle) {
         if (typeof toggle === 'undefined') { toggle = true; }
-        this.refs.button.disabled = toggle;
         this.setState({ disabled: toggle });
     }
 
     enable() {
-        this.refs.button.disabled = false;
-        this.refs.button.removeAttribute('disabled');
         this.setState({ disabled: false });
+    }
+
+    startLoading() {
+        this.setState({ isLoading: true });
+    }
+
+    stopLoading() {
+        this.setState({ isLoading: false });
     }
 }

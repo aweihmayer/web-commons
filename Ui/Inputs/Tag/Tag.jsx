@@ -1,4 +1,9 @@
 ﻿class TagInput extends BaseInput {
+    constructor(props) {
+        super(props);
+        this.state = { data: [] };
+    }
+
     render() {
         return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'tag-input']} ref="container">
             <div>
@@ -7,31 +12,42 @@
                         autoComplete="off"
                         id={this.id}
                         name={this.schema.name}
-                        onBlur={this.handleBlur.bind(this)}
-                        onChange={this.search.bind(this)}
-                        onFocus={this.handleFocus.bind(this)}
-                        onKeyPress={this.search.bind(this)}
+                        onBlur={ev => this.handleBlur(ev)}
+                        onChange={ev => this.search(ev)}
+                        onFocus={ev => this.handleFocus(ev)}
+                        onKeyPress={ev => this.search(ev)}
                         type="search" />
                     <ul ref="options"></ul>
                 </div>
-                <ul ref="tags"></ul>
+                <ul>
+                    {this.state.data.map(d =>
+                        <li data-value={d.value} title={d.value} key={d.value}>
+                            {d.name}
+                            <Button value={d.value} onClick={ev => this.remove(d.value)}>x</Button>
+                        </li>
+                    )}
+                </ul>
             </div>
         </InputContainer>;
     }
 
     search(ev) {
-        this.refs.options.innerHTML = '';
+        this.closeSearch();
         let results = this.props.onSearch(ev.data);
-        if (results.length === 0) { return; }
+        if (!results.any()) { return; }
 
-        for (let result of results) {
-            let data = result.toTag ? result.toTag : result;
+        results.forEach(r => {
             let el = document.createElement('li');
-            el.dataset.value = data.value;
-            el.innerHTML = data.name;
-            el.onclick = this.add.bind(this);
+            el.dataset.value = r.value;
+            el.innerHTML = r.name;
+            el.onclick = ev => {
+                this.add({
+                    value: ev.target.dataset.value,
+                    name: ev.target.innerHTML
+                });
+            };
             this.refs.options.appendChild(el);
-        }
+        });
 
         this.refs.options.classList.add('open');
     }
@@ -43,63 +59,72 @@
 
     handleBlur() {
         // Set a small timeout because or else the blur event closes the search before we can add a tag
-        setTimeout(function () { this.closeSearch(); }.bind(this), 200);
+        setTimeout(() => { this.closeSearch() }, 200);
     }
 
-    add(ev) {
+    parse(data) {
+        if (Array.isArray(data)) {
+            return data.map(d => this.parse(d));
+        }
+
+        if (typeof data === 'object') {
+            if (typeof data.toOption === 'function') { return data.toOption(); }
+            if (data.name && data.value) { return data; }
+        }
+
+        if (typeof this.props.parse === 'function') {
+            data = this.props.parse(data);
+            return this.parse(data);
+        }
+
+        return data;
+    }
+
+    add(value) {
+        if (!this.schema.isEnumerable && this.count() > 0) {
+            this.setError('Maximum of 1');
+            return;
+        }
+
         if (typeof this.schema.max === 'number' && this.count() > this.schema.max) {
             this.setError('Maximum of ' + this.schema.max);
             return;
         }
 
-        if (ev.target) {
-            let node = ev.target;
-            let data = { value: node.dataset.value, name: node.innerHTML };
-        } else {
-            return;
-        }
-
-        let el = document.createElement('li');
-        el.dataset.value = data.value;
-        el.setAttribute('title', data.value);
-        el.innerHTML = data.name;
-        let closeButton = document.createElement('span');
-        closeButton.innerHTML = 'x';
-        closeButton.onclick = this.remove.bind(this);
-        el.appendChild(closeButton);
-        this.refs.tags.appendChild(el);
+        value = this.parse(value);
+        let data = [...this.state.data];
+        data.push(value);
+        this.setState({ data: data });
     }
 
-    remove(ev) {
-        let option = ev.target.closest('li');
-        option.parentNode.removeChild(option);
+    remove(value) {
+        let data = this.state.data.filter(d => d.value !== value);
+        this.setState({ data: data });
     }
 
     count() {
-        return this.refs.tags.childNodes.length;
+        return this.state.data.length;
     }
 
     raw() {
-        let data = Array.from(this.refs.tags.querySelectorAll('li')).map(tag => tag.dataset.value);
+        let data = this.state.data.map(d => d.value);
         if (this.schema.isEnumerable) { return data; }
         return (data.length > 0) ? data[0] : null;
     }
 
     fill(value) {
-        if (!value) { this.refs.tags.innerHTML = ''; return; }
-
-        if (!Array.isArray(value)) {
-            value = [value];
+        if (!value) {
+            this.setState({ data: [] });
+            return;
         }
-
-        for (let v of value) {
-            this.add(v);
-        }
+        value = this.parse(value);
+        if (!Array.isArray(value)) { value = [value]; }
+        this.setState({ data: value });
     }
 
     clear() {
         this.closeSearch();
-        this.refs.tags.innerHTML = '';
+        this.setState({ data: [] });
         this.clearError();
     }
 }

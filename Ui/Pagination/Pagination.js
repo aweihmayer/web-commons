@@ -1,7 +1,4 @@
-﻿/**
- * Pagination helper. Able to execute a callback for rerendering. 
- */
-class PaginationData {
+﻿class PaginationHelper {
     /**
      * @param {object[]|number} [items] If items is a number, it is the total count of items.
      * @param {number} [itemsPerPage]
@@ -133,7 +130,8 @@ class PaginationData {
     }
 
     /**
-     * Gets the pages that should be displayed. Inserts placeholders to seperate normal pagination from skipping to the first page or last page.
+     * Gets the pages that should be displayed.
+     * Inserts placeholders to seperate normal pagination from skipping to the first page or last page.
      * @returns {number[]}
      */
     getDisplayedPages() {

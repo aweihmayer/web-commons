@@ -5,15 +5,16 @@
                 <input ref="input"
                     id={this.id}
                     name={this.schema.name}
-                    type="checkbox" />
+                    type="checkbox"
+                    onChange={ev => this.handleChange(ev)} />
             </div>
         </InputContainer>;
     }
 
     fill(value) {
         try {
-            let isChecked = Parse.bool(value);
-            this.refs.input.check = isChecked;
+            let isChecked = Parser.bool(value);
+            this.refs.input.checked = isChecked;
         } catch { }
     }
 

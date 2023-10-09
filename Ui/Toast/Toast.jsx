@@ -6,7 +6,7 @@ class Toast extends React.Component {
     static custom = {
         response: {},
         routes: []
-    }
+    };
 
     render() {
         let icon = null;
@@ -34,7 +34,7 @@ class Toast extends React.Component {
         }
 
         let action = (this.props.actionLabel && this.props.action)
-            ? <button type="button" onClick={this.handleOnActionClick.bind(this)} ref="action">{this.props.actionLabel}</button>
+            ? <button type="button" onClick={ev => this.handleActionClick(ev)} ref="action">{this.props.actionLabel}</button>
             : null;
 
         return <li>
@@ -42,15 +42,15 @@ class Toast extends React.Component {
             <article
                 className={this.props.type}
                 data-id={this.props.id}
-                onMouseEnter={this.onMouseEnter.bind(this)}
-                onMouseLeave={this.onMouseLeave.bind(this)}>
+                onMouseEnter={ev => this.onMouseEnter(ev)}
+                onMouseLeave={ev => this.onMouseLeave(ev)}>
                 {icon}
                 <div className="toast-message">
                     {this.props.title ? <h6>{this.props.title}</h6> : null}
                     {this.props.message ? <p>{this.props.message}</p> : null}
                 </div>
                 {action}
-                <button onClick={this.close.bind(this)}>X</button>
+                <button onClick={ev => this.close(ev)}>X</button>
             </article>
         </li>;
     }
@@ -59,7 +59,7 @@ class Toast extends React.Component {
      * Calls the custom action event and closes the toast.
      * @param {any} ev
      */
-    handleOnActionClick(ev) {
+    handleActionClick(ev) {
         this.refs.action.disabled = true;
         this.props.action(ev);
         this.close();
@@ -132,6 +132,8 @@ class Toast extends React.Component {
      * @param {Function} [toast.action] The on click event of the action button.
      */
     static add(toast) {
+        console.log('Toast added', toast);
+
         if (toast instanceof Response || toast.isResponse) {
             let responseToast = { type: toast.ok ? 'success' : 'error' };
 

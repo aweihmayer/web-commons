@@ -1,10 +1,13 @@
 ﻿class InputContainer extends React.Component {
     render() {
         let id = this.props.id + '-container';
-        let className = document.buildClassName('input-container', this.props.className);
+        let className = toClassName('input-container', this.props.className);
 
         return <div id={id} className={className} ref="container">
-            {this.props.label ? <label htmlFor={this.props.id}>{this.props.label.t()}</label> : null}
+            <div className="input-labels">
+                {this.props.label ? <label htmlFor={this.props.id}>{this.props.label.t()}</label> : null}
+                <Tooltip tooltip={this.props.tooltip} />
+            </div>
             {this.props.children}
             <div className="input-message">
                 <p ref="message"></p>

@@ -5,7 +5,7 @@
     }
 
     render() {
-        let className = document.buildClassName('text-input', this.props.className);
+        let className = toClassName('text-input', this.props.className);
         return null; // TODO
         /*return <InputContainer className={className} id={this.containerId} inputId={this.inputId} ref="container">this.props.options.map((v, k) => (
             <label key={k} htmlFor={'input-' + this.props.name + '-' + v}>

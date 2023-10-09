@@ -18,6 +18,13 @@ Response.prototype.deserialize = async function (request) {
 Response.prototype.getDateTimestamp = function () { return Date.parse(this.headers.get('Date')); }
 
 /**
+ * Determines if the response is too stale to use based on the date header.
+ */
+Response.prototype.isExpired = function (duration) {
+    return (this.getDateTimestamp() + duration) >= Date.unixTimestamp();
+};
+
+/**
  * Mimics the deserialization of a response with a normal object.
  * Useful when you fetch things from a cache, but you still want to use the same code for your promise chains.
  * @param {object} body The data that mimics a response.

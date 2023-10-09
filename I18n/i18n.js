@@ -13,24 +13,24 @@ String.prototype.t = function (replacements) {
     // Replace with array
     if (Array.isArray(replacements)) {
         if (placeholders.length > replacements.length) {
-            console.warn('Missing i18n replacements for ' + value);
+            console.error('Missing i18n replacements for ' + value);
         }
 
-        for (let i = 0; i < replacements.length; i++) {
-            value = value.replaceAll('{' + i + '}', replacements[i]);
-        }
+        replacements.forEach((r, i) => {
+            value = value.replaceAll('{' + i + '}', r);
+        });
 
         return value;
-    // Replace with object
+        // Replace with object
     } else {
-        for (let placeholder in placeholders) {
-            let replacement = replacements.getProp(placeholder);
-            if (typeof replacement === 'undefined' || replacements === null) {
-                console.warn('Missing i18n replacement ' + p + ' for ' + value);
-                continue;
+        placeholders.forEach(p => {
+            let r = replacements.getProp(p);
+            if (typeof r === 'undefined' || r === null) {
+                console.error('Missing i18n replacement ' + p + ' for ' + value);
+                return;
             }
-            value = value.replaceAll('{' + placeholder + '}', replacement);
-        }
+            value = value.replaceAll('{' + p + '}', r);
+        });
 
         return value;
     }
@@ -82,7 +82,7 @@ Object.defineProperty(Object.prototype, 't', {
         // The value is not an object, it is valid
         if (typeof value !== 'object') { return value.t(replacements, plural); }
         // The value is an object, it must have a property equal to the locale
-        let locale = Router.current.locale;
+        let locale = App.state.locale;
         if (value.hasOwnProperty(locale)) { return value[locale].t(replacements, plural); }
         throw new Error('The ' + locale + ' value is missing for ' + JSON.stringify(value));
     }

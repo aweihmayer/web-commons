@@ -5,68 +5,55 @@
 class App extends React.Component {
     constructor(props) {
         super(props);
-        let code = !document.body.dataset.code ? 200 : document.body.dataset.code;
-        this.state = { code: parseInt(code) };
         App.instance = this;
+        this.state = {
+            code: parseInt(!document.body.dataset.code ? 200 : document.body.dataset.code),
+            route: null,
+            params: {},
+            locale: 'en'
+        };
     }
 
     static root = null;
     static instance = null;
+    static get state() { return App.instance.state; }
 
     /**
      * Mounts the app while loading necessary assets and adding listeners.
      * @param {Element} root The element that will contain the app.
-     * @param {any} component The React component of the app.
      */
-    static async mount(root, component) {
-        // When the user navigates using the browser, we must detect the new route and rerender
-        window.addEventListener('popstate', function (event) {
-            Router.detect();
-            App.refresh(200);
+    static async mount(root) {
+        window.addEventListener('popstate', ev => {
+            Router.reload(window.location.pathname + window.location.search, true);
         });
-
-        document.head.metadata.reset();
-        Router.detect();
-        await BundleManager.loadRouteBundles(Router.current.route);
-
         App.root = ReactDOM.createRoot(root);
-        App.root.render(component);
+        App.root.render(<App />);
     }
 
-    /**
-     * Unmounts the app.
-     */
     static unmount() {
         App.root.unmount();
     }
 
-    /**
-     * Rerenders the app based on the current location.
-     * @param {any} code The HTTP code.
-     */
-    static refresh(code) {
-        if (typeof code == 'undefined') { App.instance.setState({}); }
-        else { App.instance.setState({ code: code }); }
+    setRouting(routing) {
+        this.setState({
+            code: routing.code || 200,
+            route: routing.route,
+            params: routing.params,
+            locale: routing.locale
+        });
     }
 
-    /**
-     * Returns the current view route.
-     * @returns {React.Component}
-     */
+    static setRouting(routing) {
+        App.instance.setRouting(routing);
+    }
+
     render() {
-        document.setCode(this.state.code);
-
-        if (!document.hasErrorCode()) {
-            return Router.current.route.view();
-        }
-
-        if (Routes.error[this.state.code]) { return Routes.error[this.state.code].view(); }
-        else if (Routes.error.default) { return Routes.error.default.view(); }
-        else { throw new Error('Error view not found. Implement Route.error.default or Route.error.CODE'); }
+        if (this.state.route === null) { return null; }
+        return this.state.route.view();
     }
 
     componentDidMount() {
-        document.head.metadata.apply();
+        Router.goTo(window.location.pathname + window.location.search, true);
     }
 
     componentWillUpdate() {
@@ -74,6 +61,7 @@ class App extends React.Component {
     }
 
     componentDidUpdate() {
+        document.setCode(this.state.code);
         document.head.metadata.apply();
     }
 }

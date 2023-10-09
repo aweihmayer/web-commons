@@ -25,41 +25,39 @@
         * Clears the cache of a request.
         * @param {object} payload
         */
-        this.cache.clear = (payload) => {
+        this.cache.clear = function (payload) {
             let request = route.buildRequest(payload);
             caches.open(this.cache.name).then(cache => { cache.delete(request); });
         };
-        this.cache.clear.bind(this);
 
         /**
          * Clears the cache of an entire group of requests. 
          */
-        this.cache.clearGroup = () => {
+        this.cache.clearGroup = function () {
             caches.delete(this.cache.name);
-        }
-        this.cache.clearGroup.bind(this);
+        };
     }
 
     /**
      * Gets the route parameters based on a path.
-     * @returns {object} Route parameters of the path and the query string.
+     * @returns {object}
      */
-    getParams() {
-        if (Router.current.route.name !== this.name) { throw new Error('Can only call get params on the current route'); }
+    getParams(href) {
+        href = href || (window.location.pathname + window.location.search);
+        let params = {};
 
-        let uri = window.location.pathname;
+        // Get query string params
+        if (href.includes('?')) {
+            params = Object.fromQueryString(href);
+            Object.keys(params).forEach(p => {
+                let queryParamSchema = this.uri.params.getQuery(p);
+                if (queryParamSchema == null) { return; }
+                params[p] = Parser.parse(params[p], queryParamSchema.type);
+            });
+        }
 
-        let params = Object.fromQueryString(uri);
-        params.forEach(p => {
-            let queryParamSchema = this.uri.params.getQuery(k);
-            if (queryParamSchema === null) { return; }
-            params[k] = Parser.parse(params[k], queryParamSchema.type);
-        });
-
-        uri = new Uri(uri);
-
-        // The route and the current location don't match
-        if (uri.parts.length !== this.uri.parts.length) { return {}; }
+        let uri = new Uri(href);
+        if (!uri.compare(this.uri)) { return {}; }
 
         uri.parts.forEach((p, i) => {
             // The part is not a parameter, skip it
@@ -78,24 +76,7 @@
 
     static onFetchResponse = response => response;
 
-    /**
-     * Sends a request and returns the response.
-     * @param {object} payload
-     * @returns {Promise}
-     */
     fetch(payload) {
-        // If the payload is not an object, its value belongs to the first route param
-        if (typeof payload !== 'object') {
-            if (!this.uri.params.hasUri()) {
-                payload = {};
-            } else {
-                let key = this.uri.params.getFirstUri().name;
-                let value = params;
-                payload = {};
-                payload[key] = value;
-            }
-        }
-
         let request = this.buildRequest(payload);
 
         if (this.cache.name) {
@@ -135,18 +116,22 @@
             });
     }
 
-    /**
-     * Callback function fetch responses.
-     */
     static onFetchResponse = response => response;
 
-    /**
-     * Builds a request.
-     * @param {object} payload
-     * @returns {Request}
-     */
     buildRequest(payload) {
         payload = payload || {};
+        // If the payload is not an object, its value belongs to the first route param
+        if (typeof payload !== 'object') {
+            if (!this.uri.params.hasUri()) {
+                payload = {};
+            } else {
+                let key = this.uri.params.getFirstUri().name;
+                let value = payload;
+                payload = {};
+                payload[key] = value;
+            }
+        }
+
         let path = this.uri.relative(payload);
 
         let headers = new Headers();
@@ -159,5 +144,9 @@
             body: (this.method == 'GET') ? null : JSON.stringify(payload),
             headers: headers
         });
+    }
+
+    goTo(params) {
+        Router.goTo(this.uri.relative(params));
     }
 }
