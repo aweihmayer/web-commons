@@ -21,20 +21,20 @@
         this.bundles = options.bundles || [];
 
         this.cache = options.cache || {};
-        /**
-        * Clears the cache of a request.
-        * @param {object} payload
-        */
+        this.cache.isEnabled = (this.cache.name != null);
+        this.cache.put = function (request, response) {
+            return caches.open(this.name).then(cache => {
+                let clonedResponse = response.clone();
+                cache.put(request, response);
+                return clonedResponse.deserialize(request);
+            });
+        };
         this.cache.clear = function (payload) {
             let request = route.buildRequest(payload);
-            caches.open(this.cache.name).then(cache => { cache.delete(request); });
+            caches.open(this.name).then(cache => { cache.delete(request); });
         };
-
-        /**
-         * Clears the cache of an entire group of requests. 
-         */
         this.cache.clearGroup = function () {
-            caches.delete(this.cache.name);
+            caches.delete(this.name);
         };
     }
 
@@ -76,39 +76,39 @@
 
     static onFetchResponse = response => response;
 
-    fetch(payload) {
+    fetch(payload, options) {
+        options = options || {};
         let request = this.buildRequest(payload);
 
-        if (this.cache.name) {
-            return caches.open(cache.name)
+        if (this.cache.isEnabled && !options.noCache) {
+            return caches.open(this.cache.name)
                 .then(cache => cache.match(request))
-                .then(response => {
-                    if (response) {
-                        if (!this.cache.duration) { return response; }
-                        if ((response.getDateTimestamp() + this.cache.duration) >= Date.unixTimestamp()) { return response; }
+                .then(cachedResponse => {
+                    if (cachedResponse) {
+                        if (!this.cache.duration) {
+                            return cachedResponse.deserialize(request);
+                        } else if (cachedResponse.isExpired(this.cache.duration)) { // TODO in seconds instaed of ms
+                            return cachedResponse.deserialize(request);
+                        }
                     }
 
-                    return fetch(request)
-                        .then(response => {
-                            if (response.ok) { cache.put(request, response); }
-                            return response;
-                        });
-                })
-                .then(response => response.deserialize(request))
-                .then(response => {
-                    if (!response.ok) { throw response; }
-                    return response;
+                    return this.fetch(request, { noCache: true });
                 });
         }
 
         return fetch(request)
             .then(response => {
                 response.route = this.name;
-                return Route.onFetchResponse(response)
+                return Route.onFetchResponse(response);
             })
             .then(response => {
-                if (response.retry) { return this.fetch(payload); }
-                return response.deserialize(request);
+                if (response.retry) {
+                    return this.fetch(request);
+                } else if (this.cache.isEnabled) {
+                    return this.cache.put(request, response);
+                } else {
+                    return response.deserialize(request);
+                }
             })
             .then(response => {
                 if (!response.ok) { throw response; }
@@ -130,6 +130,8 @@
                 payload = {};
                 payload[key] = value;
             }
+        } else if (payload instanceof Request) {
+            return payload;
         }
 
         let path = this.uri.relative(payload);
