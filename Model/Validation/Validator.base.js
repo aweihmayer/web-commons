@@ -60,7 +60,7 @@
             console.warn('No sub error message defined for ' + type);
             return 'Error';
         }
-        return message[type].t(schema);
+        return translate(message[type], schema);
     },
 
     messages: {

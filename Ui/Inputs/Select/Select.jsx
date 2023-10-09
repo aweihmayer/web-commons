@@ -9,7 +9,7 @@
                     onChange={ev => this.handleChange(ev)}
                     onFocus={ev => this.handleFocus(ev)}>
                     {this.schema.values.map((v, i) =>
-                        <option key={i} value={v}>{this.schema.i18n[v].t(v)}</option>
+                        <option key={i} value={v}>{t(this.schema.i18n[v], v)}</option>
                     )}
                 </select>
             </div>

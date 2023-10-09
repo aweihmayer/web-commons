@@ -33,7 +33,7 @@
 
     search(ev) {
         this.closeSearch();
-        let results = this.props.onSearch(ev.data);
+        let results = this.props.onSearch(this.refs.input.value);
         if (!results.any()) { return; }
 
         results.forEach(r => {

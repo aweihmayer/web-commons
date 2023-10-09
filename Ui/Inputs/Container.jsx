@@ -5,7 +5,7 @@
 
         return <div id={id} className={className} ref="container">
             <div className="input-labels">
-                {this.props.label ? <label htmlFor={this.props.id}>{this.props.label.t()}</label> : null}
+                {this.props.label ? <label htmlFor={this.props.id}>{translate(this.props.label)}</label> : null}
                 <Tooltip tooltip={this.props.tooltip} />
             </div>
             {this.props.children}

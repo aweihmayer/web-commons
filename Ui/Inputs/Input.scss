@@ -30,7 +30,7 @@
     }
 
     &.one-line {
-        > label, .input-wrapper {
+        .input-labels, .input-wrapper {
             display: inline-block;
             height: auto;
             width: auto;
