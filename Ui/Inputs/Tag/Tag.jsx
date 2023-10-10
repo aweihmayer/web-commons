@@ -5,7 +5,7 @@
     }
 
     render() {
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'tag-input']} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'tag-input']} tooltip={this.props.tooltip} ref="container">
             <div>
                 <div className="input-wrapper">
                     <input ref="input"

@@ -31,10 +31,10 @@
         };
         this.cache.clear = function (payload) {
             let request = route.buildRequest(payload);
-            caches.open(this.name).then(cache => { cache.delete(request); });
+            return caches.open(this.name).then(cache => { cache.delete(request); });
         };
         this.cache.clearGroup = function () {
-            caches.delete(this.name);
+            return caches.delete(this.name);
         };
     }
 

@@ -1,6 +1,6 @@
 ﻿class CheckboxInput extends BaseInput {
     render() {
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'checkbox-input checkbox-single-input one-line']} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'checkbox-input checkbox-single-input one-line']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
                 <input ref="input"
                     id={this.id}

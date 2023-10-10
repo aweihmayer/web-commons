@@ -1,6 +1,6 @@
 ﻿class TextareaInput extends BaseInput {
     render() {
-        return <InputContainer label={this.schema.label} className={[this.props.className, 'textarea-input']} ref="container">
+        return <InputContainer label={this.schema.label} className={[this.props.className, 'textarea-input']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
                 <textarea ref="input"
                     id={this.id}

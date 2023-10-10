@@ -1,6 +1,6 @@
 ﻿class CheckboxGroupInput extends BaseInput {
     render() {
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'checkbox-input checkbox-group-input']} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'checkbox-input checkbox-group-input']} tooltip={this.props.tooltip} ref="container">
             {null}
         </InputContainer>;
     }

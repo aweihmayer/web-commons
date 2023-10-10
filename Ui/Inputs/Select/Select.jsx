@@ -1,6 +1,6 @@
 ﻿class SelectInput extends BaseInput {
     render() {
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'select-input']} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'select-input']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
                 <select ref="input"
                     defaultValue={this.props.value}

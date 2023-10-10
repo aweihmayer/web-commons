@@ -18,6 +18,32 @@ const Routes = {
             this.setProp(route.name, route);
             this._routes.push(route);
         }
+
+        this.setGroupFunctions();
+    },
+
+    setGroupFunctions(routes) {
+        routes = routes ?? this;
+        if (typeof routes !== 'object') { return; }
+        if (routes instanceof Route) { return; }
+        routes.getRoutesArray = function () {
+            let routes = [];
+            for (let k in this) {
+                if (this[k] instanceof Route) { routes.push(this[k]); }
+                else if (typeof this[k] === 'object') { routes.concat(this[k].getRoutesArray()); }
+            }
+
+            return routes;
+        };
+
+        routes.clearCaches = function () {
+            let routes = this.getRoutesArray();
+            return Promise.all(routes.map(r => r.cache.clearGroup()));
+        }
+
+        for (let k in routes) {
+            this.setGroupFunctions(routes[k]);
+        }
     },
 
     /**
@@ -34,11 +60,11 @@ const Routes = {
     matchViewRoute: function (uri) {
         let matches = this._routes.filter(r => (r.method == 'GET' && r.view && r.uri.compare(uri)));
         if (!matches.any()) { return null; }
-        return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.getAllUri().length)).first();
+        return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.params.getAllUri().length)).first();
     },
 
     /**
-     * A flattened list of all the routes.
+     * The flat list of all the routes.
      */
     _routes: []
 };

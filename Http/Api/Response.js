@@ -21,7 +21,7 @@ Response.prototype.getDateTimestamp = function () { return Date.parse(this.heade
  * Determines if the response is too stale to use based on the date header.
  */
 Response.prototype.isExpired = function (duration) {
-    return (this.getDateTimestamp() + duration) >= Date.unixTimestamp();
+    return (this.getDateTimestamp() + duration) >= Date.now();
 };
 
 /**
