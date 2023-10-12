@@ -15,9 +15,9 @@ document.createUniqueId = (id) => {
 };
 
 /**
- * Builds a class name string from varying types.
- * @param {string|Array} className
- * @param {string|Array} extras
+ * Builds a class name string.
+ * @param {any} className
+ * @param {any} extras
  * @returns {string}
  */
 function toClassName(className, extras) {
@@ -28,18 +28,30 @@ function toClassName(className, extras) {
     if (Array.isArray(extras)) { classNames = classNames.concat(extras); }
     else if (typeof extras === 'string') { classNames.push(extras); }
 
-    return classNames.filter(c => (c != null && c != '')).join(' ').trim();
+    return classNames.filterEmpty().join(' ').trim();
 }
 
+/**
+ * Gets the HTTP code attribute on the body element.
+ * @returns {number}
+ */
 document.getCode = () => {
     return parseInt(document.body.dataset.code);
 };
 
+
+/**
+ * Sets the HTTP code attribute on the body element.
+ */
 document.setCode = (code) => {
     document.body.dataset.code = code;
     document.body.setAttribute('data-code', code);
 };
 
+/**
+ * Determines if the HTTP code attribute on the body element is an error code.
+ * @returns {boolean}
+ */
 document.hasErrorCode = () => {
     let code = document.body.dataset.code;
     code = parseInt(code);

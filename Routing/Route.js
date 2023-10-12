@@ -87,7 +87,7 @@
                     if (cachedResponse) {
                         if (!this.cache.duration) {
                             return cachedResponse.deserialize(request);
-                        } else if (cachedResponse.isExpired(this.cache.duration)) { // TODO in seconds instaed of ms
+                        } else if (cachedResponse.isExpired(this.cache.duration)) {
                             return cachedResponse.deserialize(request);
                         }
                     }

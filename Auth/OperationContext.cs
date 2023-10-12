@@ -122,7 +122,7 @@ namespace WebCommons.Controllers
 
                 switch (this.AuthMethod) {
                     case AuthMethod.Token:
-                        UserToken<TUser>? accessToken = this.Db.FindToken(this.AccessToken, true);
+                        UserToken<TUser>? accessToken = this.Db.FindToken(this.AccessToken.Value, true);
                         if (accessToken == null) {
                             this.wasUserFetched = true;
                             this._user = null;

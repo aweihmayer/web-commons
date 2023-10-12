@@ -40,7 +40,7 @@ namespace WebCommons.Db
         {
             // Find the access token with the user
             if (!token.HasValue) { return default; }
-            UserToken<TUser>? userToken = this.FindToken(token, true);
+            UserToken<TUser>? userToken = this.FindToken(token.Value, true);
             if (userToken == null || userToken.IsExpired() || userToken.User == null) { return default; }
             TUser user = userToken.User;
 
@@ -77,7 +77,7 @@ namespace WebCommons.Db
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { return default; }
             TUser? user = this.Users.FirstOrDefault(u => u.Email == email);
             if (user == null) { return null; }
-            if (password.IsValidPassword(user)) { return user; }
+            if (AuthUtils.VerifyEncryptedValue(password, user)) { return user; }
             return null;
         }
 
@@ -88,24 +88,11 @@ namespace WebCommons.Db
         public DbSet<UserToken<TUser>> Tokens { get; set; }
 
         /// <summary>
-        /// Builds the base token query.
-        /// </summary>
-        private IQueryable<UserToken<TUser>> FetchTokensQuery(TUser user, UserTokenType? type, bool includeUsers = false)
-        {
-            var query = includeUsers
-                ? this.Tokens.Include(t => t.User)
-                : this.Tokens.AsQueryable();
-            query = query.Where(t => t.UserId == user.Id).WhereIsNotExpired();
-            if (type.HasValue) { query = query.Where(t => t.Type == type); }
-            return query;
-        }
-
-        /// <summary>
         /// Fetches all tokens for a user.
         /// </summary>
         public List<UserToken<TUser>> FetchTokens(TUser user, bool includeUsers = false)
         {
-            return this.FetchTokensQuery(user, null, includeUsers).ToList();
+            return this.Tokens.WhereTokenBelongsToUser(user, null, includeUsers).ToList();
         }
 
         /// <summary>
@@ -113,7 +100,7 @@ namespace WebCommons.Db
         /// </summary>
         public List<UserToken<TUser>> FetchTokens(TUser user, UserTokenType? type, bool includeUsers = false)
         {
-            return this.FetchTokensQuery(user, type, includeUsers).ToList();
+            return this.Tokens.WhereTokenBelongsToUser(user, type, includeUsers).ToList();
         }
 
         /// <summary>
@@ -121,18 +108,19 @@ namespace WebCommons.Db
         /// </summary>
         public UserToken<TUser>? FindToken(TUser user, UserTokenType? type, bool includeUsers = false)
         {
-            return this.FetchTokensQuery(user, type, includeUsers).FirstOrDefault();
+            return this.Tokens.WhereTokenBelongsToUser(user, type, includeUsers).FirstOrDefault();
         }
 
         /// <summary>
         /// Finds a token by id.
         /// </summary>
-        public UserToken<TUser>? FindToken(Guid? id, bool includeUser = false)
+        public UserToken<TUser>? FindToken(Guid id, bool includeUser = false)
         {
+            string encryptedId = AuthUtils.Encrypt(id);
             var query = includeUser
                 ? this.Tokens.Include(t => t.User)
                 : this.Tokens.AsQueryable();
-            return query.Where(t => t.Id == id).WhereIsNotExpired().FirstOrDefault();
+            return query.Where(t => t.EncryptedId == encryptedId).WhereIsNotExpired().FirstOrDefault();
         }
 
         #endregion

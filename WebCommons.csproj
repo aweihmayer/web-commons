@@ -23,13 +23,13 @@
     <None Update="Http\Api\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Bundling\Manager.js">
+    <None Update="Io\Bundling\Manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caching\helper.js">
+    <None Update="Utils\Caching\helper.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caching\local.js">
+    <None Update="Utils\Caching\local.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Metadata\Metadata.js">
@@ -41,28 +41,28 @@
     <None Update="I18n\i18n.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\required.js">
+    <None Update="Utils\Validation\required.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\boolean.js">
+    <None Update="Utils\Validation\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\int.js">
+    <None Update="Utils\Validation\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\Validator.base.js">
+    <None Update="Utils\Validation\Validator.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Schema\ValueSchema.js">
+    <None Update="Http\Model\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\email.js">
+    <None Update="Utils\Validation\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\number.js">
+    <None Update="Utils\Validation\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Model\Validation\string.js">
+    <None Update="Utils\Validation\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\App.jsx">

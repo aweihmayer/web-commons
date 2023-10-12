@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebCommons.Auth;
 
 namespace WebCommons.Db
 {
@@ -9,17 +10,30 @@ namespace WebCommons.Db
 
     public static class UserTokenDurations
     {
-        public static TimeSpan Refresh { get; set; } = TimeSpan.FromDays(14);
+        public static TimeSpan Refresh { get; set; } = TimeSpan.FromDays(15);
         public static TimeSpan Access { get; set; } = TimeSpan.FromMinutes(30);
     }
 
     [Table("token")]
-    [Index(nameof(Id), IsUnique = true)]
+    [Index(nameof(EncryptedId), IsUnique = true)]
     public class UserToken<TUser> : IUserToken, TimestampableEntity where TUser : CommonUser
     {
-        [Column("token")]
+        [Column("encrypted_id")]
         [Key]
-        public Guid Id { get; set; }
+        public string EncryptedId { get; set; }
+
+        [NotMapped]
+        public Guid Id {
+            get {
+                return this.value;
+            }
+            set {
+                this.EncryptedId = AuthUtils.Encrypt(value);
+                this.value = value;
+            }
+        }
+
+        private Guid value;
 
         #region Columns
 
@@ -139,6 +153,7 @@ namespace WebCommons.Db
 
     public interface IUserToken
     {
+        public string EncryptedId { get; set; }
         public Guid Id { get; set; }
         public int? Code { get; set; }
         public string? FormattedCode { get; set; }

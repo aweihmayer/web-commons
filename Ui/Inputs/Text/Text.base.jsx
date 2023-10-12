@@ -5,7 +5,6 @@
     }
 
     render() {
-        // TODO is binding always good. Can i do onKeypress={(ev) => { this.handleKeypress(ev); }}
         return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'text-input']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
                 <input ref="input"

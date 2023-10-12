@@ -9,6 +9,7 @@ namespace WebCommons.Auth
     {
         public CommonDbContextWithAuth<TUser> Db { get; set; }
         public Controller? Controller { get; set; }
+
         public AuthService(CommonDbContextWithAuth<TUser> db, Controller? controller = null) {
             this.Db = db;
             this.Controller = controller;
@@ -45,57 +46,21 @@ namespace WebCommons.Auth
         {
             if (user == null) { throw new NotFoundException(); }
 
-            // Fetch refresh token
-            if (user.RefreshToken == null) {
-                UserToken<TUser>? refreshToken = this.Db.FindToken(user, UserTokenType.Refresh);
-                // The user doesn't have a refresh token, we create one
-                if (refreshToken == null) {
-                    refreshToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
-                    this.Db.Tokens.Add(refreshToken);
-                // The user already has a refresh token, we refresh its duration if it has a third or less of its lifespan left
-                } else if ((refreshToken.GetRemainingDuration() / UserTokenDurations.Refresh) < 0.3) {
-                    refreshToken.Refresh();
-                }
-                
-                user.RefreshToken = new UserTokenDto(refreshToken);
-            }
+            // Create tokens
+            UserToken<TUser> refreshToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
+            this.Db.Tokens.Add(refreshToken);
+            user.RefreshToken = new UserTokenDto(refreshToken);
 
-            // Fetch access token
-            if (user.AccessToken == null) {
-                UserToken<TUser>? accessToken = this.Db.FindToken(user, UserTokenType.Access);
-                // The user doesn't have an access token, we create one
-                if (accessToken == null) {
-                    accessToken = new(user, UserTokenType.Access, UserTokenDurations.Access);
-                    this.Db.Tokens.Add(accessToken);
-                }
+            UserToken<TUser> accessToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
+            this.Db.Tokens.Add(accessToken);
+            user.AccessToken = new UserTokenDto(accessToken);
 
-                user.AccessToken = new UserTokenDto(accessToken);
-            }
-
+            // Save
             user.LastAuthDate = DateTime.UtcNow;
             this.Db.SaveChanges();
+            if (this.Controller == null) { return user; }
 
-            this.SetTokenCookies(user);
-
-            return user;
-        }
-
-        /// <summary>
-        /// Refreshes a user's access token.
-        /// </summary>
-        /// <exception cref="NotFoundException">Thrown if the user or token is not found.</exception>
-        public TUser Refresh(Guid? refreshToken)
-        {
-            if (!refreshToken.HasValue) { throw new BadRequestException(); }
-            TUser? user = this.Db.FindUserByRefreshToken(refreshToken);
-            if (user == null) { throw new NotFoundException(); }
-            return this.Signin(user);
-        }
-
-        private void SetTokenCookies(TUser user)
-        {
-            if (this.Controller == null) { return; }
-
+            // Cookies
             if (user.RefreshToken != null) {
                 RefreshTokenCookie refreshTokenCookie = new RefreshTokenCookie();
                 refreshTokenCookie.Value = user.RefreshToken.Id;
@@ -107,18 +72,52 @@ namespace WebCommons.Auth
                 accessTokenCookie.Value = user.AccessToken.Id;
                 this.Controller.Response.Cookies.Create(accessTokenCookie);
             }
+
+            return user;
         }
+
+        /// <summary>
+        /// Refreshes a user's access token and revokes the refresh token.
+        /// </summary>
+        /// <exception cref="NotFoundException">Thrown if the user or token is not found.</exception>
+        public TUser RefreshToken(Guid? refreshToken)
+        {
+            if (!refreshToken.HasValue) { throw new BadRequestException(); }
+            UserToken<TUser>? token = this.Db.FindToken(refreshToken.Value, true);
+            if (token == null || token.User == null) { throw new NotFoundException(); }
+            token.Expire();
+            return this.Signin(token.User);
+        }
+
+        #region Revocation
 
         /// <summary>
         /// Revokes a user's token.
         /// </summary>
-        /// <param name="tokenId"></param>
-        public void Revoke(Guid tokenId)
+        /// <exception cref="NotFoundException">Thrown if the token is not found.</exception>
+        public void RevokeToken(Guid tokenId)
         {
             UserToken<TUser>? token = this.Db.FindToken(tokenId);
-            if (token == null) { return; }
+            if (token == null) { throw new NotFoundException(); }
             token.Expire();
             this.Db.SaveChanges();
         }
+
+
+        /// <summary>
+        /// Revokes all a user's tokens.
+        /// </summary>
+        /// <param name="tokenId">The token id. It can be any kind of token as long as it is associated to a user.</param>
+        /// <exception cref="NotFoundException">Thrown if the user or token is not found.</exception>
+        public void RevokeAllUserTokens(Guid tokenId)
+        {
+            UserToken<TUser>? token = this.Db.FindToken(tokenId, true);
+            if (token == null || token.User == null) { throw new NotFoundException(); }
+            List<UserToken<TUser>> tokens = this.Db.FetchTokens(token.User);
+            foreach (UserToken<TUser> t in tokens) { t.Expire(); }
+            this.Db.SaveChanges();
+        }
+
+        #endregion
     }
 }

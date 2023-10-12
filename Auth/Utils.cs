@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Auth
 {
-    public static class AuthExtensions
+    public static class AuthUtils
     {
         /// <summary>
         /// Carrying an extra salt inside of the source slightly improves security in case data is compromised.
@@ -13,10 +13,10 @@ namespace WebCommons.Auth
         /// <summary>
         /// Encrypts a value with a salt as SHA512.
         /// </summary>
-        public static string Encrypt(this string str, string? salt = null)
+        public static string Encrypt(string value, string? salt = null)
         {
-            string password = str + salt + SALT;
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(password);
+            string encrypted = value + salt + SALT;
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(encrypted);
             using SHA512 alg = SHA512.Create();
             byte[] hash = alg.ComputeHash(bytes);
             string hashedString = string.Empty;
@@ -24,22 +24,27 @@ namespace WebCommons.Auth
             return hashedString;
         }
 
-        /// <summary>
-        /// Determines if a password matches its encrypted value.
-        /// </summary>
-        public static bool IsValidPassword(this string password, string encryptedassword, string salt)
+        public static string Encrypt(Guid value, string? salt = null)
         {
-            return (encryptedassword == Encrypt(password, salt));
+            return Encrypt(value.ToString(), salt);
         }
 
         /// <summary>
-        /// Determines if a password matches its encrypted value.
+        /// Determines if a value matches its encrypted value.
+        /// </summary>
+        public static bool VerifyEncryptedValue(string value, string encryptedValue, string? salt = null)
+        {
+            return (encryptedValue == Encrypt(value, salt));
+        }
+
+        /// <summary>
+        /// Determines if a value matches its encrypted value.
         /// </summary>
         /// <param name="user">The user whose password we want to validate.</param>
-        public static bool IsValidPassword(this string password, CommonUser user)
+        public static bool VerifyEncryptedValue(string value, CommonUser user)
         {
             if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) { return false; }
-            return password.IsValidPassword(user.Password, user.Salt);
+            return VerifyEncryptedValue(value, user.Password, user.Salt);
         }
 
         /// <summary>

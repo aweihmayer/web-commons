@@ -94,21 +94,6 @@ Object.defineProperty(Object.prototype, 'deleteProp', {
 });
 
 /**
- * Removes empty properties.
- */
-Object.deleteEmptyProperties = (obj) => {
-    if (typeof obj !== 'object') { return; }
-    let keys = Object.keys(obj);
-    for (let k of keys) {
-        if (obj[k] === null || (typeof obj[k] === 'string' && obj[k].trim() === '')) {
-            delete obj[k];
-        } else if (typeof obj[k] === 'object') {
-            Object.deleteEmptyProperties(obj[k]);
-        }
-    }
-};
-
-/**
  * Clones the object to remove references.
  * @returns {object}
  */
@@ -134,7 +119,7 @@ Object.fromQueryString = (query) => {
 * @returns {string}
 */
 Object.toQueryString = (obj) => {
-    if (Object.keys(obj).length === 0) { return ''; }
+    if (!Object.keys(obj).any()) { return ''; }
     let query = new URLSearchParams(obj).toString();
     return '?' + query;
 };

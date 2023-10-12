@@ -6,7 +6,7 @@ namespace WebCommons.Caching
     public static class CacheExtensions
     {
         /// <summary>
-        /// Sets the <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">caching headers</see> on the response. TODO i dont think this is working
+        /// Sets the <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">caching headers</see> on the response.
         /// </summary>
         public static void SetCache(this IHeaderDictionary headers, TimeSpan duration)
         {
