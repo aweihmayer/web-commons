@@ -18,17 +18,11 @@ class App extends React.Component {
     static instance = null;
     static get state() { return App.instance.state; }
 
-    static beforeMount = () => true; // TODO
-
-    /**
-     * Mounts the app while loading necessary assets and adding listeners.
-     * @param {Element} root The element that will contain the app.
-     */
-    static async mount(root) {
+    static async mount(rootElement) {
         window.addEventListener('popstate', ev => {
             Router.reload(window.location.pathname + window.location.search, true);
         });
-        App.root = ReactDOM.createRoot(root);
+        App.root = ReactDOM.createRoot(rootElement);
         App.root.render(<App />);
     }
 

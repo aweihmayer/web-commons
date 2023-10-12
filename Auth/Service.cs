@@ -20,16 +20,6 @@ namespace WebCommons.Auth
         /// </summary>
         /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
         /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
-        public TUser Signin(SigninModel model)
-        {
-            return this.Signin(model.Email, model.Password);
-        }
-
-        /// <summary>
-        /// Signs-in a user.
-        /// </summary>
-        /// <exception cref="BadRequestException">Thrown if the email or password are empty.</exception>
-        /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
         public TUser Signin(string? email, string? password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { throw new BadRequestException(); }

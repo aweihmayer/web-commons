@@ -31,6 +31,12 @@ namespace WebCommons.Bundling
         public string[] Patterns { get; set; } = Array.Empty<string>();
 
         /// <summary>
+        /// List of patterns to exclude files.
+        /// <example>*.test.css</example>
+        /// </summary>
+        public string[] ExcludedPatterns { get; set; } = Array.Empty<string>();
+
+        /// <summary>
         /// Prepends a string before the chunk contents.
         /// </summary>
         public string Prefix { get; set; } = string.Empty;
@@ -60,6 +66,9 @@ namespace WebCommons.Bundling
                 foreach (string pattern in this.Patterns) {
                     // Find all files matching the pattern
                     string[] directoryFiles = Directory.GetFiles(dir, pattern, SearchOption.AllDirectories);
+                    directoryFiles = directoryFiles.Where(filePath => {
+                        return this.ExcludedPatterns.Any(exc => filePath.EndsWith(exc, StringComparison.OrdinalIgnoreCase));
+                    }).ToArray();
 
                     // For each file found
                     foreach (string f in directoryFiles) {
