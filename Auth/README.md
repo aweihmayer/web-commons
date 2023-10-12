@@ -25,3 +25,11 @@ The benefit of this method is increased security. In the case where your access 
 
 If we had only one long-lasting general-purpose authorization token, it would be a much bigger security risk for it to be stolen.
 
+
+## TODO
+- Encrypt the token before storing it in the database
+- On refresh, invalidate the refresh token and create a new one
+- Refresh token expire in 30 days
+- Method to revoke all tokens for a user /api/auth/revoke/all send refresh token
+- signin creates new refresh token
+- Instead of sending dates, sending "expiresIn" which represent ms. This prevents misreading of date formats
