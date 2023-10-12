@@ -114,6 +114,7 @@
 
     handleChange(ev) {
         if (this.props.onChange) {
+            ev.data = this.collect();
             this.props.onChange(ev);
         }
     }
