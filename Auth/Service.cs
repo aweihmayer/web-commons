@@ -41,7 +41,7 @@ namespace WebCommons.Auth
             this.Db.Tokens.Add(refreshToken);
             user.RefreshToken = new UserTokenDto(refreshToken);
 
-            UserToken<TUser> accessToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
+            UserToken<TUser> accessToken = new(user, UserTokenType.Access, UserTokenDurations.Access);
             this.Db.Tokens.Add(accessToken);
             user.AccessToken = new UserTokenDto(accessToken);
 

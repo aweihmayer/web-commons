@@ -20,8 +20,8 @@ String.random = (length) => {
  * @param {boolean} decreaseHeadings
  * @returns {string}
  */
-String.markdownToHtml = (decreaseHeadings) => {
-    let html = markdown(this);
+String.markdownToHtml = (value, decreaseHeadings) => {
+    let html = markdown(value);
     if (!decreaseHeadings) { return html; }
 
     for (let i = 7; i > 0; i--) {

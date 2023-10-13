@@ -26,18 +26,18 @@ const Routes = {
         routes = routes ?? this;
         if (typeof routes !== 'object') { return; }
         if (routes instanceof Route) { return; }
-        routes.getRoutesArray = function () {
+        routes.toArray = function () {
             let routes = [];
             for (let k in this) {
                 if (this[k] instanceof Route) { routes.push(this[k]); }
-                else if (typeof this[k] === 'object') { routes.concat(this[k].getRoutesArray()); }
+                else if (typeof this[k] === 'object') { routes = routes.concat(this[k].toArray()); }
             }
 
             return routes;
         };
 
         routes.clearCaches = function () {
-            let routes = this.getRoutesArray();
+            let routes = this.toArray();
             return Promise.all(routes.map(r => r.cache.clearGroup()));
         }
 

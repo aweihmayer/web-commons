@@ -67,7 +67,7 @@ namespace WebCommons.Bundling
                     // Find all files matching the pattern
                     string[] directoryFiles = Directory.GetFiles(dir, pattern, SearchOption.AllDirectories);
                     directoryFiles = directoryFiles.Where(filePath => {
-                        return this.ExcludedPatterns.Any(exc => filePath.EndsWith(exc, StringComparison.OrdinalIgnoreCase));
+                        return !this.ExcludedPatterns.Any(exc => filePath.EndsWith(exc, StringComparison.OrdinalIgnoreCase));
                     }).ToArray();
 
                     // For each file found

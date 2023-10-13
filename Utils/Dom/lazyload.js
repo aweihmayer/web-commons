@@ -9,9 +9,9 @@ HTMLPictureElement.prototype.lazyLoad = function () {
 };
 
 Element.prototype.getLazyLoadableElements = function () {
-    this.querySelectorAll('*[data-lazyload]');
+    return Array.from(this.querySelectorAll('*[data-lazyload]'));
 };
 
 Element.prototype.lazyLoadAllElements = function () {
-    this.getLazyLoadableElements().foreach(v => { v.lazyLoad(); });
+    this.getLazyLoadableElements().forEach(v => { v.lazyLoad(); });
 };
