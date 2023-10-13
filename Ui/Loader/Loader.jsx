@@ -16,12 +16,12 @@
     static start(component) {
         component = Loader.collectComponents(component);
         component.forEach(c => {
-            if (typeof component.startLoading === 'function') {
-                component.startLoading();
+            if (typeof c.startLoading === 'function') {
+                c.startLoading();
             }
 
-            for (let r in component.refs) {
-                Loader.start(component.refs[r]);
+            for (let r in c.refs) {
+                Loader.start(c.refs[r]);
             }
 
             // Show cursor loading animation if there are active loaders
@@ -34,12 +34,12 @@
     static stop(component) {
         component = Loader.collectComponents(component);
         component.forEach(c => {
-            if (typeof component.stopLoading === 'function') {
-                component.stopLoading();
+            if (typeof c.stopLoading === 'function') {
+                c.stopLoading();
             }
 
-            for (let r in component.refs) {
-                Loader.stop(component.refs[r]);
+            for (let r in c.refs) {
+                Loader.stop(c.refs[r]);
             }
 
             // Remove cursor progress animation if there are no more active loaders
@@ -58,6 +58,8 @@
             return [component];
         } else if (typeof component === 'object' && !Array.isArray(component)) {
             return Object.keys(component).map(k => component[k]);
+        } else if (Array.isArray(component)) {
+            return component;
         } else {
             return [component];
         }

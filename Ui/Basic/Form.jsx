@@ -3,7 +3,7 @@
         encType: null,
         onValidationFail: ev => ev,
         onSubmit: ev => ev,
-        refs: {}
+        refs: null
     };
 
     constructor(props) {
@@ -12,7 +12,7 @@
     }
 
     render() {
-        return <form action="#" encType={this.props.encType} onSubmit={ev => { this.submit(ev) }} ref="form">
+        return <form action="#" encType={this.props.encType} onSubmit={ev => this.submit(ev)} ref="form">
             {this.props.children}
         </form>;
     }
@@ -35,30 +35,30 @@
             ev.data = data;
             return ev;
         })
-        .then(this.props.onSubmit)
-        .catch(this.props.onValidationFail)
-        .finally(this.stopLoading());
+        .then(ev => this.props.onSubmit(ev))
+        .catch(ex => this.props.onValidationFail(ex))
+        .finally(ev => { this.stopLoading() });
     }
 
     fill(data, filter) {
-        let refs = this.getChildrenRefs();
+        let refs = this.getPropRefs();
         InputManager.fill(refs, data, filter);
     }
 
     async collect(filter) {
-        let refs = this.getChildrenRefs();
+        let refs = this.getPropRefs();
         return InputManager.collect(refs, filter);
     }
 
     clear(filter) {
-        let refs = this.getChildrenRefs();
+        let refs = this.getPropRefs();
         InputManager.clear(refs, filter);
     }
 
     startLoading() {
         this._isLoading = true;
         for (let r in this.refs) { Loader.start(this.refs[r]); }
-        let childRefs = this.getChildrenRefs();
+        let childRefs = this.getPropRefs();
         for (let r in childRefs) {
             Loader.start(childRefs[r]);
         }
@@ -67,7 +67,7 @@
     stopLoading() {
         this._isLoading = false;
         for (let r in this.refs) { Loader.stop(this.refs[r]); }
-        let childRefs = this.getChildrenRefs();
+        let childRefs = this.getPropRefs();
         for (let r in childRefs) {
             Loader.stop(childRefs[r]);
         }
@@ -75,12 +75,28 @@
 
     isLoading() { return this._isLoading; }
 
-    getChildrenRefs() {
-        let refs = {};
-        if (this.props.refs) {
-            refs = this.props.refs.refs ?? this.props.refs;
-        }
+    getPropRefs() {
+        let refs = [];
+        if (this.props.refs == null) { return refs; }
 
-        return Object.keys(refs).map(r => refs[r]).filter(r => !(r instanceof Form));
+        let components = this.props.refs;
+        if (!Array.isArray(components)) { components = [components]; }
+
+        components.forEach(c => {
+            let componentRefs = c.refs;
+            componentRefs = Object.keys(componentRefs)
+                .map(r => componentRefs[r])
+                .filter(r => !(r instanceof Form));
+            refs = refs.concat(componentRefs);
+        })
+
+        if (!this.props.refFilter) { return refs; }
+        let filters = this.props.refFilter;
+        if (!Array.isArray(this.props.refFilter)) { filters = [filters]; }
+        filters.forEach(f => {
+            refs = refs.filter(f);
+        });
+
+        return refs;
     }
 }
