@@ -15,9 +15,18 @@ class LocalStorageValue {
      */
     retrieve() {
         let data = localStorage.getItem(this.name);
-        let item = CacheHelper.retrieve(data, this.duration);
-        if (item == null) { localStorage.removeItem(this.name); }
-        return item;
+
+        if (data == null) { return null; }
+        if (typeof data === 'string') { data = JSON.parse(data); }
+
+        if (!this.duration || !data.cachedAt) {
+            return data.data ?? data;
+        } else if ((data.cachedAt + duration) < Date.now()) {
+            this.clear();
+            return null;
+        } else {
+            return data.data ?? data;
+        }
     }
 
     /**
@@ -25,15 +34,19 @@ class LocalStorageValue {
      * @param {any} data
      */
     put(value) {
-        value = CacheHelper.toCacheFormat(value);
+        value = { data: value, cachedAt: Date.now() };
         value = JSON.stringify(value);
         localStorage.setItem(this.name, value);
     }
 
     /**
-     * Removes the value from the cache.
+     * Removes a value from the cache.
      */
     clear() {
         localStorage.clear(this.name);
+    }
+
+    static clear() {
+        localStorage.clear();
     }
 }

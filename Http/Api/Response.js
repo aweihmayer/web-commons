@@ -9,19 +9,22 @@ Response.prototype.deserialize = async function (request) {
     return this.json().then(data => {
         this.json = data;
         this.method = method;
-        return this; });
+        return this;
+    });
 };
 
 /**
  * Gets the date header value of a response.
  */
-Response.prototype.getDateTimestamp = function () { return Date.parse(this.headers.get('Date')); }
+Response.prototype.getDateTimestamp = function () {
+    return Date.parse(this.headers.get('Date'));
+}
 
 /**
  * Determines if the response is too stale to use based on the date header.
  */
 Response.prototype.isExpired = function (duration) {
-    return (this.getDateTimestamp() + duration) >= Date.now();
+    return (this.getDateTimestamp() + duration) < Date.now();
 };
 
 /**
@@ -39,6 +42,7 @@ Response.mimic = (body, method, code) => {
             body: body,
             status: code,
             ok: (code >= 200 && code < 300),
-            method: method || 'GET' });
+            method: method || 'GET'
+        });
     });
 };

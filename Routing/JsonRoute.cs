@@ -1,25 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using System.Reflection;
 using WebCommons.IO;
 using WebCommons.Model;
-using WebCommons.Utils;
 
 namespace WebCommons.Controllers
 {
-    public class JsRoute
+    public class JsonRoute
     {
         /// <summary>
-        /// Defines the front-end view.
-        /// The value will be parsed in a function returns <c>() => view</c>.
+        /// Defines the route name which should be a JSON path.
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Defines the URI template for the route.
-        /// The <see cref="RouteAttribute"/> has priority, but since it is limited to ASP syntax, you may want to change it with this property.
+        /// The <see cref="RouteAttribute"/> has priority, but since its syntax is not customizable syntax, you may want to change it with this property.
         /// </summary>
         [JsonProperty("uri")]
         public string Uri { get; set; }
@@ -43,29 +40,10 @@ namespace WebCommons.Controllers
         public string ContentType { get; set; }
 
         /// <summary>
-        /// Defines the front-end view.
-		/// The value will be parsed in a function returns <c>() => view</c>.
+        /// Defines cache duration in ms.
         /// </summary>
-        [JsonProperty("view", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonConverter(typeof(JsonNoQuotesConverter))]
-        public string? View {
-            get { return string.IsNullOrEmpty(this.view) ? null :string.Format("() => <{0} key={{window.location.pathname + window.location.search}} ref=\"view\" />", this.view); }
-            set { this.view = value; }
-        }
-
-        private string? view = null;
-
-        /// <summary>
-        /// Defines a comma separated list of assets or package names to load with the route.
-        /// </summary>
-        [JsonProperty("bundles")]
-        public List<string> Bundles { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Defines how the cache is handled.
-        /// </summary>
-        [JsonProperty("cache")]
-        public JsRouteCache Cache { get; set; }
+        [JsonProperty("cacheDuration")]
+        public int? CacheDuration { get; set; }
 
         /// <summary>
         /// Defines the allowed parameters in the query string.
@@ -73,11 +51,11 @@ namespace WebCommons.Controllers
         [JsonProperty("queryStringParams")]
         public List<ValueSchema> QueryStringParams { get; set; } = new();
 
-        public JsRoute(JsRouteAttribute jsAttribute, RouteAttribute routeAttribute, MethodInfo method, bool isApiController)
+        public JsonRoute(JsonRouteAttribute jsonAttribute, RouteAttribute routeAttribute, MethodInfo method, bool isApiController)
         {
             this.Name = routeAttribute.Name;
-            this.View = jsAttribute.View;
-            this.Uri = string.IsNullOrEmpty(jsAttribute.Uri) ? routeAttribute.Template : jsAttribute.Uri;
+            this.Uri = string.IsNullOrEmpty(jsonAttribute.Uri) ? routeAttribute.Template : jsonAttribute.Uri;
+            this.CacheDuration = (jsonAttribute.CacheDuration.HasValue) ? jsonAttribute.CacheDuration.Value : null;
 
             // Method
 			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) {		this.Method = "DELETE"; }
@@ -105,43 +83,14 @@ namespace WebCommons.Controllers
                 this.Accept = FileType.JSON_CONTENT_TYPE;
 				this.ContentType = FileType.JSON_CONTENT_TYPE;
 			}
-
-            if (jsAttribute.Bundles != null) {
-                this.Bundles = jsAttribute.Bundles.Split(',').Select(b => b.Trim()).ToList();
-            }
-
-            if (jsAttribute.CacheName != null) {
-                this.Cache = new JsRouteCache(jsAttribute.CacheName, jsAttribute.CacheDuration);
-            }
-        }
-
-        public class JsRouteCache
-        {
-            /// <summary>
-            /// The name of the cache when fetching with the <see href="https://developer.mozilla.org/en-US/docs/Web/API/Cache">JS cache service worker</see>.
-            /// </summary>
-            [JsonProperty("name")]
-            public string? Name { get; set; }
-
-            /// <summary>
-            /// The duration in seconds of the cache.
-            /// </summary>
-            [JsonProperty("duration")]
-            public int? Duration { get; set; }
-
-            public JsRouteCache(string? name, int? duration)
-            {
-                this.Name = name;
-                this.Duration = duration;
-            }
         }
 
         /// <summary>
         /// Build the JS routes of many controllers.
         /// </summary>
-        public static List<JsRoute> BuildRoutes(IEnumerable<Type> controllers)
+        public static List<JsonRoute> BuildRoutes(IEnumerable<Type> controllers)
 		{
-            List<JsRoute> routes = new();
+            List<JsonRoute> routes = new();
             foreach (Type controller in controllers) {
                 routes.AddRange(BuildRoutes(controller));
             }
@@ -152,9 +101,9 @@ namespace WebCommons.Controllers
 		/// <summary>
 		/// Builds the JS routes of a controller.
 		/// </summary>
-		public static List<JsRoute> BuildRoutes(Type controller)
+		public static List<JsonRoute> BuildRoutes(Type controller)
 		{
-			List<JsRoute> routes = new();
+			List<JsonRoute> routes = new();
 			MethodInfo[] methods = controller.GetMethods();
 
 			bool isApiController = controller.HasCustomAttribute<ApiControllerAttribute>();
@@ -162,12 +111,12 @@ namespace WebCommons.Controllers
 			// For each method in the controller
 			foreach (MethodInfo method in methods) {
 				// Skip if the method doesn't have the necessary attributes
-				var jsRouteAttr = method.GetCustomAttribute<JsRouteAttribute>();
+				var jsRouteAttr = method.GetCustomAttribute<JsonRouteAttribute>();
 				if (jsRouteAttr == null) { continue; }
 				var routeAttr = method.GetCustomAttribute<RouteAttribute>();
 				if (routeAttr == null) { continue; }
 
-				JsRoute route = new(jsRouteAttr, routeAttr, method, isApiController);
+				JsonRoute route = new(jsRouteAttr, routeAttr, method, isApiController);
                 routes.Add(route);
 			}
 

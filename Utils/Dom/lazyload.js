@@ -4,6 +4,12 @@
     this.src = this.dataset.lazyload;
 };
 
+HTMLIFrameElement.prototype.lazyLoad = function () {
+    if (this.src) { return; }
+    if (!this.dataset.lazyload) { return; }
+    this.src = this.dataset.lazyload;
+};
+
 HTMLPictureElement.prototype.lazyLoad = function () {
     this.lazyLoadAllElements();
 };

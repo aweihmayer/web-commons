@@ -38,7 +38,7 @@ const Routes = {
 
         routes.clearCaches = function () {
             let routes = this.toArray();
-            return Promise.all(routes.map(r => r.cache.clearGroup()));
+            return Promise.all(routes.map(r => r.cache.clear()));
         }
 
         for (let k in routes) {
