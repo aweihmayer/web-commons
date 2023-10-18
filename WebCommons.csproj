@@ -32,6 +32,9 @@
     <None Update="Io\Bundling\Manager.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Embedded\YouTubeVideo.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Utils\Caching\local.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

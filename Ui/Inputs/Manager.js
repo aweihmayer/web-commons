@@ -42,13 +42,14 @@
 
     isValid: function (component, filter) {
         let refs = component.refs ?? component;
+        let isValid = true;
         for (let r in refs) {
             let ref = refs[r];
             if (typeof ref.isValid !== 'function') { continue; }
             if (typeof filter === 'function' && !filter(ref)) { continue; }
-            if (!ref.isValid()) { return false; }
+            if (!ref.isValid()) { isValid = false; }
         }
 
-        return true;
+        return isValid;
     }
 }

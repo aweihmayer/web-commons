@@ -23,26 +23,32 @@
 
         if (this.isLoading()) { return; }
 
-        new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.startLoading();
-            if (InputManager.isValid(this.props.refs)) {
+
+            if (this.isValid()) {
                 resolve(this.collect());
             } else {
                 reject(ev);
             }
         })
-        .then(data => {
-            ev.data = data;
-            return ev;
-        })
-        .then(ev => this.props.onSubmit(ev))
-        .catch(ex => this.props.onValidationFail(ex))
-        .finally(ev => { this.stopLoading() });
+            .then(data => {
+                ev.data = data;
+                return ev;
+            })
+            .then(ev => this.props.onSubmit(ev))
+            .catch(ex => this.props.onValidationFail(ex))
+            .finally(ev => { this.stopLoading() });
     }
 
     fill(data, filter) {
         let refs = this.getPropRefs();
         InputManager.fill(refs, data, filter);
+    }
+
+    isValid() {
+        let refs = this.getPropRefs();
+        return InputManager.isValid(refs);
     }
 
     async collect(filter) {

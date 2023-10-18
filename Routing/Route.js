@@ -70,7 +70,7 @@
         options.onResponse = Route.onFetchResponse;
         if (this.accept) { options.headers.append('Accept', this.accept); }
         if (this.contentType) { options.headers.append('Content-Type', this.contentType); }
-        return Api.fetch(options);
+        return Http.fetch(options);
     }
 
     goTo(params) {

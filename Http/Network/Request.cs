@@ -2,11 +2,10 @@
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using WebCommons.Model;
 
 namespace WebCommons.Api
 {
-	public class ApiRequest
+	public class HttpRequest
 	{
 		/// <summary>
 		/// The request's endpoint.
@@ -46,7 +45,7 @@ namespace WebCommons.Api
 		/// </summary>
 		public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-		public ApiRequest(string endpoint, HttpMethod method, object? query = null, object? model = null, object? defaultQuery = null, object? defaultModel = null)
+		public HttpRequest(string endpoint, HttpMethod method, object? query = null, object? model = null, object? defaultQuery = null, object? defaultModel = null)
 		{
 			this.Endpoint = endpoint;
 			this.Method = method;

@@ -21,13 +21,13 @@
             .then(cache => cache.match(request))
             .then(cachedResponse => {
                 if (!cachedResponse) {
-                    return Api.fetch({ request: request, cache: this, noCache: true });
+                    return Http.fetch({ request: request, cache: this, noCache: true });
                 } else if (!this.duration) {
                     return cachedResponse.deserialize(request);
                 } else if (!cachedResponse.isExpired(this.duration)) {
                     return cachedResponse.deserialize(request);
                 } else {
-                    return Api.fetch({ request: request, cache: this, noCache: true });
+                    return Http.fetch({ request: request, cache: this, noCache: true });
                 }
             });
     }

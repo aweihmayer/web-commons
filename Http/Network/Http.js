@@ -1,4 +1,4 @@
-﻿class Api {
+﻿class Http {
     static buildRequest(options) {
         if (options instanceof Request) {
             return options;
@@ -50,7 +50,7 @@
     }
 
     static fetch(options) {
-        let request = Api.buildRequest(options);
+        let request = Http.buildRequest(options);
 
         // Cache
         let cache = null;
@@ -66,7 +66,6 @@
 
         return fetch(request)
             .then(response => {
-                response.uri = request.path;
                 if (typeof options.onResponse === 'function') {
                     return options.onResponse(response);
                 } else {
@@ -74,7 +73,7 @@
                 }
             }).then(response => {
                 if (response.retry) {
-                    return Api.fetch(request);
+                    return Http.fetch(request);
                 } else if (cache && cache.isEnabled) {
                     return cache.put(request, response);
                 } else {

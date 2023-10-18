@@ -3,11 +3,11 @@
  */
 const Router = {
     /**
-     * Called before the route changes. Return false to prevent.
+     * Called before the any route changes.
      * @param {{ route: Route, params: object, locale: string }} newRouting
      * @returns {boolean}
      */
-    beforeRouteChange: newRouting => true,
+    beforeRouteChange: newRouting => { },
 
     afterRouteChange: () => { },
 
@@ -50,8 +50,10 @@ const Router = {
         if (!force && href === (location.pathname + location.search)) { return; }
 
         let newRouting = this.detect(href);
-        let shouldRouteChange = this.beforeRouteChange(newRouting);
-        if (shouldRouteChange === false) { return; }
+        this.beforeRouteChange(newRouting);
+        if (typeof newRouting.route.beforeRouteChange === 'function') {
+            newRouting.route.beforeRouteChange(newRouting);
+        }
 
         action(href);
         document.head.metadata.reset();

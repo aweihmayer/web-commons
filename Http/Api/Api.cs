@@ -31,7 +31,7 @@ namespace WebCommons.Api
         /// <summary>
         /// Sends a request and returns a response.
         /// </summary>
-        public async Task<ApiResponse<T>> SendRequest<T>(ApiRequest request)
+        public async Task<HttpResponse<T>> SendRequest<T>(HttpRequest request)
         {
             Stopwatch watch = new();
             watch.Start();
@@ -40,12 +40,12 @@ namespace WebCommons.Api
                 HttpResponseMessage response = await this.Client.SendAsync(requestMessage).ConfigureAwait(false);
                 string content = await response.Content.ReadAsStringAsync();
                 watch.Stop();
-                var parsedResponse = new ApiResponse<T>(response, content, watch.Elapsed);
+                var parsedResponse = new HttpResponse<T>(response, content, watch.Elapsed);
                 if (!parsedResponse.IsSuccessStatusCode) { throw parsedResponse.ToException(); }
                 return parsedResponse;
             } catch (Exception) {
                 watch.Stop();
-                return new ApiResponse<T>(HttpStatusCode.InternalServerError);
+                return new HttpResponse<T>(HttpStatusCode.InternalServerError);
             }
         }
     }

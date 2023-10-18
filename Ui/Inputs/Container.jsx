@@ -6,7 +6,7 @@
         return <div id={id} className={className} ref="container">
             <div className="input-labels">
                 {this.props.label ? <label htmlFor={this.props.id}>{translate(this.props.label)}</label> : null}
-                <Tooltip tooltip={this.props.tooltip} />
+                <Tooltip tip={this.props.tooltip} />
             </div>
             {this.props.children}
             <div className="input-message">

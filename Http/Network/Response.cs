@@ -10,7 +10,7 @@ namespace WebCommons.Api
 	/// Instead, this will read and deserialize the content once only.
 	/// </summary>
 	/// <typeparam name="T">The deserialiazed content type.</typeparam>
-	public class ApiResponse<T>
+	public class HttpResponse<T>
 	{
 		public HttpStatusCode StatusCode { get; set; }
 		public bool IsSuccessStatusCode { get; set; }
@@ -18,20 +18,20 @@ namespace WebCommons.Api
 		public TimeSpan Duration { get; set; }
 		public T? Content { get; set; }
 
-		public ApiResponse(HttpResponseMessage response, string content, TimeSpan duration) : this(response)
+		public HttpResponse(HttpResponseMessage response, string content, TimeSpan duration) : this(response)
 		{
 			this.Duration = duration;
 			this.Content = !string.IsNullOrEmpty(content) ? JsonConvert.DeserializeObject<T>(content) : default;
 		}
 
-		public ApiResponse(HttpResponseMessage response)
+		public HttpResponse(HttpResponseMessage response)
 		{
 			this.StatusCode = response.StatusCode;
 			this.IsSuccessStatusCode = response.IsSuccessStatusCode;
 			this.Headers = response.Headers;
 		}
 
-		public ApiResponse(HttpStatusCode statusCode)
+		public HttpResponse(HttpStatusCode statusCode)
 		{
 			this.StatusCode = statusCode;
 			int code = (int) statusCode;

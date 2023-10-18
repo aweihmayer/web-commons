@@ -11,7 +11,7 @@
     width: 1.2em;
 
     &:hover::after, &:focus::after {
-        content: attr(data-tooltip);
+        content: attr(data-tip);
         position: absolute;
         background-color: #000;
         color: #fff;
