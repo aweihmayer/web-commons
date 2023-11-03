@@ -20,16 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Http\Api\Api.js">
+    <None Update="Http\Network\Http.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Http\Api\Cache.js">
+    <None Update="Http\Network\Cache.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Http\Api\Response.js">
+    <None Update="Http\Network\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Io\Bundling\Manager.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Basic\Picture.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Embedded\YouTubeVideo.jsx">
@@ -59,7 +62,7 @@
     <None Update="Utils\Validation\Validator.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Http\Model\Schema\ValueSchema.js">
+    <None Update="Utils\Validation\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Validation\email.js">

@@ -39,11 +39,14 @@
             margin-right: 5px;
             padding: 0px 5px 0px 5px;
 
-            span {
+            button {
+                background-color: transparent;
+                border: none;
                 color: #f44336;
                 cursor: pointer;
                 font-weight: bold;
                 padding-left: 10px;
+                vertical-align: middle;
             }
         }
     }

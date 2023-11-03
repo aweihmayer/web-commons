@@ -10,7 +10,7 @@
             <div className="input-wrapper" ref="input">
                 <input type="file" name={this.schema.name} onChange={ev => this.change()} id={this.id} accept="image/png, image/jpeg" ref="file" />
                 <input type="hidden" name="old" value="" ref="old" />
-                <Button size="tiny" style="remove" onClick={ev => this.clear()} className="top-right" />
+                <button onClick={ev => this.clear()} />
                 <div style={{ backgroundImage: ImageInput.cameraIcon }} ref="preview"></div>
             </div>
         </InputContainer>;

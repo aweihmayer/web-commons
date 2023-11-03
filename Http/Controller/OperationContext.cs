@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCommons.Db;
-using WebCommons.Internationalization;
 
 namespace WebCommons.Controllers
 {
@@ -15,7 +14,7 @@ namespace WebCommons.Controllers
         public TDb Db { get; set; } = new TDb();
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
         public bool DryRun { get; set; } = false;
-        public I18n I18n { get; set; } = new("en");
+        public string Locale { get; set; } = "en";
 
         public CommonOperationContext() { }
     }
