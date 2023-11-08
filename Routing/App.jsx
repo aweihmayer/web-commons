@@ -7,7 +7,7 @@ class App extends React.Component {
         super(props);
         App.instance = this;
         this.state = {
-            code: parseInt(!document.body.dataset.code ? 200 : document.body.dataset.code),
+            code: document.getCode(),
             route: null,
             params: {},
             locale: 'en'
@@ -31,21 +31,41 @@ class App extends React.Component {
     }
 
     setRouting(routing) {
-        this.setState({
-            code: routing.code || 200,
-            route: routing.route,
-            params: routing.params,
-            locale: routing.locale
-        });
+        this.setState(routing);
     }
 
     static setRouting(routing) {
         App.instance.setRouting(routing);
     }
 
+    static setCode(code) {
+        if (typeof code === 'object') { code = code.status || code.message; }
+        App.setRouting({ code: parseInt(code) });
+    }
+
     render() {
-        if (this.state.route === null) { return null; }
-        return this.state.route.view();
+        let route = this.state.route;
+        let code = this.state.code;
+
+        if (code >= 300 || code < 200 && Routes.error) {
+            if (Routes.error.hasOwnProperty(code)) {
+                route = Routes.error[code];
+            } else if (Routes.error.default) {
+                route = Routes.error.default;
+            } else {
+                route = new Route(() => <p>Implement the route "error.{code}" or "error.default" for a custom error page.</p>);
+            }
+        }
+
+        if (route === null) {
+            if (Routes.error && Routes.error.hasOwnProperty(404)) {
+                route = Routes.error[404];
+            } else {
+                route = new Route(() => <p>Implement the route "error.404" for a custom error page.</p>);
+            }
+        }
+
+        return route.view();
     }
 
     componentDidMount() {

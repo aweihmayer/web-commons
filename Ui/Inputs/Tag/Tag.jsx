@@ -23,7 +23,7 @@
                     {this.state.data.map(d =>
                         <li data-value={d.value} title={d.value} key={d.value}>
                             {d.name}
-                            <Button value={d.value} onClick={ev => this.remove(d.value)}>x</Button>
+                            <button type="button" data-value={d.value} onClick={ev => this.remove(d.value)}>x</button>
                         </li>
                     )}
                 </ul>

@@ -15,16 +15,17 @@ const Router = {
         href = href || (window.location.pathname + window.location.search);
         let uri = new Uri(href);
         let routing = {
+            code: 200,
             route: Routes.matchViewRoute(uri),
             params: {},
             locale: 'en'
         };
 
-        // No route was found. Set the current route as an error
-        if (routing.route === null) {
-            routing.route = (Routes.error && Routes.error.hasOwnProperty('404'))
-                ? Routes.error['404']
-                : new Route(() => <p>Implement the route "error.404" for a custom page for missing resources.</p>);
+        if (routing.route !== null) {
+            routing.params = routing.route.getParams(href);
+        } else {
+            routing.code = 404;
+            routing.route = null;
         }
 
         routing.params = routing.route.getParams(href);

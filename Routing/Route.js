@@ -64,7 +64,7 @@
         options = options ?? {};
         options.payload = payload;
         options.cache = this.cache;
-        options.uri = this.uri;
+        options.uri = this;
         options.method = this.method;
         options.headers = new Headers();
         options.onResponse = Route.onFetchResponse;

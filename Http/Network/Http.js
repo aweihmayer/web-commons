@@ -80,6 +80,10 @@
                     return response.deserialize(request);
                 }
             }).then(response => {
+                if (options.uri instanceof Route) {
+                    response.route = options.uri.name;
+                }
+
                 if (!response.ok) {
                     throw response;
                 } else {

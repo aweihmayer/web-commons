@@ -36,9 +36,9 @@ function toClassName(className, extras) {
  * @returns {number}
  */
 document.getCode = () => {
+    if (!document.body.dataset.code) { return 200; }
     return parseInt(document.body.dataset.code);
 };
-
 
 /**
  * Sets the HTTP code attribute on the body element.
