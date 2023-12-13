@@ -51,11 +51,11 @@ namespace WebCommons.Controllers
         [JsonProperty("queryStringParams")]
         public List<ValueSchema> QueryStringParams { get; set; } = new();
 
-        public JsonRoute(JsonRouteAttribute jsonAttribute, RouteAttribute routeAttribute, MethodInfo method, bool isApiController)
+        public JsonRoute(JsonRouteAttribute routeAttribute, MethodInfo method, bool isApiController)
         {
             this.Name = routeAttribute.Name;
-            this.Uri = string.IsNullOrEmpty(jsonAttribute.Uri) ? routeAttribute.Template : jsonAttribute.Uri;
-            this.CacheDuration = (jsonAttribute.CacheDuration.HasValue) ? jsonAttribute.CacheDuration.Value : null;
+            this.Uri = string.IsNullOrEmpty(routeAttribute.JsonTemplate) ? routeAttribute.Template : routeAttribute.JsonTemplate;
+            this.CacheDuration = (routeAttribute.CacheDuration != 0) ? routeAttribute.CacheDuration : null;
 
             // Method
 			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) {		this.Method = "DELETE"; }
@@ -111,13 +111,10 @@ namespace WebCommons.Controllers
 			// For each method in the controller
 			foreach (MethodInfo method in methods) {
 				// Skip if the method doesn't have the necessary attributes
-				var jsRouteAttr = method.GetCustomAttribute<JsonRouteAttribute>();
-				if (jsRouteAttr == null) { continue; }
-				var routeAttr = method.GetCustomAttribute<RouteAttribute>();
-				if (routeAttr == null) { continue; }
-
-				JsonRoute route = new(jsRouteAttr, routeAttr, method, isApiController);
-                routes.Add(route);
+				var routeAttributes = method.GetCustomAttributes<JsonRouteAttribute>();
+                foreach (var route in routeAttributes) {
+                    routes.Add(new JsonRoute(route, method, isApiController));
+                }
 			}
 
 			return routes;

@@ -35,8 +35,8 @@ String.markdownToHtml = (value, decreaseHeadings) => {
  * Removes accents from a string.
  * @returns {string}
  */
-String.prototype.removeAccents = () => {
-    const normalizedString = input.normalize('NFD');
+String.prototype.removeAccents = function() {
+    const normalizedString = this.normalize('NFD');
     // Use a regular expression to match and replace diacritics
     const accentRegex = /[\u0300-\u036f]/g;
     // Replace diacritics with an empty string
@@ -49,8 +49,8 @@ String.prototype.removeAccents = () => {
  * Transforms a string to a slug.
  * @returns {string}
  */
-String.prototype.toSlug = () => {
-    let v = this.removeAccepts().toLowerCase().trim();
+String.prototype.toSlug = function() {
+    let v = this.removeAccents().toLowerCase().trim();
     v = v.replace(/[^a-z0-9\s-]/, ''); // Invalid chars
     v = v.replace(/\s+/, ''); // Convert multiple spaces into one space
     v = v.replace(/\s/, ''); // Hyphens
@@ -71,3 +71,12 @@ String.getQueryString = (str) => {
 * @returns {string}
 */
 String.removeQueryString = (str) => str.split('?')[0];
+
+/**
+ * Transforms the first char of a string to lower case.
+ * @returns {string}
+ */
+String.prototype.firstCharToLowerCase = function() {
+    if (this.length === 0) return this;
+    return this.charAt(0).toLowerCase() + this.substring(1);
+}

@@ -51,5 +51,8 @@ namespace WebCommons.Model
 
         [JsonProperty("colors", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<object, object>? Colors { get; set; } = null;
+
+        [JsonExtensionData]
+        public Dictionary<object, object> Data { get; set; } = new();
     }
 }

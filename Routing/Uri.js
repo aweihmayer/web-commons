@@ -15,13 +15,13 @@
         this.params.getFirstQuery = function () { return this.getAllQuery().first(); }
 
         // Build parts
-        let parts = template.split(/\/|\./).filter(p => p !== '');
+        let parts = this.template.split(/\/|\./).filter(p => p !== '');
 
         // Since we split the parts with slashes and dots, we need to readd a dot at the
         // last part in order to detect if it is an extension
         if (parts.length > 0) {
-            let indexOfPathExtensionStart = template.length - parts.last().length - 1;
-            if (template.charAt(indexOfPathExtensionStart) === '.') {
+            let indexOfPathExtensionStart = this.template.length - parts.last().length - 1;
+            if (this.template.charAt(indexOfPathExtensionStart) === '.') {
                 parts[parts.length - 1] = '.' + parts[parts.length - 1];
             }
         }

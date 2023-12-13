@@ -6,17 +6,13 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         App.instance = this;
-        this.state = {
-            code: document.getCode(),
-            route: null,
-            params: {},
-            locale: 'en'
-        };
+        this.state = Router.detect();
+        this.state.code = document.getCode();
     }
 
     static root = null;
     static instance = null;
-    static get state() { return App.instance.state; }
+    static get state() { return App.instance.state; } // TODO why 2 render at start
 
     static async mount(rootElement) {
         window.addEventListener('popstate', ev => {
@@ -65,11 +61,7 @@ class App extends React.Component {
             }
         }
 
-        return route.view();
-    }
-
-    componentDidMount() {
-        Router.goTo(window.location.pathname + window.location.search, true);
+        return route.view(this.state.params);
     }
 
     componentWillUpdate() {

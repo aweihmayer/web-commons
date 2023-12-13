@@ -266,7 +266,7 @@
     <None Update="Utils\Dom\lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Lists\array.js">
+    <None Update="Utils\Collections\array.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Objects\object.js">
