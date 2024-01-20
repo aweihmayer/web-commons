@@ -1,12 +1,12 @@
 ﻿namespace System.Reflection
 {
-    public static class Extensions
+    public static class ReflectionExtensions
     {
         public static T? GetPropertyValue<T>(this Type type, object obj, string propertyName)
         {
             object value = type.GetProperty(propertyName).GetValue(obj);
-            if (value == null) { return default; }
-            return (T)value;
+            if (value == null) return default;
+            else return (T)value;
         }
 
         public static void SetPropertyValue(this Type type, object obj, string propertyName, object value)

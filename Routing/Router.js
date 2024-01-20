@@ -41,20 +41,18 @@ const Router = {
             href = path.uri.relative();
         } else if (typeof path === 'object' && path.target) {
             let el = path.target.closest('a[href]');
-            if (!el) { return; }
+            if (!el) return;
             href = el.getAttribute('href');
         } else {
             return;
         }
 
         // Same location, do nothing
-        if (!force && href === (location.pathname + location.search)) { return; }
+        if (!force && href === (location.pathname + location.search)) return;
 
         let newRouting = this.detect(href);
         this.beforeRouteChange(newRouting);
-        if (typeof newRouting.route.beforeRouteChange === 'function') {
-            newRouting.route.beforeRouteChange(newRouting);
-        }
+        if (typeof newRouting.route.beforeRouteChange === 'function') newRouting.route.beforeRouteChange(newRouting);
 
         action(href);
         document.head.metadata.reset();
@@ -69,8 +67,8 @@ const Router = {
      */
     goTo: function (path, force) {
         if (typeof path === 'object') {
-            if (path.preventDefault) { path.preventDefault(); }
-            if (path.stopPropagation) { path.stopPropagation(); }
+            if (path.preventDefault) path.preventDefault();
+            if (path.stopPropagation) path.stopPropagation();
         }
         this.changeRoute(path, href => { window.history.pushState('', '', href); }, force);
     },
@@ -80,8 +78,8 @@ const Router = {
      */
     reload: async function (path, force) {
         if (typeof path === 'object') {
-            if (path.preventDefault) { path.preventDefault(); }
-            if (path.stopPropagation) { path.stopPropagation(); }
+            if (path.preventDefault) path.preventDefault();
+            if (path.stopPropagation) path.stopPropagation();
         }
         this.changeRoute(path, href => { window.history.replaceState('', '', href) }, force);
     },
@@ -91,8 +89,8 @@ const Router = {
      */
     replace: function (path) {
         if (typeof path === 'object') {
-            if (path.preventDefault) { path.preventDefault(); }
-            if (path.stopPropagation) { path.stopPropagation(); }
+            if (path.preventDefault) path.preventDefault();
+            if (path.stopPropagation) path.stopPropagation();
         }
         this.changeRoute(path, href => { window.history.replaceState('', '', href) });
     }

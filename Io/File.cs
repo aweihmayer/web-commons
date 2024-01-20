@@ -26,9 +26,7 @@ namespace WebCommons.IO
             this.Path = MapPath(path);
             this.extension = FileType.GetExtension(extension);
             string[] parts = this.Path.Split('.');
-            if (parts.Length == 1) {
-                this.Path += "." + FileType.GetExtension(extension);
-            }
+            if (parts.Length == 1) this.Path += "." + FileType.GetExtension(extension);
         }
 
         /// <summary>
@@ -49,9 +47,8 @@ namespace WebCommons.IO
         /// </summary>
         public void Delete()
         {
-            try {
-                File.Delete(this.Path);
-            } catch (Exception) { }
+            try { File.Delete(this.Path); }
+            catch (Exception) { }
         }
 
         /// <summary>

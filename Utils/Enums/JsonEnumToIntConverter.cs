@@ -12,11 +12,8 @@ namespace WebCommons.Utils
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is Enum) {
-                writer.WriteValue((int)value);
-            } else {
-                base.WriteJson(writer, value, serializer);
-            }
+            if (value is Enum) writer.WriteValue((int)value);
+            else base.WriteJson(writer, value, serializer);
         }
     }
 }

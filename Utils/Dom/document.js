@@ -22,11 +22,11 @@ document.createUniqueId = (id) => {
  */
 function toClassName(className, extras) {
     let classNames = [];
-    if (Array.isArray(className)) { classNames = classNames.concat(className); }
-    else if (typeof className === 'string') { classNames.push(className); }
+    if (Array.isArray(className)) classNames = classNames.concat(className);
+    else if (typeof className === 'string') classNames.push(className);
 
-    if (Array.isArray(extras)) { classNames = classNames.concat(extras); }
-    else if (typeof extras === 'string') { classNames.push(extras); }
+    if (Array.isArray(extras)) classNames = classNames.concat(extras);
+    else if (typeof extras === 'string') classNames.push(extras);
 
     return classNames.filterEmpty().join(' ').trim();
 }
@@ -36,8 +36,8 @@ function toClassName(className, extras) {
  * @returns {number}
  */
 document.getCode = () => {
-    if (!document.body.dataset.code) { return 200; }
-    return parseInt(document.body.dataset.code);
+    if (!document.body.dataset.code) return 200;
+    else return parseInt(document.body.dataset.code);
 };
 
 /**

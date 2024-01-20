@@ -101,7 +101,7 @@ class Toast extends React.Component {
      */
     static getToastIndex(id) {
         for (let i = 0; i < ToastContainer.instance.state.toasts.length; i++) {
-            if (ToastContainer.instance.state.toasts[i].id == id) { return i; }
+            if (ToastContainer.instance.state.toasts[i].id == id) return i;
         }
 
         return null;
@@ -138,13 +138,13 @@ class Toast extends React.Component {
             let responseToast = { type: toast.ok ? 'success' : 'error' };
 
             let config = Toast.custom.response[toast.status] ?? {};
-            if (config.default) { Object.assign(responseToast, config.default); }
-            if (config[toast.method]) { Object.assign(responseToast, config[toast.method]); }
+            if (config.default) Object.assign(responseToast, config.default);
+            if (config[toast.method]) Object.assign(responseToast, config[toast.method]);
 
             config = Toast.custom.routes[toast.route] ?? {};
             config = config[toast.status] ?? {};
-            if (config.default) { Object.assign(responseToast, config.default); }
-            if (config[toast.method]) { Object.assign(responseToast, config[toast.method]); }
+            if (config.default) Object.assign(responseToast, config.default); }
+            if (config[toast.method]) Object.assign(responseToast, config[toast.method]);
 
             toast = responseToast;
         }
@@ -167,7 +167,6 @@ class Toast extends React.Component {
         let container = document.createElement('aside');
         container.id = 'app-toast';
         document.body.appendChild(container);
-
         Toast.root = ReactDOM.createRoot(document.getElementById('app-toast'));
         Toast.root.render(<ToastContainer />);
     }

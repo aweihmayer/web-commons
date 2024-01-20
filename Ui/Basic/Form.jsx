@@ -17,92 +17,35 @@
         </form>;
     }
 
-    submit(ev) {
-        if (ev) { ev.preventDefault(); }
-        else { ev = {}; }
+    async submit(ev) {
+        if (this.isLoading()) return;
+        else if (ev) ev.preventDefault();
+        else ev = {};
 
-        if (this.isLoading()) { return; }
-
-        return new Promise((resolve, reject) => {
+        try {
             this.startLoading();
-
-            if (this.isValid()) {
-                resolve(this.collect());
-            } else {
-                reject(ev);
-            }
-        })
-            .then(data => {
-                ev.data = data;
-                return ev;
-            })
-            .then(ev => this.props.onSubmit(ev))
-            .catch(ex => this.props.onValidationFail(ex))
-            .finally(ev => { this.stopLoading() });
-    }
-
-    fill(data, filter) {
-        let refs = this.getPropRefs();
-        InputManager.fill(refs, data, filter);
-    }
-
-    isValid() {
-        let refs = this.getPropRefs();
-        return InputManager.isValid(refs);
-    }
-
-    async collect(filter) {
-        let refs = this.getPropRefs();
-        return InputManager.collect(refs, filter);
-    }
-
-    clear(filter) {
-        let refs = this.getPropRefs();
-        InputManager.clear(refs, filter);
+            if (await !this.isValid()) throw ev;
+            const data = await this.collect();
+            ev.data = data;
+            await this.props.onSubmit(ev);
+        } catch (ex) {
+            await this.props.onValidationFail(ex);
+        } finally {
+            this.stopLoading();
+        }
     }
 
     startLoading() {
         this._isLoading = true;
-        for (let r in this.refs) { Loader.start(this.refs[r]); }
-        let childRefs = this.getPropRefs();
-        for (let r in childRefs) {
-            Loader.start(childRefs[r]);
-        }
+        let components = this.collectRefs();
+        for (let c of components) Loader.start(c);
     }
 
     stopLoading() {
         this._isLoading = false;
-        for (let r in this.refs) { Loader.stop(this.refs[r]); }
-        let childRefs = this.getPropRefs();
-        for (let r in childRefs) {
-            Loader.stop(childRefs[r]);
-        }
+        let components = this.collectRefs();
+        for (let c of components) Loader.stop(c);
     }
 
     isLoading() { return this._isLoading; }
-
-    getPropRefs() {
-        let refs = [];
-        if (this.props.refs == null) { return refs; }
-
-        let components = this.props.refs;
-        if (!Array.isArray(components)) { components = [components]; }
-
-        components.forEach(c => {
-            let componentRefs = c.refs;
-            componentRefs = Object.keys(componentRefs)
-                .map(r => componentRefs[r])
-                .filter(r => !(r instanceof Form));
-            refs = refs.concat(componentRefs);
-        })
-
-        if (!this.props.refFilter) { return refs; }
-        let filters = this.props.refFilter;
-        if (!Array.isArray(this.props.refFilter)) { filters = [filters]; }
-        filters.forEach(f => {
-            refs = refs.filter(f);
-        });
-
-        return refs;
-    }
 }

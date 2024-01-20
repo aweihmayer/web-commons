@@ -1,13 +1,13 @@
 ﻿HTMLImageElement.prototype.lazyLoad = function () {
-    if (this.src) { return; }
-    if (!this.dataset.lazyload) { return; }
-    this.src = this.dataset.lazyload;
+    if (this.src) return;
+    else if (!this.dataset.lazyload) return;
+    else this.src = this.dataset.lazyload;
 };
 
 HTMLIFrameElement.prototype.lazyLoad = function () {
-    if (this.src) { return; }
-    if (!this.dataset.lazyload) { return; }
-    this.src = this.dataset.lazyload;
+    if (this.src) return;
+    else if (!this.dataset.lazyload) return;
+    else this.src = this.dataset.lazyload;
 };
 
 HTMLPictureElement.prototype.lazyLoad = function () {

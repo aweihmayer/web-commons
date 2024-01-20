@@ -58,11 +58,11 @@ namespace WebCommons.Controllers
             this.CacheDuration = (routeAttribute.CacheDuration != 0) ? routeAttribute.CacheDuration : null;
 
             // Method
-			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) {		this.Method = "DELETE"; }
-			else if (method.GetCustomAttribute<HttpPatchAttribute>() != null) {	this.Method = "PATCH"; }
-			else if (method.GetCustomAttribute<HttpPostAttribute>() != null) {	this.Method = "POST"; }
-			else if (method.GetCustomAttribute<HttpPutAttribute>() != null) {	this.Method = "PUT"; }
-			else if (method.GetCustomAttribute<HttpGetAttribute>() != null){	this.Method = "GET"; }
+			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) this.Method = "DELETE";
+			else if (method.GetCustomAttribute<HttpPatchAttribute>() != null) this.Method = "PATCH";
+			else if (method.GetCustomAttribute<HttpPostAttribute>() != null) this.Method = "POST";
+			else if (method.GetCustomAttribute<HttpPutAttribute>() != null)	this.Method = "PUT";
+			else if (method.GetCustomAttribute<HttpGetAttribute>() != null)	this.Method = "GET";
 
             // Query string
 			foreach (ParameterInfo paramInfo in method.GetParameters()) {
@@ -91,10 +91,7 @@ namespace WebCommons.Controllers
         public static List<JsonRoute> BuildRoutes(IEnumerable<Type> controllers)
 		{
             List<JsonRoute> routes = new();
-            foreach (Type controller in controllers) {
-                routes.AddRange(BuildRoutes(controller));
-            }
-
+            foreach (Type controller in controllers) routes.AddRange(BuildRoutes(controller));
 			return routes;
         }
 
@@ -105,16 +102,13 @@ namespace WebCommons.Controllers
 		{
 			List<JsonRoute> routes = new();
 			MethodInfo[] methods = controller.GetMethods();
-
 			bool isApiController = controller.HasCustomAttribute<ApiControllerAttribute>();
 
 			// For each method in the controller
 			foreach (MethodInfo method in methods) {
 				// Skip if the method doesn't have the necessary attributes
 				var routeAttributes = method.GetCustomAttributes<JsonRouteAttribute>();
-                foreach (var route in routeAttributes) {
-                    routes.Add(new JsonRoute(route, method, isApiController));
-                }
+                foreach (var route in routeAttributes) routes.Add(new JsonRoute(route, method, isApiController));
 			}
 
 			return routes;

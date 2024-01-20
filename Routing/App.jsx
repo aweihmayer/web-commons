@@ -44,21 +44,14 @@ class App extends React.Component {
         let code = this.state.code;
 
         if (code >= 300 || code < 200 && Routes.error) {
-            if (Routes.error.hasOwnProperty(code)) {
-                route = Routes.error[code];
-            } else if (Routes.error.default) {
-                route = Routes.error.default;
-            } else {
-                route = new Route(() => <p>Implement the route "error.{code}" or "error.default" for a custom error page.</p>);
-            }
+            if (Routes.error.hasOwnProperty(code)) route = Routes.error[code];
+            else if (Routes.error.default) route = Routes.error.default;
+            else route = new Route(() => <p>Implement the route "error.{code}" or "error.default" for a custom error page.</p>);
         }
 
         if (route === null) {
-            if (Routes.error && Routes.error.hasOwnProperty(404)) {
-                route = Routes.error[404];
-            } else {
-                route = new Route(() => <p>Implement the route "error.404" for a custom error page.</p>);
-            }
+            if (Routes.error && Routes.error.hasOwnProperty(404)) route = Routes.error[404];
+            else route = new Route(() => <p>Implement the route "error.404" for a custom error page.</p>);
         }
 
         return route.view(this.state.params);

@@ -19,20 +19,12 @@
 
         try {
             result.value = Parser.parse(value, type, schema);
+            if (schema.isRequired) Validator.required(result.value, schema);
 
-            if (schema.isRequired) {
-                Validator.required(result.value, schema);
-            }
-
-            if (typeof Validator[type] !== 'function') {
-                console.warn('No function defined to validate the type ' + type);
-            } else {
-                Validator[schema.type](result.value, schema);
-            }
-            
+            if (typeof Validator[type] !== 'function') console.warn('No function defined to validate the type ' + type);
+            else Validator[schema.type](result.value, schema);
             return result;
         } catch (ex) {
-            console.warn('Validation error', value, schema, ex);
             result.error = ex.message;
             result.isValid = false;
             result.message = Validator.getMessage(result.error, schema);
@@ -60,6 +52,7 @@
             console.warn('No sub error message defined for ' + type);
             return 'Error';
         }
+
         return translate(message[type], schema);
     },
 

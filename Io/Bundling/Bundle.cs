@@ -45,7 +45,7 @@ namespace WebCommons.Bundling
 				// For each file to merge
 				foreach (string f in chunk.GetFilesToMerge()) {
 					// Skip it if it was already merged
-					if (mergedFiles.Contains(f)) { continue; }
+					if (mergedFiles.Contains(f)) continue;
 					mergedFiles.Add(f);
 					// Read the content and merge them
 					SystemFile file = new(f);
@@ -54,9 +54,9 @@ namespace WebCommons.Bundling
 				}
 
 				// If the chunk is to be appened, add it at the end of the merge contents
-				if (chunk.Append) { contents += chunkContent + chunk.Suffix; }
+				if (chunk.Append) contents += chunkContent + chunk.Suffix;
 				// Otherwise, add it at the beginning
-				else { contents = chunkContent + chunk.Suffix + contents; }
+				else contents = chunkContent + chunk.Suffix + contents;
 			}
 
 			return contents;

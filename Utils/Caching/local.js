@@ -15,9 +15,8 @@ class LocalStorageValue {
      */
     retrieve() {
         let data = localStorage.getItem(this.name);
-
-        if (data == null) { return null; }
-        if (typeof data === 'string') { data = JSON.parse(data); }
+        if (data == null) return null;
+        else if (typeof data === 'string') data = JSON.parse(data);
 
         if (!this.duration || !data.cachedAt) {
             return data.data ?? data;
@@ -46,6 +45,9 @@ class LocalStorageValue {
         localStorage.clear(this.name);
     }
 
+    /**
+     * Removes all keys from the local storage.
+     */
     static clear() {
         localStorage.clear();
     }

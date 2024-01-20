@@ -14,17 +14,13 @@
         }
 
         let parsed = this[type](value);
-        if (typeof schema === 'undefined') { return parsed; }
+        if (typeof schema === 'undefined') return parsed;
 
         // Parse enumerables
         if (!schema.isEnumerable && Array.isArray(parsed)) {
-            if (parsed.length === 0) {
-                parsed = null;
-            } else if (parsed.length === 1) {
-                parsed = parsed[0];
-            } else {
-                throw new Error('type');
-            }
+            if (parsed.length === 0) parsed = null;
+            else if (parsed.length === 1) parsed = parsed[0];
+            else throw new Error('type');
         } else if (schema.isEnumerable && !Array.isArray(parsed)) {
             parsed = [parsed];
         }

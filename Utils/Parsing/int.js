@@ -1,9 +1,6 @@
 ﻿Parser.int = function (value) {
-    if (Array.isArray(value)) {
-        return value.map(v => this.int(v));
-    }
-
-    if (value === null) { return null; }
+    if (Array.isArray(value)) return value.map(v => this.int(v));
+    else if (value === null) return null;
 
     switch (typeof value) {
         case 'boolean':
@@ -12,11 +9,11 @@
             return parseInt(value);
         case 'string':
             value = value.replaceAll(',', '').trim();
-            if (value === '') { return null; }
-            if (value === '-') { value = '0'; }
+            if (value === '') return null;
+            else if (value === '-') value = '0';
             value = parseInt(value);
-            if (isNaN(value)) { throw new Error('type'); }
-            return value;
+            if (isNaN(value)) throw new Error('type');
+            else return value;
         default:
             throw new Error('type');
     }

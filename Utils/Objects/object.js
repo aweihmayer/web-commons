@@ -29,12 +29,9 @@ Object.defineProperty(Object.prototype, 'getProp', {
         // Navigate to the property
         for (let part of path) {
             // The child property exists, keep going
-            if (v.hasOwnProperty(part)) {
-                v = v[part];
+            if (v.hasOwnProperty(part)) v = v[part];
             // The child property does not exist, throw an error
-            } else {
-                throw new Error('The property "' + part + '" of the path "' + path + '" is undefined');
-            }
+            else throw new Error('The property "' + part + '" of the path "' + path + '" is undefined');
         }
 
         return v;
@@ -55,7 +52,7 @@ Object.defineProperty(Object.prototype, 'setProp', {
         // Navigate to the property while creating the object along the way
         for (let i = 0; i < path.length - 1; i++) {
             let part = path[i];
-            if (!prop.hasOwnProperty(part)) { prop[part] = {}; }
+            if (!prop.hasOwnProperty(part)) prop[part] = {};
             prop = prop[part];
         }
 
@@ -63,7 +60,7 @@ Object.defineProperty(Object.prototype, 'setProp', {
         path = path.last();
         // It contains square brackets and is an array
         if (path.includes('[]')) {
-            if (!prop.hasOwnProperty(path)) { prop[path] = []; }
+            if (!prop.hasOwnProperty(path)) prop[path] = [];
             prop[path].push(value);
         // It is another value
         } else {
@@ -85,7 +82,7 @@ Object.defineProperty(Object.prototype, 'deleteProp', {
         // Navigate to the property
         for (let i = 0; i < path.length - 1; i++) {
             let part = path[i];
-            if (!prop.hasOwnProperty(part)) { return; }
+            if (!prop.hasOwnProperty(part)) return; 
             prop = prop[part];
         }
 
@@ -107,10 +104,7 @@ Object.fromQueryString = (query) => {
     let params = {};
     query = query.substring(query.indexOf('?'));
     let queryParams = new URLSearchParams(query);
-    for (let pair of queryParams.entries()) {
-        params[pair[0]] = pair[1];
-    }
-
+    for (let pair of queryParams.entries()) params[pair[0]] = pair[1];
     return params;
 };
 
@@ -119,7 +113,7 @@ Object.fromQueryString = (query) => {
 * @returns {string}
 */
 Object.toQueryString = (obj) => {
-    if (!Object.keys(obj).any()) { return ''; }
+    if (!Object.keys(obj).any()) return '';
     let query = new URLSearchParams(obj).toString();
     return '?' + query;
 };

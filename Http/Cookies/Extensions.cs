@@ -12,16 +12,16 @@ namespace WebCommons.Http
         {
             Type type = cookie.GetType();
             var value = type.GetPropertyValue<string>(cookie, "Base64Value");
-            if (string.IsNullOrEmpty(value)) { return; }
+            if (string.IsNullOrEmpty(value)) return;
 
             CookieOptions options = new();
             options.HttpOnly = type.GetPropertyValue<bool>(cookie, "HttpOnly");
             var path = type.GetPropertyValue<string?>(cookie, "Path");
-            if (!string.IsNullOrEmpty(path)) { options.Path = path; }
+            if (!string.IsNullOrEmpty(path)) options.Path = path;
             options.Expires = DateTime.UtcNow.Add(type.GetPropertyValue<TimeSpan>(cookie, "Duration"));
 
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            if (!string.IsNullOrEmpty(name)) { cookies.Append(name, value, options); }
+            if (!string.IsNullOrEmpty(name)) cookies.Append(name, value, options);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace WebCommons.Http
         public static void Delete(this IResponseCookies cookies, object cookie)
         {
             var name = cookie.GetType().GetPropertyValue<string>(cookie, "Name");
-            if (!string.IsNullOrEmpty(name)) { cookies.Delete(name); }
+            if (!string.IsNullOrEmpty(name)) cookies.Delete(name);
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace WebCommons.Http
             T cookie = new T();
             Type type = typeof(T);
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            if (string.IsNullOrEmpty(name) || cookies[name] == null) { return default(T); }
+            if (string.IsNullOrEmpty(name) || cookies[name] == null) return default(T);
             string? value = cookies[name];
-            if (string.IsNullOrEmpty(value)) { return default(T); }
+            if (string.IsNullOrEmpty(value)) return default(T);
             type.SetPropertyValue(cookie, "Base64Value", value);
             return cookie;
         }

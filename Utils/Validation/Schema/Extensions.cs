@@ -23,8 +23,7 @@ namespace WebCommons.Model
             object instance = Activator.CreateInstance(model);
             foreach (PropertyInfo property in properties) {
                 ValueSchema? schema = property.BuildSchema(instance);
-                if (schema == null) { continue; }
-                schemas[schema.Name] = schema;
+                if (schema != null) schemas[schema.Name] = schema;
             }
 
             return schemas;
@@ -57,17 +56,17 @@ namespace WebCommons.Model
                 schema.IsEnumerable = true;
             }
 
-            if (propertyType.IsEnum) { propertyTypeName = "enum"; }
-            else { propertyTypeName = propertyType.Name.ToLower(); }
+            if (propertyType.IsEnum) propertyTypeName = "enum";
+            else propertyTypeName = propertyType.Name.ToLower();
 
             // Determine if it is required
             schema.IsRequired = (property.GetCustomAttribute<RequiredAttribute>() != null);
 
             var fillName = property.GetCustomAttribute<FillNameAttribute>();
-            if (fillName != null) { schema.Fill = fillName.Name; }
+            if (fillName != null) schema.Fill = fillName.Name;
 
             var displayName = property.GetCustomAttribute<DisplayNameAttribute>();
-            if (displayName != null) { schema.Label = displayName.DisplayName; }
+            if (displayName != null) schema.Label = displayName.DisplayName;
 
             // Determine the type and its validation rules
             switch (propertyTypeName) {

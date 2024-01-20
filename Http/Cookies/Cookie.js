@@ -15,12 +15,12 @@
      */
     read() {
         // Do nothing if the cookie does not exist
-        if (!this.exists()) { return; }
+        if (!this.exists()) return;
         // Find the cookie
         let result = document.cookie.match("(^|[^;]+)\\s*" + this.name + "\\s*=\\s*([^;]+)");
         this.value = result ? result.pop() : null;
         // Do nothing if the cookie value was not found. This is unexpected
-        if (this.value === null) { return; }
+        if (this.value === null) return;
         // Decode the base64 value
         let decodedValue = atob(this.value);
         try {

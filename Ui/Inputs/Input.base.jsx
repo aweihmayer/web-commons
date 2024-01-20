@@ -38,14 +38,14 @@
      * Sets the value of this input.
      * @param {any} value
      */
-    fill(value) {
+    setValue(value) {
         this.refs.input.value = Parser.parse(value, this.schema.type);
     }
 
     /**
      * Clears the value of this input.
      */
-    clear() {
+    clearValue() {
         this.refs.input.value = null;
     }
 
@@ -53,16 +53,23 @@
      * Gets the value of the input and parses it to the schema's type.
      * @returns {any}
      */
-    collect() {
-        let value = this.raw();
-        return Parser.parse(value, this.schema.type, this.schema);
+    async getValue() {
+        return Parser.parse(this.getRawValue(), this.schema.type, this.schema);
+    }
+
+    /**
+     * Gets the name of the input.
+     * @returns {string}
+     */
+    getValueName() {
+        return this.schema.name;
     }
 
     /**
      * Gets the raw value of the input without any parsing.
      * @returns {any}
      */
-    raw() {
+    async getRawValue() {
         return this.refs.input.value;
     }
 
@@ -70,9 +77,9 @@
      * Determines if the input is valid and adds an error message if it is not.
      * @returns {boolean}
      */
-    isValid() {
-        let result = this.validate();
-        if (result.isValid) { return true; }
+    async isValid() {
+        let result = await this.validate();
+        if (result.isValid) return true;
         this.setError(result.message);
         return false;
     }
@@ -81,8 +88,8 @@
      * Validates the value and returns details about the validation.
      * @returns {object}
      */
-    validate() {
-        return Validator.validate(this.raw(), this.schema.type, this.schema);
+    async validate() {
+        return Validator.validate(await this.getRawValue(), this.schema.type, this.schema);
     }
 
     /**
@@ -107,9 +114,7 @@
 
     handleBlur(ev) {
         this.isValid();
-        if (this.props.onFocus) {
-            this.props.onFocus(ev);
-        }
+        if (this.props.onFocus) this.props.onFocus(ev);
     }
 
     handleChange(ev) {
@@ -121,21 +126,15 @@
 
     handleFocus(ev) {
         this.clearError();
-        if (this.props.onFocus) {
-            this.props.onFocus(ev);
-        }
+        if (this.props.onFocus) this.props.onFocus(ev);
     }
 
     handleInput(ev) {
-        if (this.props.onInput) {
-            this.props.onInput(ev);
-        }
+        if (this.props.onInput) this.props.onInput(ev);
     }
 
     handleKeyPress(ev) {
-        if (this.props.onKeyPress) {
-            this.props.onKeyPress(ev);
-        }
+        if (this.props.onKeyPress) this.props.onKeyPress(ev);
     }
 
     // #endregion

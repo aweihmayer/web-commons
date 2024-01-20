@@ -26,7 +26,7 @@ namespace WebCommons.Http
         public string Base64Value
         {
             get {
-                if (this.Value == null) { return string.Empty; }
+                if (this.Value == null) return string.Empty;
                 string value = JsonConvert.SerializeObject(this.Value);
                 value = value.EncodeBase64();
                 return value;

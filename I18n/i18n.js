@@ -2,22 +2,25 @@
     // Value is an object, it contains locales and/or keys
     if (typeof value === 'object' && !Array.isArray(value)) {
         // A specific key is defined
-        if (typeof key !== 'undefined' && this.hasProp(key)) {value = value.getProp(key); }
+        if (typeof key !== 'undefined' && this.hasProp(key)) value = value.getProp(key);
         // The value has an i18n property
-        if (typeof value === 'object' && value.i18n) { value = value.i18n; }
+        if (typeof value === 'object' && value.i18n) value = value.i18n;
+
         // The value is an array, translate it
-        if (Array.isArray(value)) { return translate(value, replacements, plural); }
+        if (Array.isArray(value)) return translate(value, replacements, plural);
         // The value is not an object, translate it
-        if (typeof value !== 'object') { return translate(value, replacements, plural); }
+        else if (typeof value !== 'object') return translate(value, replacements, plural);
+
         // The value is an object, it has a locale
         let locale = App.state.locale;
         // The locale is found, translate it
-        if (value.hasOwnProperty(locale)) { return translate(value[locale], replacements, plural); }
+        if (value.hasOwnProperty(locale)) return translate(value[locale], replacements, plural);
+
         // The locale is not found, we translate the first locale by default
         Console.warn('The ' + locale + ' value is missing for ' + JSON.stringify(value));
         let locales = Object.keys(value);
         // There are no locales, return an empty string
-        if (!locale.any()) { return ''; }
+        if (!locale.any()) return '';
         // Translate the first locale
         let defaultLocale = locales.first();
         return translate(value[defaultLocale], replacements, plural);

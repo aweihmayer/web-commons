@@ -23,46 +23,6 @@ namespace WebCommons.Controllers
     {
         protected TOperation OperationContext { get; set; } = new TOperation();
 
-        #region Model
-
-        /// <summary>
-        /// Determines if the model is valid.
-        /// </summary>
-        /// <returns>True if the model is valid.</returns>
-        /// <exception cref="BadRequestException">Thrown as a bad request (400) if the model is not valid.</exception>
-        protected bool ModelMustBeValid()
-        {
-            if (ModelState.IsValid) { return true; }
-            throw new BadRequestException();
-        }
-
-        #endregion Model
-
-        #region View response
-
-        protected ViewResult View(Exception ex)
-        {
-            return this.View(500);
-        }
-
-        protected ViewResult View(ResponseException ex)
-        {
-            return this.View(ex.StatusCode);
-        }
-
-        protected ViewResult View(HttpStatusCode code)
-        {
-            return this.View((int) code);
-        }
-
-        protected ViewResult View(int code)
-        {
-            Response.StatusCode = code;
-            return View();
-        }
-
-        #endregion
-
         #region Life cycle events
         
         public override void OnActionExecuting(ActionExecutingContext context)

@@ -22,7 +22,7 @@ String.random = (length) => {
  */
 String.markdownToHtml = (value, decreaseHeadings) => {
     let html = markdown(value);
-    if (!decreaseHeadings) { return html; }
+    if (!decreaseHeadings) return html;
 
     for (let i = 7; i > 0; i--) {
         html = html.replaceAll('<h' + (i - 1) + '>', '<h' + i + '>');
@@ -62,8 +62,8 @@ String.prototype.toSlug = function() {
  * @returns {string}
  */
 String.getQueryString = (str) => {
-    if (str.includes('?')) { return ''; }
-    return str.substring(str.indexOf('?'));
+    if (str.includes('?')) return '';
+    else return str.substring(str.indexOf('?'));
 };
 
 /**
@@ -78,5 +78,5 @@ String.removeQueryString = (str) => str.split('?')[0];
  */
 String.prototype.firstCharToLowerCase = function() {
     if (this.length === 0) return this;
-    return this.charAt(0).toLowerCase() + this.substring(1);
+    else return this.charAt(0).toLowerCase() + this.substring(1);
 }

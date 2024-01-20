@@ -31,14 +31,14 @@
     }
 
     async handleClick(ev) {
-        if (!this.props.onClick) { return; }
+        if (!this.props.onClick) return;
         this.disable();
         await this.props.onClick(ev);
         this.enable();
     }
 
     disable(toggle) {
-        if (typeof toggle === 'undefined') { toggle = true; }
+        if (typeof toggle === 'undefined') toggle = true;
         this.setState({ disabled: toggle });
     }
 

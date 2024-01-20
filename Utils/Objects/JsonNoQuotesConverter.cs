@@ -6,11 +6,8 @@ namespace WebCommons.Utils
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (value is string strValue) {
-                writer.WriteRawValue(strValue);
-            } else {
-                throw new InvalidOperationException("Expected a string value.");
-            }
+            if (value is string strValue) writer.WriteRawValue(strValue);
+            else throw new InvalidOperationException("Expected a string value.");
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

@@ -76,7 +76,7 @@ namespace WebCommons.Bundling
                         string file = f.Replace(@"\", "/");
                         file = file.Substring(file.IndexOf(directory));
                         // Skip it if it has already been added
-                        if (filesToMerge.Contains(file)) { continue; }
+                        if (filesToMerge.Contains(file)) continue;
                         // Add it
                         filesToMerge.Add(file);
                     }

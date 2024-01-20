@@ -13,10 +13,7 @@ namespace WebCommons.IO
         /// <summary>
         /// Reads the image file as an image object.
         /// </summary>
-        public Image ReadImage()
-        {
-            return Image.FromFile(this.Path);
-        }
+        public Image ReadImage() => Image.FromFile(this.Path);
 
         /// <summary>
         /// Reads the image file as a base64 string.

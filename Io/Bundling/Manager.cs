@@ -35,8 +35,8 @@ namespace WebCommons.Bundling
 		public CustomBundle GetBundle(string name)
 		{
 			CustomBundle? bundle = this.Bundles.FirstOrDefault(b => b.Name == name);
-			if (bundle == null) { throw new Exception("Bundle not found"); }
-			return bundle;
+			if (bundle == null) throw new Exception("Bundle not found");
+			else return bundle;
 		}
 
 		/// <summary>
@@ -47,14 +47,11 @@ namespace WebCommons.Bundling
 			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name);
 
 			// If caching is enabled, use existing file
-			if (cachedFile.Exists() && IsCachingEnabled) {
-				return cachedFile.ReadAsStream();
-			}
+			if (cachedFile.Exists() && IsCachingEnabled) return cachedFile.ReadAsStream();
 
 			// Build the bundle
 			string contents = bundle.GetContents();
 			contents = contents.Replace(this.Values);
-
 			// Create the bundle file and return the stream
 			contents = this.Transform(contents);
 			cachedFile.Write(contents);

@@ -5,17 +5,17 @@
         </InputContainer>;
     }
 
-    fill(values) {
+    setValue(values) {
         this.refs.container.querySelectorAll('[name="' + this.props.name + '"]').forEach(inp => {
             input.checked = values.includes(inp.value);
         });
     }
 
-    raw() {
+    getRawValue() {
         return this.refs.container.querySelectorAll('input:checked').map(inp => inp.value);
     }
 
-    clear() {
+    clearValue() {
         this.refs.container.querySelectorAll('[name="' + this.schema.name + '"]').forEach(inp => {
             inp.checked = false;
         });

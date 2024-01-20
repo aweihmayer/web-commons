@@ -1,7 +1,5 @@
 ﻿Parser.string = function (value) {
-    if (Array.isArray(value)) {
-        return value.map(v => this.string(v));
-    }
+    if (Array.isArray(value)) return value.map(v => this.string(v));
 
     value = String(value);
     value = value.trim();

@@ -16,7 +16,7 @@
         </InputContainer>;
     }
 
-    fill(value) {
+    setValue(value) {
         try {
             let parsedValue = Parser.parse(value, this.schema.type);
             Array.from(this.refs.input.getElementsByTagName('option')).forEach(o => {

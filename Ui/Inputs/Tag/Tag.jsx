@@ -106,13 +106,13 @@
         return this.state.data.length;
     }
 
-    raw() {
+    getRawValue() {
         let data = this.state.data.map(d => d.value);
         if (this.schema.isEnumerable) { return data; }
         return (data.length > 0) ? data[0] : null;
     }
 
-    fill(value) {
+    setValue(value) {
         if (!value) {
             this.setState({ data: [] });
             return;
@@ -122,7 +122,7 @@
         this.setState({ data: value });
     }
 
-    clear() {
+    clearValue() {
         this.closeSearch();
         this.setState({ data: [] });
         this.clearError();

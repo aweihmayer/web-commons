@@ -10,11 +10,8 @@ const BundleManager = {
      */
     loadBundles: async function(bundles) {
         for (let b of bundles) {
-            if (this.bundles.hasOwnPropert(b)) {
-                await this.loadBundle(b);
-            } else {
-                await this.load(b);
-            }
+            if (this.bundles.hasOwnPropert(b)) await this.loadBundle(b);
+            else await this.load(b);
         }
     },
 
@@ -32,28 +29,7 @@ const BundleManager = {
      * @param {string|string[]} assets
      */
     load: async function load(assets) {
-        if (!Array.isArray(assets)) { assets = [assets]; }
-
-        // The function to load JS
-        let loadJs = function (asset) {
-            return new Promise(function (resolve, reject) {
-                let script = document.createElement('script');
-                script.onload = resolve;
-                script.src = asset;
-                document.getElementsByTagName('head')[0].appendChild(script);
-            });
-        };
-
-        // The function to load CSS
-        let loadCss = function (asset) {
-            return new Promise(function (resolve, reject) {
-                let style = document.createElement('link');
-                style.rel = 'stylesheet';
-                style.href = asset;
-                style.onload = resolve;
-                document.getElementsByTagName('head')[0].appendChild(style);
-            });
-        };
+        if (!Array.isArray(assets)) assets = [assets];
 
         // Create a list of promises for each asset to be loaded
         let promises = [];
@@ -63,13 +39,9 @@ const BundleManager = {
 
             switch (extension) {
                 case 'js':
-                    // Skip if already loaded
-                    if (document.querySelector('head script[src="' + asset + '"]') != null) { continue; }
                     promises.push(loadJs(asset));
                     break;
                 case 'css':
-                    // Skip if already loaded
-                    if (document.querySelector('head style[href="' + source + '"]') != null) { continue; }
                     promises.push(loadCss(asset));
                     break;
             }
@@ -77,5 +49,26 @@ const BundleManager = {
 
         // Execute all promises
         await Promise.all(promises);
+    },
+
+    loadJs: function (asset) {
+        return new Promise(function (resolve, reject) {
+            if (document.querySelector('head script[src="' + asset + '"]') != null) return;
+            let script = document.createElement('script');
+            script.onload = resolve;
+            script.src = asset;
+            document.getElementsByTagName('head')[0].appendChild(script);
+        });
+    },
+
+    loadCss: function (asset) {
+        return new Promise(function (resolve, reject) {
+            if (document.querySelector('head style[href="' + source + '"]') != null) continue;
+            let style = document.createElement('link');
+            style.rel = 'stylesheet';
+            style.href = asset;
+            style.onload = resolve;
+            document.getElementsByTagName('head')[0].appendChild(style);
+        });
     }
 }

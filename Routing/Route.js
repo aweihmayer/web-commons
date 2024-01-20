@@ -41,11 +41,11 @@
         }
 
         let uri = new Uri(href);
-        if (!uri.compare(this.uri)) { return {}; }
+        if (!uri.compare(this.uri)) return {};
 
         uri.parts.forEach((p, i) => {
             // The part is not a parameter, skip it
-            if (!this.uri.parts[i].isParam) { return; }
+            if (!this.uri.parts[i].isParam) return;
             this.uri.parts[i].params.forEach(p2 => {
                 try {
                     let paramSchema = this.uri.params.getUri(p2);
@@ -68,8 +68,8 @@
         options.method = this.method;
         options.headers = new Headers();
         options.onResponse = Route.onFetchResponse;
-        if (this.accept) { options.headers.append('Accept', this.accept); }
-        if (this.contentType) { options.headers.append('Content-Type', this.contentType); }
+        if (this.accept) options.headers.append('Accept', this.accept);
+        if (this.contentType) options.headers.append('Content-Type', this.contentType);
         return Http.fetch(options);
     }
 
