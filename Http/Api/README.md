@@ -3,7 +3,7 @@ APIs should be structured in a standard way. The goal is to make things discover
 class with too many endpoint methods. We should structure the methods with the context first and the technical
 operation last.
 
-Consider this as a bad example because the developper cannot discover things progressively.
+Consider this as a bad example because a developer cannot discover things progressively.
 ```
 api.createArticle
 api.readArticle
@@ -14,7 +14,7 @@ api.removeArticleAuthor
 etc...
 ```
 
-A better approach would be to show users a smaller list of options to funnel him to want he wants.
+A better approach would be to show users a smaller list of options to funnel them to want they want.
 ```
 api.article.create
 api.article.read

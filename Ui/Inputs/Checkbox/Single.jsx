@@ -11,14 +11,14 @@
         </InputContainer>;
     }
 
-    setValue(value) {
+    fill(value) {
         try {
             let isChecked = Parser.bool(value);
             this.refs.input.checked = isChecked;
         } catch { }
     }
 
-    getRawValue() {
+    collectRaw() {
         return this.refs.input.checked;
     }
 }

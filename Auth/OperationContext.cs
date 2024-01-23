@@ -15,12 +15,10 @@ namespace WebCommons.Controllers
         private Controller? _controller = null;
         public Controller? Controller
         {
-            get {
-                return this._controller;
-            }
+            get => this._controller;
             set {
                 this._controller = value;
-                if (value == null) { return; }
+                if (value == null) return;
 
                 string timeOffsetHeader = value.Request.Headers["Time-Offset"];
                 if (!string.IsNullOrEmpty(timeOffsetHeader)) {
@@ -33,12 +31,13 @@ namespace WebCommons.Controllers
                 if (!string.IsNullOrEmpty(authHeader)) {
                     this.PopulateAuthValueFromHeader(authHeader);
                     return;
-                }
-
+                } 
                 // Cookie
-                var accessTokenCookie = value.Request.Cookies.Read<AccessTokenCookie>();
-                var refreshTokenCookie = value.Request.Cookies.Read<RefreshTokenCookie>();
-                this.PopulateAuthValueFromCookie(accessTokenCookie, refreshTokenCookie);
+                else {
+                    var accessTokenCookie = value.Request.Cookies.Read<AccessTokenCookie>();
+                    var refreshTokenCookie = value.Request.Cookies.Read<RefreshTokenCookie>();
+                    this.PopulateAuthValueFromCookie(accessTokenCookie, refreshTokenCookie);
+                }
             }
         }
 
@@ -57,14 +56,12 @@ namespace WebCommons.Controllers
         {
             // Splits the header to seperate the value from the type. For example 'Basic <TOKEN>'
             string[] values = header.Trim().Split(' ');
-            if (values.Length == 2)
-            {
-                switch (values[0])
-                {
+            if (values.Length == 2) {
+                switch (values[0]) {
                     // Basic type has credentials separated by a colon as email:password
                     case "Basic":
                         string[] credentials = values[1].DecodeBase64().Split(':');
-                        if (credentials.Length != 2) { return; }
+                        if (credentials.Length != 2) return;
                         this.Email = credentials[0];
                         this.Password = credentials[1];
                         this.AuthMethod = AuthMethod.Credentials;
@@ -72,7 +69,7 @@ namespace WebCommons.Controllers
                     // Bearer type has GUID token
                     case "Bearer":
                         Guid token;
-                        if (!Guid.TryParse(values[1], out token)) { return; }
+                        if (!Guid.TryParse(values[1], out token)) return;
                         this.AccessToken = token;
                         this.AuthMethod = AuthMethod.Token;
                         break;
@@ -80,7 +77,7 @@ namespace WebCommons.Controllers
                         return;
                 }
             } else if (values.Length == 1) {
-                if (!Guid.TryParse(values[0], out Guid token)) { return; }
+                if (!Guid.TryParse(values[0], out Guid token)) return;
                 this.AccessToken = token;
                 this.AuthMethod = AuthMethod.Token;
             } else {
@@ -118,7 +115,7 @@ namespace WebCommons.Controllers
         private TUser? _user = null;
         public TUser? User {
             get {
-                if (this.wasUserFetched) { return this._user; }
+                if (this.wasUserFetched) return this._user;
 
                 switch (this.AuthMethod) {
                     case AuthMethod.Token:
@@ -167,8 +164,8 @@ namespace WebCommons.Controllers
         /// <exception cref="UnauthorizedException">Thrown if the user is not authenticated.</exception>
         public bool MustBeAuthenticated()
         {
-            if (!this.IsAuthenticated()) { throw new UnauthorizedException(); }
-            return true;
+            if (!this.IsAuthenticated()) throw new UnauthorizedException();
+            else return true;
         }
 
         #endregion

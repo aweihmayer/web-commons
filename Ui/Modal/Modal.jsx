@@ -33,7 +33,7 @@ class Modal extends React.Component {
 
         // Close the modal if clicking outside of its box
         container.onclick = function (ev) {
-            if (ev.target.closest('article') != null) { return; }
+            if (ev.target.closest('article') != null) return;
             Modal.close();
         };
 

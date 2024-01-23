@@ -113,7 +113,7 @@
             relativeUri += queryStringParams;
         } else if (typeof queryStringParams === 'object') {
             this.params.getAllQuery().forEach(p => {
-                if (!queryStringParams.hasProp(p.name)) { return; }
+                if (!queryStringParams.hasProp(p.name)) return;
                 let v = queryStringParams.getProp(p.name);
                 v = Parser.parse(v, 'string');
                 queryString.setProp(p.name, v);

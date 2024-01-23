@@ -35,7 +35,7 @@
             params = Object.fromQueryString(href);
             Object.keys(params).forEach(p => {
                 let queryParamSchema = this.uri.params.getQuery(p);
-                if (queryParamSchema == null) { return; }
+                if (queryParamSchema == null) return;
                 params[p] = Parser.parse(params[p], queryParamSchema.type);
             });
         }

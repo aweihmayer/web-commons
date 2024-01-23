@@ -16,7 +16,7 @@
         </InputContainer>;
     }
 
-    clearValue() {
+    clear() {
         this.refs.preview.style.backgroundImage = ImageInput.cameraIcon;
         this.refs.old.value = null;
         this.refs.file.value = '';
@@ -27,23 +27,19 @@
         this.refs.old.value = null;
     }
 
-    setValue(v) {
-        if (!v) { return; }
+    fill(v) {
+        if (!v) return;
         this.refs.preview.style.backgroundImage = 'url(' + this.props.imageRoute.uri.relative(v) + ')';
         this.refs.old.value = v;
     }
 
-    async getValue() {
-        return await this.getRawValue();
+    async collect() {
+        return await this.collectRaw();
     }
 
-    async getRawValue() {
-        if (this.refs.old.value) { return this.refs.old.value; }
-
-        for (let file of this.refs.file.files) {
-            return await this.readFile(file);
-        }
-
+    async collectRaw() {
+        if (this.refs.old.value) return this.refs.old.value;
+        for (let file of this.refs.file.files) return await this.readFile(file);
         return null;
     }
 

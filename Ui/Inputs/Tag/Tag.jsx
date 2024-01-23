@@ -34,7 +34,7 @@
     search(ev) {
         this.closeSearch();
         let results = this.props.onSearch(this.refs.input.value);
-        if (!results.any()) { return; }
+        if (!results.any()) return;
 
         results.forEach(r => {
             let el = document.createElement('li');
@@ -106,13 +106,13 @@
         return this.state.data.length;
     }
 
-    getRawValue() {
+    collectRaw() {
         let data = this.state.data.map(d => d.value);
         if (this.schema.isEnumerable) { return data; }
         return (data.length > 0) ? data[0] : null;
     }
 
-    setValue(value) {
+    fill(value) {
         if (!value) {
             this.setState({ data: [] });
             return;
@@ -122,7 +122,7 @@
         this.setState({ data: value });
     }
 
-    clearValue() {
+    clear() {
         this.closeSearch();
         this.setState({ data: [] });
         this.clearError();

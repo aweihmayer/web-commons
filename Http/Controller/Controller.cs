@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
 using System.Reflection;
 
 namespace WebCommons.Controllers
@@ -18,7 +17,7 @@ namespace WebCommons.Controllers
     ///     <item>Create cookies.</item>
     /// </list>
     /// </summary>
-    public class CommonController<TOperation> : Controller
+    public abstract class CommonController<TOperation> : Controller
         where TOperation : OperationContext, new()
     {
         protected TOperation OperationContext { get; set; } = new TOperation();
@@ -35,21 +34,19 @@ namespace WebCommons.Controllers
             ViewBag.OperationContext = this.OperationContext;
             ViewBag.Response = this.Response;
 
-            ControllerActionDescriptor? controllerActionDescriptor;
-            if (context.ActionDescriptor is ControllerActionDescriptor) {
-                controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-                if (controllerActionDescriptor == null) { return; }
+            if (context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor) {
+                this.AuthorizeRequest(context, controllerActionDescriptor.MethodInfo);
             } else {
                 return;
             }
+        }
 
-            bool isApiController = controllerActionDescriptor.ControllerTypeInfo.HasCustomAttribute<ApiControllerAttribute>();
-
-            // Check the user's permissions
+        protected virtual void AuthorizeRequest(ActionExecutingContext context, MethodInfo method)
+        {
+            bool isApiController = this.GetType().HasCustomAttribute<ApiControllerAttribute>();
             try {
-                // Check if the action has the RequiresAuth attribute
-                var permissionAttributes = controllerActionDescriptor.MethodInfo.GetCustomAttribute<RequiresAuthAttribute>();
-                if (permissionAttributes != null) { this.OperationContext.MustBeAuthenticated(); }
+                var permissionAttributes = method.GetCustomAttribute<RequiresAuthAttribute>();
+                if (permissionAttributes != null) this.OperationContext.MustBeAuthenticated();
             } catch (ResponseException ex) {
                 context.Result = isApiController ? this.Response.AsJson(ex) : this.View(ex);
             } catch (Exception ex) {

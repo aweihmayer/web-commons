@@ -39,9 +39,9 @@ namespace WebCommons.Db
         protected TUser? FindUserByToken(Guid? token, UserTokenType tokenType, bool includeTokens = false)
         {
             // Find the access token with the user
-            if (!token.HasValue) { return default; }
+            if (!token.HasValue) return default;
             UserToken<TUser>? userToken = this.FindToken(token.Value, true);
-            if (userToken == null || userToken.IsExpired() || userToken.User == null) { return default; }
+            if (userToken == null || userToken.IsExpired() || userToken.User == null) return default;
             TUser user = userToken.User;
 
             switch (tokenType) {
@@ -50,18 +50,18 @@ namespace WebCommons.Db
             }
 
             // Include alt token if applicable
-            if (!includeTokens) { return user; }
+            if (!includeTokens) return user;
 
             UserToken<TUser>? altToken = null;
             switch (tokenType) {
                 case UserTokenType.Access:
                     altToken = this.FindToken(user, UserTokenType.Refresh);
-                    if (altToken == null) { return user; }
+                    if (altToken == null) return user;
                     user.RefreshToken = new UserTokenDto(altToken);
                     break;
                 case UserTokenType.Refresh:
                     altToken = this.FindToken(user, UserTokenType.Access);
-                    if (altToken == null) { return user; }
+                    if (altToken == null) return user;
                     user.AccessToken = new UserTokenDto(altToken);
                     break;
             }
@@ -74,10 +74,10 @@ namespace WebCommons.Db
         /// </summary>
         public TUser? FindUser(string? email, string? password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { return default; }
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return default;
             TUser? user = this.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null) { return null; }
-            if (AuthUtils.VerifyEncryptedValue(password, user)) { return user; }
+            if (user == null) return null;
+            if (AuthUtils.VerifyEncryptedValue(password, user)) return user;
             return null;
         }
 
@@ -126,4 +126,3 @@ namespace WebCommons.Db
         #endregion
     }
 }
- 

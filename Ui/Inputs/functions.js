@@ -6,41 +6,40 @@
 };
 
 React.Component.prototype.clear = function () {
-    let components = this.collectRefs();
-    for (let c of components) {
-        if (typeof c.clearValue === 'function') c.clearValue();
+    for (let c of this.collectRefs()) {
+        c.clear();
         if (typeof c.setDefaultValue === 'function') c.setDefaultValue();
     }
 };
 
 React.Component.prototype.collect = async function () {
     let data = {};
-    let components = this.collectRefs();
-    for (let c of components) {
-        if (typeof c.getValue !== 'function' || typeof c.getValueName !== 'function') continue;
-        let v = await c.getValue();
-        let n = c.getValueName();
-        data.setProp(n, v);
+    for (let c of this.collectRefs()) {
+        if (typeof c.getCollectName === 'function') {
+            let n = c.getCollectName();
+            let v = c.collect();
+            data.setProp(n, v);
+        } else {
+            let v = c.collect();
+            Object.assign(data, v);
+        }        
     }
 
     return data;
 };
 
 React.Component.prototype.fill = function (data) {
+    if (isEmpty(data)) return;
     this.clear();
-    if (typeof data === 'undefined' || data === null) return;
-    let components = this.collectRefs();
-    for (let c of components) {
-        if (typeof c.setValue !== 'function') continue;
-        let n = (typeof c.getValueName === 'function') ? c.getValueName() : null;
-        if (n === null) c.setValue(data);
-        else if (data.hasProp(n)) c.setValue(data.getProp(n));
+    for (let c of this.collectRefs()) {
+        let n = (typeof c.getFillName === 'function') ? c.getFillName() : null;
+        if (n === null) c.fill(data);
+        else if (data.hasProp(n)) c.fill(data.getProp(n));
     }
 };
 
 React.Component.prototype.isValid = async function () {
-    let components = this.collectRefs();
-    for (let c of components) {
+    for (let c of this.collectRefs()) {
         if (typeof c.isValid === 'function' && await !c.isValid()) return false;
     }
 

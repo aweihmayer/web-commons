@@ -83,7 +83,7 @@ namespace WebCommons.Api
 			}
 
 			// Fixes issues with sending "Expect 100-continue" header to APIs that don't support it
-			if (this.Method == HttpMethod.Patch) { request.Headers.ExpectContinue = false; }
+			if (this.Method == HttpMethod.Patch) request.Headers.ExpectContinue = false;
 
 			return request;
 		}
@@ -95,17 +95,11 @@ namespace WebCommons.Api
 		{
 			Dictionary<string, object> query = this.Query.GetQueryStringParams(false);
 			// Add model query params
-			foreach (KeyValuePair<string, object> param in this.Model.GetQueryStringParams(true)) {
-				query.Add(param.Key, param.Value);
-			}
+			foreach (var param in this.Model.GetQueryStringParams(true)) query.Add(param.Key, param.Value);
 			// Add default query params
-			foreach (KeyValuePair<string, object> param in this.DefaultQuery.GetQueryStringParams(false)) {
-				query.Add(param.Key, param.Value);
-			}
+			foreach (var param in this.DefaultQuery.GetQueryStringParams(false)) query.Add(param.Key, param.Value);
 			// Add default model params
-			foreach (KeyValuePair<string, object> param in this.DefaultModel.GetQueryStringParams(true)) {
-				query.Add(param.Key, param.Value);
-			}
+			foreach (var param in this.DefaultModel.GetQueryStringParams(true)) query.Add(param.Key, param.Value);
 
 			return query;
 		}

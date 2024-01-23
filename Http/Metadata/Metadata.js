@@ -33,7 +33,7 @@ class SearchEngineMetadata {
      * Resets the values to their defaults.
      */
     reset() {
-        if (typeof this.defaults === 'undefined') { return; }
+        if (typeof this.defaults === 'undefined') return;
         Object.assign(this, this.defaults);
     }
 

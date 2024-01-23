@@ -20,7 +20,7 @@ namespace WebCommons.Auth
             using SHA512 alg = SHA512.Create();
             byte[] hash = alg.ComputeHash(bytes);
             string hashedString = string.Empty;
-            foreach (byte x in hash) { hashedString += String.Format("{0:x2}", x); }
+            foreach (byte x in hash) hashedString += String.Format("{0:x2}", x);
             return hashedString;
         }
 
@@ -43,7 +43,7 @@ namespace WebCommons.Auth
         /// <param name="user">The user whose password we want to validate.</param>
         public static bool VerifyEncryptedValue(string value, CommonUser user)
         {
-            if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) { return false; }
+            if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) return false;
             return VerifyEncryptedValue(value, user.Password, user.Salt);
         }
 

@@ -22,9 +22,9 @@ namespace WebCommons.Auth
         /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
         public TUser Signin(string? email, string? password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) { throw new BadRequestException(); }
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) throw new BadRequestException();
             TUser? user = this.Db.FindUser(email, password);
-            if (user == null) { throw new NotFoundException(); }
+            if (user == null) throw new NotFoundException();
             return this.Signin(user);
         }
 
@@ -34,7 +34,7 @@ namespace WebCommons.Auth
         /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
         public TUser Signin(TUser? user)
         {
-            if (user == null) { throw new NotFoundException(); }
+            if (user == null) throw new NotFoundException();
 
             // Create tokens
             UserToken<TUser> refreshToken = new(user, UserTokenType.Refresh, UserTokenDurations.Refresh);
@@ -48,7 +48,7 @@ namespace WebCommons.Auth
             // Save
             user.LastAuthDate = DateTime.UtcNow;
             this.Db.SaveChanges();
-            if (this.Controller == null) { return user; }
+            if (this.Controller == null) return user;
 
             // Cookies
             if (user.RefreshToken != null) {
@@ -72,9 +72,9 @@ namespace WebCommons.Auth
         /// <exception cref="NotFoundException">Thrown if the user or token is not found.</exception>
         public TUser RefreshToken(Guid? refreshToken)
         {
-            if (!refreshToken.HasValue) { throw new BadRequestException(); }
+            if (!refreshToken.HasValue) throw new BadRequestException();
             UserToken<TUser>? token = this.Db.FindToken(refreshToken.Value, true);
-            if (token == null || token.User == null) { throw new NotFoundException(); }
+            if (token == null || token.User == null) throw new NotFoundException();
             token.Expire();
             return this.Signin(token.User);
         }
@@ -88,7 +88,7 @@ namespace WebCommons.Auth
         public void RevokeToken(Guid tokenId)
         {
             UserToken<TUser>? token = this.Db.FindToken(tokenId);
-            if (token == null) { throw new NotFoundException(); }
+            if (token == null) throw new NotFoundException();
             token.Expire();
             this.Db.SaveChanges();
         }
@@ -102,9 +102,9 @@ namespace WebCommons.Auth
         public void RevokeAllUserTokens(Guid tokenId)
         {
             UserToken<TUser>? token = this.Db.FindToken(tokenId, true);
-            if (token == null || token.User == null) { throw new NotFoundException(); }
+            if (token == null || token.User == null) throw new NotFoundException();
             List<UserToken<TUser>> tokens = this.Db.FetchTokens(token.User);
-            foreach (UserToken<TUser> t in tokens) { t.Expire(); }
+            foreach (UserToken<TUser> t in tokens) t.Expire();
             this.Db.SaveChanges();
         }
 

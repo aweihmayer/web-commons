@@ -17,9 +17,10 @@ namespace WebCommons.Db
             var query = includeUsers
                 ? dbset.Include(t => t.User)
                 : dbset.AsQueryable();
+
             query = query.Where(t => t.UserId == user.Id).WhereIsNotExpired();
-            if (type.HasValue) query = query.Where(t => t.Type == type);
-            return query;
+            if (type.HasValue) return query.Where(t => t.Type == type);
+            else return query;
         }
     }
 }

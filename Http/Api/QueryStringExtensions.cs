@@ -20,7 +20,7 @@ namespace WebCommons.Api
         /// <param name="onlyPropertiesWithQueryAttribute">If true, only properties with the <see cref="FromQueryAttribute" /> will be collected.</param>
         public static Dictionary<string, object> GetQueryStringParams(this object? obj, bool onlyPropertiesWithQueryAttribute = true)
         {
-            if (obj == null) { return new Dictionary<string, object>(); }
+            if (obj == null) return new Dictionary<string, object>();
 
             Type type = obj.GetType();
             PropertyInfo[] props = type.GetProperties();
@@ -28,17 +28,17 @@ namespace WebCommons.Api
             Dictionary<string, object> query = new();
 
             foreach (PropertyInfo prop in props) {
-                if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.IsArray) { continue; }
+                if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.IsArray) continue;
                 string name = prop.Name;
 
                 if (onlyPropertiesWithQueryAttribute) {
                     FromQueryAttribute? queryAttribute = prop.GetCustomAttribute<FromQueryAttribute>();
-                    if (queryAttribute == null) { continue; }
-                    if (!string.IsNullOrEmpty(queryAttribute.Name)) { name = queryAttribute.Name; }
+                    if (queryAttribute == null) continue;
+                    else if (!string.IsNullOrEmpty(queryAttribute.Name)) name = queryAttribute.Name;
                 }
 
                 object? value = prop.GetValue(obj);
-                if (value != null) { query.Add(name, value); }
+                if (value != null) query.Add(name, value);
             }
 
             return query;

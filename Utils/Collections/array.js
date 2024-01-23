@@ -1,5 +1,5 @@
 ﻿/**
- * Determines if the array has any elements
+ * Determines if the array has any elements.
  * @returns {boolean}
  */
 Object.defineProperty(Array.prototype, 'any', {
@@ -39,6 +39,17 @@ Object.defineProperty(Array.prototype, 'filterEmpty', {
     enumerable: false,
     value: function () {
         return this.filter(v => (v !== null && v !== '' && typeof v !== 'undefined'));
+    }
+});
+
+/**
+ * Finds the first element that is not an empty value.
+ * @returns {any}
+ */
+Object.defineProperty(Array.prototype, 'findNotEmpty', {
+    enumerable: false,
+    value: function () {
+        return this.find(x => typeof x !== 'undefined' && x !== null && x !== '');
     }
 });
 

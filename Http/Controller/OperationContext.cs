@@ -9,7 +9,8 @@ namespace WebCommons.Controllers
         bool MustBeAuthenticated();
     }
 
-    public partial class CommonOperationContext<TDb, TUser> : OperationContext where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
+    public partial class CommonOperationContext<TDb, TUser> : OperationContext
+        where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
         public TDb Db { get; set; } = new TDb();
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;

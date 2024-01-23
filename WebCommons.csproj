@@ -125,7 +125,7 @@
     <None Update="Ui\Icons\Filter.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Manager.js">
+    <None Update="Ui\Inputs\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Form.jsx">

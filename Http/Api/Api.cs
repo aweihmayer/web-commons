@@ -41,7 +41,7 @@ namespace WebCommons.Api
                 string content = await response.Content.ReadAsStringAsync();
                 watch.Stop();
                 var parsedResponse = new HttpResponse<T>(response, content, watch.Elapsed);
-                if (!parsedResponse.IsSuccessStatusCode) { throw parsedResponse.ToException(); }
+                if (!parsedResponse.IsSuccessStatusCode) throw parsedResponse.ToException();
                 return parsedResponse;
             } catch (Exception) {
                 watch.Stop();

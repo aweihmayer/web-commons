@@ -58,18 +58,18 @@ namespace WebCommons.Dto
             this.FirstName = user.FirstName;
             this.LastName = user.LastName;
 
-            if (details == Details.None) { return; }
+            if (details == Details.None) return;
             this.Email = user.Email;
             this.CreatedDate = user.CreatedDate;
             this.UpdatedDate = user.UpdatedDate;
 
-            if (details == Details.Medium) { return; }
+            if (details == Details.Medium) return;
             this.Tokens = new();
             if (tokens != null) { this.Tokens = tokens.Select(t => new UserTokenDto(t)).ToList(); }
             if (user.AccessToken != null) { this.Tokens.Add(user.AccessToken); }
             if (user.RefreshToken != null) { this.Tokens.Add(user.RefreshToken); }
 
-            if (details == Details.High) { return; }
+            if (details == Details.High) return;
             this.Password = user.Password;
             this.Salt = user.Salt;
         }

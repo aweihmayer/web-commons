@@ -38,40 +38,51 @@
      * Sets the value of this input.
      * @param {any} value
      */
-    setValue(value) {
+    fill(value) {
         this.refs.input.value = Parser.parse(value, this.schema.type);
     }
 
     /**
-     * Clears the value of this input.
+     * Gets the name of the input for filling.
+     * @returns {string}
      */
-    clearValue() {
-        this.refs.input.value = null;
+    getFillName() {
+        return this.schema.fill;
     }
 
     /**
      * Gets the value of the input and parses it to the schema's type.
      * @returns {any}
      */
-    async getValue() {
-        return Parser.parse(this.getRawValue(), this.schema.type, this.schema);
-    }
-
-    /**
-     * Gets the name of the input.
-     * @returns {string}
-     */
-    getValueName() {
-        return this.schema.name;
+    async collect() {
+        let v = await this.collectRaw();
+        return Parser.parse(v, this.schema.type, this.schema);
     }
 
     /**
      * Gets the raw value of the input without any parsing.
      * @returns {any}
      */
-    async getRawValue() {
+    async collectRaw() {
         return this.refs.input.value;
     }
+
+    /**
+     * Gets the name of the input for collection.
+     * @returns {string}
+     */
+    getCollectName() {
+        return this.schema.name;
+    }
+
+    /**
+     * Clears the value of this input.
+     */
+    clear() {
+        this.refs.input.value = null;
+    }
+
+    // #region Validation
 
     /**
      * Determines if the input is valid and adds an error message if it is not.
@@ -89,8 +100,13 @@
      * @returns {object}
      */
     async validate() {
-        return Validator.validate(await this.getRawValue(), this.schema.type, this.schema);
+        let v = await this.collectRaw();
+        return Validator.validate(v, this.schema.type, this.schema);
     }
+
+    // #endregion
+
+    // #region Utitlity
 
     /**
      * Determines if the input is disabled. 

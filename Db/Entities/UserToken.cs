@@ -24,9 +24,7 @@ namespace WebCommons.Db
 
         [NotMapped]
         public Guid Id {
-            get {
-                return this.value;
-            }
+            get => this.value;
             set {
                 this.EncryptedId = AuthUtils.Encrypt(value);
                 this.value = value;
@@ -94,10 +92,7 @@ namespace WebCommons.Db
             this.UserId = user.Id;
             this.User = user;
             this.Type = type;
-            if (hasCode) {
-                Random rnd = new();
-                this.Code = rnd.Next(0, 9999);
-            }
+            if (hasCode) this.Code = new Random().Next(0, 9999);
         }
 
         public UserToken(TUser user, UserTokenType type, TimeSpan duration, bool hasCode = false)
@@ -108,10 +103,7 @@ namespace WebCommons.Db
             this.UserId = user.Id;
             this.User = user;
             this.Type = type;
-            if (hasCode) {
-                Random rnd = new();
-                this.Code = rnd.Next(0, 9999);
-            }
+            if (hasCode) this.Code = new Random().Next(0, 9999);
         }
 
         /// <summary>
@@ -119,8 +111,8 @@ namespace WebCommons.Db
         /// </summary>
         public void Refresh()
         {
-            if (!this.Duration.HasValue) { return; }
-            this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
+            if (!this.Duration.HasValue) return;
+            else this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
         }
 
         /// <summary>
@@ -136,8 +128,8 @@ namespace WebCommons.Db
         /// </summary>
         public bool IsExpired()
         {
-            if (!this.ExpirationDate.HasValue) { return false; }
-            return this.ExpirationDate < DateTime.UtcNow;
+            if (!this.ExpirationDate.HasValue) return false;
+            else return this.ExpirationDate < DateTime.UtcNow;
         }
 
         /// <summary>
@@ -145,9 +137,9 @@ namespace WebCommons.Db
         /// </summary>
         public TimeSpan? GetRemainingDuration()
         {
-            if (!this.ExpirationDate.HasValue) { return null; }
-            if (this.IsExpired()) { return TimeSpan.Zero; }
-            return this.ExpirationDate - DateTime.UtcNow;
+            if (!this.ExpirationDate.HasValue) return null;
+            else if (this.IsExpired()) return TimeSpan.Zero;
+            else return this.ExpirationDate - DateTime.UtcNow;
         }
     }
 

@@ -24,8 +24,8 @@ const Routes = {
 
     setGroupFunctions(routes) {
         routes = routes ?? this;
-        if (typeof routes !== 'object') { return; }
-        if (routes instanceof Route) { return; }
+        if (typeof routes !== 'object') return;
+        if (routes instanceof Route) return;
         routes.toArray = function () {
             let routes = [];
             for (let k in this) {
