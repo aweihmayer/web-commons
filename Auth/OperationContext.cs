@@ -30,7 +30,6 @@ namespace WebCommons.Controllers
                 string? authHeader = value.Request.Headers.Authorization;
                 if (!string.IsNullOrEmpty(authHeader)) {
                     this.PopulateAuthValueFromHeader(authHeader);
-                    return;
                 } 
                 // Cookie
                 else {
