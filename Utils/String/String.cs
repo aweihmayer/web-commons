@@ -11,8 +11,7 @@ namespace System
 
         public static string ToSlug(this string str)
         {
-            str = str.Trim().ToLower();
-            str = str.RemoveAccents();
+            str = str.Trim().ToLower().RemoveAccents();
             str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // Invalid chars
             str = Regex.Replace(str, @"\s+", " "); // Convert multiple spaces into one space   
             return Regex.Replace(str, @"\s", "-"); // Hyphens   
@@ -86,10 +85,7 @@ namespace System
         /// </summary>
         public static string Replace(this string str, Dictionary<string, object> replacements)
         {
-            foreach (var v in replacements) {
-                str = str.Replace(v.Key, v.Value.ToString());
-            }
-
+            foreach (var v in replacements) str = str.Replace(v.Key, v.Value.ToString());
             return str;
         }
     }

@@ -50,6 +50,9 @@
     <None Update="I18n\i18n.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Utils\functions.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Utils\Validation\required.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

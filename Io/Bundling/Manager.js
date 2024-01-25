@@ -17,7 +17,7 @@ document.loadBundles = async function (bundles) {
  */
 document.loadBundle = async function (name) {
     let files = this.bundles[name];
-    await BundleManager.load(files);
+    await this.load(files);
 };
 
 /**
@@ -55,7 +55,7 @@ document.loadJs = function (asset) {
 
 document.loadCss = function (asset) {
     return new Promise(function (resolve, reject) {
-        if (document.querySelector('head style[href="' + source + '"]') != null) continue;
+        if (document.querySelector('head style[href="' + source + '"]') != null) return;
         let style = document.createElement('link');
         style.rel = 'stylesheet';
         style.href = asset;

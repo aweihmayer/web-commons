@@ -32,13 +32,24 @@ Object.defineProperty(Array.prototype, 'last', {
 });
 
 /**
- * Returns a new array with no null or empty string values.
+ * Returns a new array with no null or empty values.
  * @returns {Array}
  */
 Object.defineProperty(Array.prototype, 'filterEmpty', {
     enumerable: false,
     value: function () {
-        return this.filter(v => (v !== null && v !== '' && typeof v !== 'undefined'));
+        return this.filter(v => !isEmpty(v));
+    }
+});
+
+/**
+ * Returns a new array with no null values.
+ * @returns {Array}
+ */
+Object.defineProperty(Array.prototype, 'filterNull', {
+    enumerable: false,
+    value: function () {
+        return this.filter(v => !isNull(v));
     }
 });
 
@@ -49,7 +60,7 @@ Object.defineProperty(Array.prototype, 'filterEmpty', {
 Object.defineProperty(Array.prototype, 'findNotEmpty', {
     enumerable: false,
     value: function () {
-        return this.find(x => typeof x !== 'undefined' && x !== null && x !== '');
+        return this.find(v => !isEmpty(v));
     }
 });
 

@@ -56,7 +56,7 @@ const Router = {
 
         action(href);
         document.head.metadata.reset();
-        await BundleManager.loadBundles(newRouting.route.bundles);
+        await document.loadBundles(newRouting.route.bundles);
         App.setRouting(newRouting);
         this.afterRouteChange();
         window.scrollTo(0, 0);

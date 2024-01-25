@@ -82,6 +82,8 @@
         this.refs.input.value = null;
     }
 
+    // #endregion
+
     // #region Validation
 
     /**

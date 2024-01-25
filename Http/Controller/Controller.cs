@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 using System.Reflection;
 
 namespace WebCommons.Controllers
@@ -54,6 +55,31 @@ namespace WebCommons.Controllers
             }
         }
         
+        #endregion
+
+        #region View response
+
+        protected ViewResult View(Exception ex)
+        {
+            return this.View(500);
+        }
+
+        protected ViewResult View(ResponseException ex)
+        {
+            return this.View(ex.StatusCode);
+        }
+
+        protected ViewResult View(HttpStatusCode code)
+        {
+            return this.View((int) code);
+        }
+
+        protected ViewResult View(int code)
+        {
+            this.Response.StatusCode = code;
+            return this.View();
+        }
+
         #endregion
     }
 }

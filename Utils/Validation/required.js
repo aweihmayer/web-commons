@@ -5,6 +5,6 @@
         else return true;
     }
 
-    if (value === null || value === '' || typeof value === 'undefined') throw new Error('required');
+    if (isEmpty(value)) throw new Error('required');
     else return true;
 };

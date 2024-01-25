@@ -143,7 +143,7 @@ class Toast extends React.Component {
 
             config = Toast.custom.routes[toast.route] ?? {};
             config = config[toast.status] ?? {};
-            if (config.default) Object.assign(responseToast, config.default); }
+            if (config.default) Object.assign(responseToast, config.default);
             if (config[toast.method]) Object.assign(responseToast, config[toast.method]);
 
             toast = responseToast;

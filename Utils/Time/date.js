@@ -1,9 +1,13 @@
 ﻿/**
- * Gets the current unix timestamp in seconds
+ * Gets the current unix timestamp in seconds.
  * @returns {number}
  */
-Date.unixTimestamp = () => (Math.floor(Date.now() / 1000));
+Date.unix = () => (Math.floor(Date.now() / 1000));
 
+/**
+ * Gets the current UTC date.
+ * @returns {Date}
+ */
 Date.utcNow = () => new Date(Date.UTC(
     new Date().getUTCFullYear(),
     new Date().getUTCMonth(),

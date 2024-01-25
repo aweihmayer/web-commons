@@ -38,7 +38,8 @@
     }
 
     static collectComponents(component) {
-        if (component instanceof React.Component) return [component];
+        if (isEmpty(component)) return [];
+        else if (component instanceof React.Component) return [component];
         else if (typeof component === 'object' && !Array.isArray(component)) return Object.keys(component).map(k => component[k]);
         else if (Array.isArray(component)) return component;
         else return [component];

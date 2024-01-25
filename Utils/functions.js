@@ -3,4 +3,11 @@
  * @param {any} value
  * @returns {boolean}
  */
-function isEmpty(value) { return (typeof value === 'undefined' || value === null || value === ''); }
+function isEmpty(value) { return (isNull(v) || value === ''); }
+
+/**
+ * Determines if a value is null.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function isNull(value) { return (typeof value === 'undefined' || value === null); }

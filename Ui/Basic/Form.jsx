@@ -24,8 +24,8 @@
 
         try {
             this.startLoading();
-            if (await !this.isValid()) throw ev;
-            const data = await this.collect();
+            if (!await this.isValid()) throw ev;
+            const data = await this.collect(true);
             ev.data = data;
             await this.props.onSubmit(ev);
         } catch (ex) {

@@ -7,7 +7,7 @@
      * @returns {{ value: any, isValid: boolean, error: string, message: string, schema: ValueSchema }}
      */
     validate: function (value, type, schema) {
-        schema = schema || new ValueSchema();
+        schema = schema ?? new ValueSchema();
 
         let result = {
             value: value,

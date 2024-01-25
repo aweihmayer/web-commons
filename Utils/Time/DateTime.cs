@@ -3,7 +3,7 @@
     public static class DateTimeExtensions
     {
         /// <summary>
-        /// Gets the date of the previous occurence of a day.
+        /// Gets the date of the previous occurrence of a day.
         /// </summary>
         public static DateTimeOffset GetPreviousDay(this DateTimeOffset date, DayOfWeek day)
         {

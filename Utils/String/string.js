@@ -1,10 +1,10 @@
 ﻿/**
  * Creates a random string of a specified length.
- * @param {number} length
+ * @param {number} length The length of the string. Defaults to 25.
  * @returns {string}
  */
 String.random = (length) => {
-    length = length || 25;
+    length = length ?? 25;
     let result = [];
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;
@@ -17,7 +17,7 @@ String.random = (length) => {
 
 /**
  * Transforms markdown text to HTML.
- * @param {boolean} decreaseHeadings
+ * @param {boolean} decreaseHeadings Decreases the heading values by one if true.
  * @returns {string}
  */
 String.markdownToHtml = (value, decreaseHeadings) => {
@@ -50,11 +50,10 @@ String.prototype.removeAccents = function() {
  * @returns {string}
  */
 String.prototype.toSlug = function() {
-    let v = this.removeAccents().toLowerCase().trim();
-    v = v.replace(/[^a-z0-9\s-]/, ''); // Invalid chars
-    v = v.replace(/\s+/, ''); // Convert multiple spaces into one space
-    v = v.replace(/\s/, ''); // Hyphens
-    return v;
+    return this.removeAccents().toLowerCase().trim()
+        .replace(/[^a-z0-9\s-]/, '') // Invalid chars
+        .replace(/\s+/, ' ') // Convert multiple spaces into one space
+        .replace(/\s/, '-'); // Hyphens
 };
 
 /**
