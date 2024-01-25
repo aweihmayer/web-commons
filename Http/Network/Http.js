@@ -1,20 +1,13 @@
 ﻿class Http {
     static buildRequest(options) {
-        if (options instanceof Request) {
-            return options;
-        } else if (options.request instanceof Request) {
-            return options.request;
-        }
+        if (options instanceof Request) return options;
+        else if (options.request instanceof Request) return options.request;
 
         // Uri
         let uri = new Uri('');
-        if (typeof options.uri === 'string') {
-            uri = new Uri(options.uri);
-        } else if (options.uri instanceof Uri) {
-            uri = options.uri;
-        } else if (options.uri instanceof Route) {
-            uri = options.uri.uri;
-        }
+        if (typeof options.uri === 'string') uri = new Uri(options.uri);
+        else if (options.uri instanceof Uri) uri = options.uri;
+        else if (options.uri instanceof Route) uri = options.uri.uri;
 
         // Payload
         let payload = {};
@@ -32,9 +25,7 @@
         if (options.headers instanceof Headers) {
             headers = options.headers;
         } else {
-            for (let h in options.headers) {
-                headers.append(h, options.headers[h]);
-            }
+            for (let h in options.headers) headers.append(h, options.headers[h]);
         }
 
         headers.append('Time-Offset', new Date().getTimezoneOffset() * -1);
@@ -60,35 +51,21 @@
             cache = new RequestCacheValue(options.cacheName, otions.cacheDuration);
         }
 
-        if (cache && cache.isEnabled && !options.noCache) {
-            return cache.retrieve(request);
-        }
+        if (cache && cache.isEnabled && !options.noCache) return cache.retrieve(request);
 
         return fetch(request)
             .then(response => {
-                if (typeof options.onResponse === 'function') {
-                    return options.onResponse(response);
-                } else {
-                    return response;
-                }
+                if (typeof options.onResponse !== 'function') return response;
+                else return options.onResponse(response);
             }).then(response => {
-                if (response.retry) {
-                    return Http.fetch(request);
-                } else if (cache && cache.isEnabled) {
-                    return cache.put(request, response);
-                } else {
-                    return response.deserialize(request);
-                }
+                if (response.retry) return Http.fetch(request);
+                else if (cache && cache.isEnabled) return cache.put(request, response);
+                else return response.deserialize(request);
             }).then(response => {
-                if (options.uri instanceof Route) {
-                    response.route = options.uri.name;
-                }
+                if (options.uri instanceof Route) response.route = options.uri.name;
 
-                if (!response.ok) {
-                    throw response;
-                } else {
-                    return response;
-                }
+                if (!response.ok) throw response;
+                else return response;
             });
     }
 }

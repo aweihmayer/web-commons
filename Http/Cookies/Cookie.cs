@@ -28,8 +28,7 @@ namespace WebCommons.Http
             get {
                 if (this.Value == null) return string.Empty;
                 string value = JsonConvert.SerializeObject(this.Value);
-                value = value.EncodeBase64();
-                return value;
+                return value.EncodeBase64();
             }
             set {
                 value = value.DecodeBase64();

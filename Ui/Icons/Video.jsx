@@ -1,8 +1,4 @@
 ﻿class VideoIcon extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     static defaultProps = {
         tooltip: 'Video',
         color: '#000000',

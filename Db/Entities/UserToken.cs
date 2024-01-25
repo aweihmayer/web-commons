@@ -47,9 +47,7 @@ namespace WebCommons.Db
         [NotMapped]
         public string? FormattedCode
         {
-            get {
-                return this.Code.HasValue ? this.Code.Value.ToString("000000") : null;
-            }
+            get => this.Code.HasValue ? this.Code.Value.ToString("000000") : null;
             set {
                 this.Code = int.Parse(value);
             }
@@ -111,8 +109,7 @@ namespace WebCommons.Db
         /// </summary>
         public void Refresh()
         {
-            if (!this.Duration.HasValue) return;
-            else this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
+            if (this.Duration.HasValue) this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
         }
 
         /// <summary>

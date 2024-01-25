@@ -51,7 +51,7 @@ namespace WebCommons.Api
         public override string ToString()
         {
 			return string.Format("Response took {0}ms and returned {1} {2}",
-				this.Duration.Milliseconds.ToString(),
+				this.Duration.TotalMilliseconds.ToString(),
 				this.StatusCode.ToString(),
 				JsonConvert.SerializeObject(this.Content));
         }

@@ -33,7 +33,7 @@
     }
 
     clear(request) {
-        if (typeof request === 'undefined') {
+        if (isEmpty(request)) {
             return caches.delete(this.name);
         } else if (request instanceof Request) {
             return caches.open(this.name).then(cache => { cache.delete(request); });

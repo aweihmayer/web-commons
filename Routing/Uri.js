@@ -1,7 +1,7 @@
 ﻿class Uri {
     constructor(template, queryStringParams) {
         // Initialize properties
-        if (template.length === 0 || template.charAt(0) !== '/') { template = '/' + template; }
+        if (template.length === 0 || template.charAt(0) !== '/') template = '/' + template;
         this.template = String.removeQueryString(template);
         this.parts = [];
         this.params = [];

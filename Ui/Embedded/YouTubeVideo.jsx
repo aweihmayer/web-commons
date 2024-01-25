@@ -1,8 +1,8 @@
 ﻿class EmbeddedYouTubeVideo extends React.Component {
     render() {
         let src = 'https://www.youtube.com/embed/' + this.props.id + '?enablejsapi=1';
-        if (this.props.autoplay) { src += '&autoplay=1'; }
-        if (this.props.startAt) { src += ('&start=' + this.props.startAt); }
+        if (this.props.autoplay) src += '&autoplay=1';
+        if (this.props.startAt) src += ('&start=' + this.props.startAt);
 
         return <div className="video-content">
             <iframe width="560" height="315"
@@ -27,8 +27,6 @@
 
     static pauseAll(el) {
         let iframes = el.querySelectorAll('iframe');
-        Array.from(iframes).forEach(f => {
-            EmbeddedYouTubeVideo.pause(f);
-        });
+        Array.from(iframes).forEach(f => { EmbeddedYouTubeVideo.pause(f); });
     }
 }

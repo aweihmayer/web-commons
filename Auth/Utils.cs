@@ -44,7 +44,7 @@ namespace WebCommons.Auth
         public static bool VerifyEncryptedValue(string value, CommonUser user)
         {
             if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) return false;
-            return VerifyEncryptedValue(value, user.Password, user.Salt);
+            else return VerifyEncryptedValue(value, user.Password, user.Salt);
         }
 
         /// <summary>

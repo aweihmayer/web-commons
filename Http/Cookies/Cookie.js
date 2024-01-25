@@ -27,7 +27,9 @@
             // Deserialize the value and set the properties of the cookie with it
             let json = JSON.parse(decodedValue);
             Object.assign(this, json);
-        } catch (e) { }
+        } catch {
+            console.error('Unable to parse cookie ' + this.name);
+        }
     }
 
     /**

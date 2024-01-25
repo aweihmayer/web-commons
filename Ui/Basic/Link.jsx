@@ -22,10 +22,7 @@
     }
 
     onClick(ev) {
-        if (this.props.disabled) {
-            ev.preventDefault();
-        } else {
-            Router.goTo(ev);
-        }
+        if (this.props.disabled) ev.preventDefault();
+        else Router.goTo(ev);
     }
 }

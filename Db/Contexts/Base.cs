@@ -13,9 +13,7 @@ namespace WebCommons.Db
 
         public override int SaveChanges()
         {
-            var changedEntities = ChangeTracker.Entries();
-
-            foreach (var changedEntity in changedEntities) {
+            foreach (var changedEntity in ChangeTracker.Entries()) {
                 TimestampableEntity timestampable;
                 SoftDeleteEntity softDelete;
 

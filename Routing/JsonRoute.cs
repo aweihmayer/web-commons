@@ -70,9 +70,8 @@ namespace WebCommons.Controllers
 					this.QueryStringParams.AddRange(paramInfo.ParameterType.BuildSchema().Select(s => s.Value));
 				} else {
 					foreach (PropertyInfo property in paramInfo.ParameterType.GetProperties()) {
-						if (property.GetCustomAttribute<FromQueryAttribute>() != null) {
-                            this.QueryStringParams.Add(property.BuildSchema());
-                        }
+                        if (property.GetCustomAttribute<FromQueryAttribute>() == null) continue;
+                        this.QueryStringParams.Add(property.BuildSchema());
                     }
 				}
 			}

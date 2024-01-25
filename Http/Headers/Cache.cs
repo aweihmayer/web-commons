@@ -10,11 +10,10 @@ namespace WebCommons.Caching
         /// </summary>
         public static void SetCache(this IHeaderDictionary headers, TimeSpan duration)
         {
-            if (headers.ContainsKey(HeaderNames.CacheControl)) {
-                headers[HeaderNames.CacheControl] = "private,max-age=" + duration.TotalSeconds + ",must-revalidate";
-            } else {
-                headers.Add(HeaderNames.CacheControl, "private,max-age=" + duration.TotalSeconds + ",must-revalidate");
-            }
+            string key = HeaderNames.CacheControl;
+            string value = "private,max-age=" + duration.TotalSeconds + ",must-revalidate";
+            if (headers.ContainsKey(key)) headers[key] = value;
+            else headers.Add(key, value);
         }
     }
 }

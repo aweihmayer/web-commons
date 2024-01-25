@@ -52,20 +52,11 @@ namespace WebCommons.Db
             // Include alt token if applicable
             if (!includeTokens) return user;
 
-            UserToken<TUser>? altToken = null;
-            switch (tokenType) {
-                case UserTokenType.Access:
-                    altToken = this.FindToken(user, UserTokenType.Refresh);
-                    if (altToken == null) return user;
-                    user.RefreshToken = new UserTokenDto(altToken);
-                    break;
-                case UserTokenType.Refresh:
-                    altToken = this.FindToken(user, UserTokenType.Access);
-                    if (altToken == null) return user;
-                    user.AccessToken = new UserTokenDto(altToken);
-                    break;
-            }
-
+            UserTokenType altType = (tokenType == UserTokenType.Access) ? UserTokenType.Refresh : UserTokenType.Access;
+            UserToken<TUser>? altToken = this.FindToken(user, altType);
+            if (altToken == null) return user;
+            else if (altType == UserTokenType.Access) user.AccessToken = new UserTokenDto(altToken);
+            else user.RefreshToken = new UserTokenDto(altToken);
             return user;
         }
 
@@ -116,10 +107,11 @@ namespace WebCommons.Db
         /// </summary>
         public UserToken<TUser>? FindToken(Guid id, bool includeUser = false)
         {
-            string encryptedId = AuthUtils.Encrypt(id);
             var query = includeUser
                 ? this.Tokens.Include(t => t.User)
                 : this.Tokens.AsQueryable();
+
+            string encryptedId = AuthUtils.Encrypt(id);
             return query.Where(t => t.EncryptedId == encryptedId).WhereIsNotExpired().FirstOrDefault();
         }
 

@@ -28,11 +28,8 @@
     } else if (Array.isArray(value)) {
         // Determine plurality
         switch (typeof plural) {
-            case 'boolean':
-                break;
-            case 'number':
-                plural = (plural >= 2);
-                break;
+            case 'boolean': break;
+            case 'number': plural = (plural >= 2); break;
             case 'string':
                 plural = parseInt(plural);
                 plural = isNaN(plural) ? false : (plural >= 2);

@@ -113,9 +113,9 @@ namespace WebCommons.Api
 			string uri = this.Endpoint;
 
 			// Replace placeholders in the URI with query parameter value and remove the parameter
-			foreach (KeyValuePair<string, object> param in query) {
+			foreach (var param in query) {
 				string placeholder = "{" + param.Key + "}";
-				if (!uri.Contains(placeholder)) { continue; }
+				if (!uri.Contains(placeholder)) continue;
 				uri = uri.Replace(placeholder, param.Value.ToString());
 				query.Remove(param.Key);
 			}
@@ -131,11 +131,7 @@ namespace WebCommons.Api
 		protected Dictionary<string, string> BuildHeaders()
 		{
             Dictionary<string, string> headers = new();
-            // Add headers
-            foreach (KeyValuePair<string, string> header in this.Headers) {
-                headers.Add(header.Key, header.Value);
-            }
-
+            foreach (var header in this.Headers) headers.Add(header.Key, header.Value);
 			return headers;
         }
 

@@ -15,9 +15,7 @@ class App extends React.Component {
     static get state() { return App.instance.state; } // TODO why 2 render at start
 
     static async mount(rootElement) {
-        window.addEventListener('popstate', ev => {
-            Router.reload(window.location.pathname + window.location.search, true);
-        });
+        window.addEventListener('popstate', ev => { Router.reload(window.location.pathname + window.location.search, true); });
         App.root = ReactDOM.createRoot(rootElement);
         App.root.render(<App />);
     }
@@ -35,7 +33,7 @@ class App extends React.Component {
     }
 
     static setCode(code) {
-        if (typeof code === 'object') { code = code.status || code.message; }
+        if (typeof code === 'object') code = code.status || code.message;
         App.setRouting({ code: parseInt(code) });
     }
 

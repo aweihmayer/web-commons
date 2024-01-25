@@ -29,7 +29,7 @@
     <None Update="Http\Network\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Io\Bundling\Manager.js">
+    <None Update="Io\Bundling\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Picture.jsx">
