@@ -7,7 +7,7 @@ const Routes = {
      * @param {Array<Route|object>} routes Route instances or a plain JSON config object.
      */
     add: function (routes) {
-        if (!Array.isArray(routes)) { routes = [routes]; }
+        if (!Array.isArray(routes)) routes = [routes];
 
         for (let r of routes) {
             let route = r;
@@ -41,9 +41,7 @@ const Routes = {
             return Promise.all(routes.map(r => r.cache.clear()));
         }
 
-        for (let k in routes) {
-            this.setGroupFunctions(routes[k]);
-        }
+        for (let k in routes) this.setGroupFunctions(routes[k]);
     },
 
     /**
@@ -53,14 +51,17 @@ const Routes = {
      */
     find: function (name) { this._routes.find(r => r.name === name) },
 
+    getViews: function () { return this._routes.filter(r => (r.method == 'GET' && r.view)); }
+
     /**
      * Finds a match for a view route. We pick the route that has the least amount of uri parameters.
      * @param {any} uri
      */
     matchViewRoute: function (uri) {
-        let matches = this._routes.filter(r => (r.method == 'GET' && r.view && r.uri.compare(uri)));
-        if (!matches.any()) { return null; }
-        return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.params.getAllUri().length)).first();
+        let matches = this.getViews().filter(r => r.uri.compare(uri));
+        if (!matches.any()) return null;
+        // Sort the matches by prioritizing the route that has the least URI parameters
+        else return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.params.getAllUri().length)).first();
     },
 
     /**
@@ -68,3 +69,5 @@ const Routes = {
      */
     _routes: []
 };
+
+Routes._routes.getViews = function () { return this.filter(r => (r.method == 'GET' && r.view)); }
