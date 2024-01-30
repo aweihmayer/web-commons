@@ -51,17 +51,18 @@ const Routes = {
      */
     find: function (name) { this._routes.find(r => r.name === name) },
 
-    getViews: function () { return this._routes.filter(r => (r.method == 'GET' && r.view)); }
+    getViews: function () { return this._routes.filter(r => (r.method == 'GET' && r.view)); },
 
     /**
-     * Finds a match for a view route. We pick the route that has the least amount of uri parameters.
-     * @param {any} uri
+     * Finds a match for a view route.
+     * @param {string} uri
+     * @returns {Route}
      */
-    matchViewRoute: function (uri) {
-        let matches = this.getViews().filter(r => r.uri.compare(uri));
+    getView: function (uri) {
+        let matches = this.getViews().filter(r => r.matches(uri));
         if (!matches.any()) return null;
         // Sort the matches by prioritizing the route that has the least URI parameters
-        else return matches.sort((a, b) => (a.uri.params.getAllUri().length > b.uri.params.getAllUri().length)).first();
+        else return matches.sort((a, b) => (a.getUriParams().length > b.getUriParams().length)).first();
     },
 
     /**

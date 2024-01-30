@@ -57,7 +57,7 @@ Object.defineProperty(Array.prototype, 'filterNull', {
  * Finds the first element that is not an empty value.
  * @returns {any}
  */
-Object.defineProperty(Array.prototype, 'findNotEmpty', {
+Object.defineProperty(Array.prototype, 'findNotEmpty', { // TODO filter not empty or filter empty?
     enumerable: false,
     value: function () {
         return this.find(v => !isEmpty(v));

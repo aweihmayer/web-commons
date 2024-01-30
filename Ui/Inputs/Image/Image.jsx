@@ -29,7 +29,7 @@
 
     fill(v) {
         if (!v) return;
-        this.refs.preview.style.backgroundImage = 'url(' + this.props.imageRoute.uri.relative(v) + ')';
+        this.refs.preview.style.backgroundImage = 'url(' + this.props.imageRoute.getRelativeUri(v) + ')';
         this.refs.old.value = v;
     }
 

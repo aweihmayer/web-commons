@@ -10,7 +10,7 @@
         if (typeof this.props.href !== 'undefined') {
             href = this.props.href
         } else if (typeof this.props.route !== 'undefined') {
-            href = this.props.route.uri.relative(this.props.params);
+            href = this.props.route.getRelativeUri(this.props.params);
         }
 
         return <a

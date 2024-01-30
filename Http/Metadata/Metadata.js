@@ -53,7 +53,7 @@ class SearchEngineMetadata {
             { name: 'og:section',       attribute: 'property',  value: this.section },
             { name: 'og:modified_time', attribute: 'property',  value: this.modifiedTime },
             { name: 'og:image',         attribute: 'property',  value: this.image },
-            { name: 'og:url',           attribute: 'property',  value: (route ? route.uri.canonical(App.state.params) : null) }
+            { name: 'og:url',           attribute: 'property',  value: (route ? route.getCanonicalUri(App.state.params) : null) }
         ];
 
         document.head.applyMetadata(metadata);

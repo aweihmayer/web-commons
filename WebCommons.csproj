@@ -32,6 +32,9 @@
     <None Update="Io\Bundling\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Routing\function.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Basic\Picture.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -87,9 +90,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\Routes.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Routing\Uri.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ThirdParty\Drawdown\drawdown.js">

@@ -1,24 +1,22 @@
 ﻿class Http {
-    static buildRequest(options) {
-        if (options instanceof Request) return options;
-        else if (options.request instanceof Request) return options.request;
-
-        // Uri
-        let uri = new Uri('');
-        if (typeof options.uri === 'string') uri = new Uri(options.uri);
-        else if (options.uri instanceof Uri) uri = options.uri;
-        else if (options.uri instanceof Route) uri = options.uri.uri;
+    static buildRequest(uri, options) {
+        if (uri instanceof Request) return uri;
 
         // Payload
         let payload = {};
         if (typeof options.payload !== 'object') {
-            if (uri.params.hasUri()) {
-                let firstUriParamName = uri.params.getFirstUri().name;
+            if (uri instanceof Route && uri.params.some(p => p.type === 'uri')) {
+                let firstUriParamName = uri.params.find(p => p.type === 'uri').name;
                 payload[firstUriParamName] = options.payload;
             }
         } else {
             payload = options.payload;
         }
+
+        // Uri
+        let requestUri = '';
+        if (typeof uri === 'string') requestUri = options.uri;
+        else if (uri instanceof Route) requestUri = uri.getRelativeUri(payload);
 
         // Headers
         let headers = new Headers();
@@ -32,16 +30,15 @@
 
         // Fetch
         let method = options.method ?? 'GET';
-        let path = uri.relative(payload);
-        return new Request(path, {
+        return new Request(requestUri, {
             method: method,
             body: (method == 'GET') ? null : JSON.stringify(payload),
             headers: headers
         });
     }
 
-    static fetch(options) {
-        let request = Http.buildRequest(options);
+    static fetch(uri, options) {
+        let request = Http.buildRequest(uri, options);
 
         // Cache
         let cache = null;

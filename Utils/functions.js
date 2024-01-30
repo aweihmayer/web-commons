@@ -3,7 +3,7 @@
  * @param {any} value
  * @returns {boolean}
  */
-function isEmpty(value) { return (isNull(v) || value === ''); }
+function isEmpty(value) { return (isNull(value) || value === ''); }
 
 /**
  * Determines if a value is null.

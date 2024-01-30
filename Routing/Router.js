@@ -12,11 +12,10 @@ const Router = {
     afterRouteChange: () => { },
 
     detect: (href) => {
-        href = href || (window.location.pathname + window.location.search);
-        let uri = new Uri(href);
+        href = href || (window.location.relativeHref);
         let routing = {
             code: 200,
-            route: Routes.matchViewRoute(uri),
+            route: Routes.getView(href),
             params: {},
             locale: 'en'
         };
@@ -38,17 +37,17 @@ const Router = {
         if (typeof path == 'string') {
             href = path;
         } else if (path instanceof Route) {
-            href = path.uri.relative();
+            href = path.getRelativeUri();
         } else if (typeof path === 'object' && path.target) {
             let el = path.target.closest('a[href]');
             if (!el) return;
-            href = el.getAttribute('href');
+            else href = el.getAttribute('href');
         } else {
             return;
         }
 
         // Same location, do nothing
-        if (!force && href === (location.pathname + location.search)) return;
+        if (!force && href === (window.location.relativeHref)) return;
 
         let newRouting = this.detect(href);
         this.beforeRouteChange(newRouting);
