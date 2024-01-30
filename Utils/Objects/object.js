@@ -113,15 +113,7 @@ Object.fromQueryString = (query) => {
 * @returns {string}
 */
 Object.toQueryString = (obj) => {
-    if (Object.isEmpty(obj)) return '';
+    if (isEmpty(obj)) return '';
     let query = new URLSearchParams(obj).toString();
     return '?' + query;
-};
-
-/**
-* Determines if an object has any properties.
-* @returns {boolean}
-*/
-Object.isEmpty = (obj) => {
-    return !Object.keys(obj).any();
 };

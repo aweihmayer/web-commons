@@ -21,6 +21,7 @@
         this.cache = new RequestCacheValue(options.cacheName, options.cacheDuration);
 
         this.template = String.removeQueryString(template) || '/';
+        if (this.template.charAt(0) != '/') this.template = '/' + this.template;
         this.params = [];
 
         // Build params
@@ -74,6 +75,7 @@
      * @returns {boolean}
      */
     matches(uri) {
+        uri = String.removeQueryString(uri);
         // Escape special characters in the URL pattern and replace wildcard with a regex wildcard
         const regexPattern = this.template.replace(/\//g, '\\/').replace(/\{.*?\}/g, '([\\w-]+)');
         const regex = new RegExp('^' + regexPattern + '$');
@@ -89,6 +91,8 @@
         if (!this.matches(uri)) return {};
 
         uri = uri ?? (window.location.relativeHref);
+        let query = String.getQueryString(uri);
+        uri = String.removeQueryString(uri);
         let params = {};
 
         const regexPattern = this.template.replace(/\//g, '\\/').replace(/\{([^{}]+)\}/g, '([^/]+)');
@@ -100,14 +104,13 @@
             params.setProp(param.name, v);
         })
 
-        if (!uri.includes('{')) return params;
+        if (isEmpty(query)) return params;
 
-        // Get query string params
-        let query = Object.fromQueryString(href);
+        query = Object.fromQueryString(query);
         Object.keys(query).forEach(k => {
             let queryParam = this.params.find(p => p.name === k);
-            if (!queryParam) return;
-            else params[k] = Parser.parse(params[k], queryParam.type);
+            if (!queryParam) params[k] = query[k];
+            else params[k] = Parser.parse(query[k], queryParam.type);
         });
 
         return params;
@@ -154,8 +157,7 @@
         });
 
         if (uri.includes('{')) throw new Error('Missing route parameter for ' + this.template);
-
-        if (typeof query === 'string') {
+        else if (typeof query === 'string') {
             return uri + query;
         } else if (typeof query === 'object') {
             let parsedQuery = {};

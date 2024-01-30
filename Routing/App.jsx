@@ -12,10 +12,10 @@ class App extends React.Component {
 
     static root = null;
     static instance = null;
-    static get state() { return App.instance.state; } // TODO why 2 render at start
+    static get state() { return App.instance.state; }
 
     static async mount(rootElement) {
-        window.addEventListener('popstate', ev => { Router.reload(window.location.relativeHref, true); });
+        window.addEventListener('popstate', ev => Router.reload(window.location.relativeHref, true));
         App.root = ReactDOM.createRoot(rootElement);
         App.root.render(<App />);
     }

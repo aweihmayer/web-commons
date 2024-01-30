@@ -61,7 +61,7 @@ String.prototype.toSlug = function() {
  * @returns {string}
  */
 String.getQueryString = (str) => {
-    if (str.includes('?')) return '';
+    if (!str.includes('?')) return '';
     else return str.substring(str.indexOf('?'));
 };
 
