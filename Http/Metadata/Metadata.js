@@ -30,6 +30,15 @@ class SearchEngineMetadata {
     }
 
     /**
+     * Resets the metadata and sets the new values.
+     * @param {object} values
+     */
+    set(values) {
+        this.reset();
+        Object.assign(this, values);
+    }
+
+    /**
      * Resets the values to their defaults.
      */
     reset() {
@@ -39,8 +48,12 @@ class SearchEngineMetadata {
 
     /**
      * Creates, updates or removes metadata nodes.
+     * @param {object} [values] Optional values to reset the metadata and set the new values.
      */
-    apply() {
+    apply(values) {
+        if (typeof values === 'string') this.set({ title: values });
+        else if (typeof values === 'object') this.set(values);
+
         document.title = [this.titlePrefix, this.title, this.titleSuffix].filterEmpty().join(' ').trim();
         let route = App.state.route;
 
@@ -56,9 +69,8 @@ class SearchEngineMetadata {
             { name: 'og:url',           attribute: 'property',  value: (route ? route.getCanonicalUri(App.state.params) : null) }
         ];
 
-        document.head.applyMetadata(metadata);
+        document.head.setMetadata(metadata);
     }
 }
 
-if (typeof document.head === 'undefined') { document.head = {}; }
-document.head.metadata = new SearchEngineMetadata(new SearchEngineMetadata());
+document.metadata = new SearchEngineMetadata(new SearchEngineMetadata());

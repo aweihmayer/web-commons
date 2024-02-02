@@ -55,12 +55,7 @@ class App extends React.Component {
         return route.view(this.state.params);
     }
 
-    componentWillUpdate() {
-        document.head.metadata.reset();
-    }
-
     componentDidUpdate() {
         document.setCode(this.state.code);
-        document.head.metadata.apply();
     }
 }

@@ -17,28 +17,31 @@
         </form>;
     }
 
-    async submit(ev) {
-        if (this.isLoading()) return;
-        else if (ev) ev.preventDefault();
+    submit(ev) {
+        if (ev) ev.preventDefault();
         else ev = {};
 
-        try {
-            this.startLoading();
-            if (!await this.isValid()) throw ev;
-            const data = await this.collect(true);
-            ev.data = data;
-            await this.props.onSubmit(ev);
-        } catch (ex) {
-            await this.props.onValidationFail(ex);
-        } finally {
-            this.stopLoading();
-        }
+        if (this.isLoading()) return;
+
+        (async () => {
+            try {
+                this.startLoading();
+                if (!await this.isValid()) throw ev;
+                const data = await this.collect(true);
+                ev.data = data;
+                await this.props.onSubmit(ev);
+            } catch (ex) {
+                await this.props.onValidationFail(ex);
+            } finally {
+                this.stopLoading();
+            }
+        })();
     }
 
     startLoading() {
         this._isLoading = true;
-        let components = this.collectRefs();
-        for (let c of components) Loader.start(c);
+        let components = this.collectRefs(true);
+        Loader.start(components);
     }
 
     stopLoading() {

@@ -18,9 +18,10 @@
         component.forEach(c => {
             if (typeof c.startLoading === 'function') c.startLoading();
             for (let r in c.refs) Loader.start(c.refs[r]);
-            // Show cursor loading animation if there are active loaders
-            if (Loader.documentHasLoaders()) document.body.style.cursor = 'progress';
         });
+
+        // Show cursor loading animation if there are active loaders
+        if (Loader.documentHasLoaders()) document.body.style.cursor = 'progress';
     }
 
     static stop(component) {
@@ -28,9 +29,10 @@
         component.forEach(c => {
             if (typeof c.stopLoading === 'function') c.stopLoading();
             for (let r in c.refs) Loader.stop(c.refs[r]);
-            // Remove cursor progress animation if there are no more active loaders
-            if (!Loader.documentHasLoaders()) document.body.style.cursor = 'auto';
         });
+
+        // Remove cursor progress animation if there are no more active loaders
+        if (!Loader.documentHasLoaders()) document.body.style.cursor = 'auto';
     }
 
     static documentHasLoaders() {

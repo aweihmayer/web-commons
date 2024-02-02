@@ -54,7 +54,6 @@ const Router = {
         if (typeof newRouting.route.beforeRouteChange === 'function') newRouting.route.beforeRouteChange(newRouting);
 
         action(href);
-        document.head.metadata.reset();
         await document.loadBundles(newRouting.route.bundles);
         App.setRouting(newRouting);
         this.afterRouteChange();

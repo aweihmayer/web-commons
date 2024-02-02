@@ -116,10 +116,6 @@
         return params;
     }
 
-    matchUriValues(uri) {
-
-    }
-
     // #endregion
 
     // #region URI
@@ -136,13 +132,12 @@
 
         // If the payload is not an object, its value belongs to the first route param
         if (typeof params !== 'object') {
-            if (!this.params.some(p => p.type === 'uri')) {
-                params = {};
-            } else {
-                let key = this.params.find(p => p.type === 'uri').name;
+            const firstUriParam = this.params.find(p => p.location === 'uri');
+            if (!firstUriParam) params = {};
+            else {
                 let value = params;
                 params = {};
-                params[key] = value;
+                params[firstUriParam.name] = value;
             }
         }
 

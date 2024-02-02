@@ -4,12 +4,11 @@
 
         // Payload
         let payload = {};
-        if (typeof options.payload !== 'object') {
-            if (uri instanceof Route && uri.params.some(p => p.type === 'uri')) {
-                let firstUriParamName = uri.params.find(p => p.type === 'uri').name;
-                payload[firstUriParamName] = options.payload;
-            }
-        } else {
+        if (typeof options.payload !== 'object' && uri instanceof Route) {
+            const firstUriParam = uri.params.find(p => p.location === 'uri');
+            if (!firstUriParam) payload = {};
+            else payload[firstUriParam.name] = options.payload;
+        } else if (typeof options.payload === 'object') {
             payload = options.payload;
         }
 

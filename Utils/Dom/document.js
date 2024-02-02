@@ -35,25 +35,25 @@ function toClassName(className, extras) {
  * Gets the HTTP code attribute on the body element.
  * @returns {number}
  */
-document.getCode = () => {
-    if (!document.body.dataset.code) return 200;
-    else return parseInt(document.body.dataset.code);
+document.getCode = function () {
+    if (!this.body.dataset.code) return 200;
+    else return parseInt(this.body.dataset.code);
 };
 
 /**
  * Sets the HTTP code attribute on the body element.
  */
-document.setCode = (code) => {
-    document.body.dataset.code = code;
-    document.body.setAttribute('data-code', code);
+document.setCode = function (code) {
+    this.body.dataset.code = code;
+    this.body.setAttribute('data-code', code);
 };
 
 /**
  * Determines if the HTTP code attribute on the body element is an error code.
  * @returns {boolean}
  */
-document.hasErrorCode = () => {
-    let code = document.body.dataset.code;
+document.hasErrorCode = function () {
+    let code = this.body.dataset.code;
     code = parseInt(code);
     return (code < 200 || code > 299);
 };

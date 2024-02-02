@@ -4,7 +4,7 @@
  * @returns {boolean}
  */
 function isEmpty(value) {
-    if (typeof value === 'object') return !Object.keys(obj).any();
+    if (typeof value === 'object' && value !== null) return !Object.keys(value).any();
     else return (isNull(value) || value === '');
 }
 

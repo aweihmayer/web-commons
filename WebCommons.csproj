@@ -53,7 +53,7 @@
     <None Update="I18n\i18n.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\functions.js">
+    <None Update="Utils\Data\general.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Validation\required.js">
@@ -269,10 +269,10 @@
     <None Update="Utils\Dom\lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Collections\array.js">
+    <None Update="Utils\Data\array.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Objects\object.js">
+    <None Update="Utils\Data\object.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Parsing\boolean.js">
@@ -293,13 +293,13 @@
     <None Update="Utils\Parsing\Parser.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\String\string.js">
+    <None Update="Utils\Data\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Cookies\Cookie.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Time\date.js">
+    <None Update="Utils\Data\date.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -135,9 +135,9 @@
         if (this.props.onFocus) this.props.onFocus(ev);
     }
 
-    handleChange(ev) {
+    async handleChange(ev) {
         if (this.props.onChange) {
-            ev.data = this.collect();
+            ev.data = await this.collect();
             this.props.onChange(ev);
         }
     }

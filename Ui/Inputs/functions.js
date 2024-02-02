@@ -1,10 +1,7 @@
 ﻿React.Component.prototype.collectRefs = function (withParent) {
-    let components = [];
-    this.refs.toArray().forEach(c => components.push(c));
-    for (let k in this.refs) components.push(this.refs[k]);
+    let components = Object.toArray(this.refs);
     if (!withParent || !this.props.parent) return components;
-    for (let k in this.props.parent.refs) components.push(this.props.parent.refs[k]);
-    return components.filter(c => c != this);
+    return components.concat(Object.toArray(this.props.parent.refs)).filter(c => c != this);
 };
 
 React.Component.prototype.clear = function (withParent) {

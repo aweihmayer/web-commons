@@ -62,7 +62,11 @@ const Routes = {
         let matches = this.getViews().filter(r => r.matches(uri));
         if (!matches.any()) return null;
         // Sort the matches by prioritizing the route that has the least URI parameters
-        else return matches.sort((a, b) => (a.getUriParams().length > b.getUriParams().length)).first();
+        else return matches.sort((a, b) => {
+            const uriParams1 = a.params.filter(p => p.location === 'uri').length;
+            const uriParams2 = b.params.filter(p => p.location === 'uri').length;
+            return uriParams1 > uriParams2;
+        }).first();
     },
 
     /**
