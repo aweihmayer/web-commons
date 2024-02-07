@@ -14,22 +14,22 @@
     }
 
     static start(component) {
-        component = Loader.collectComponents(component);
-        component.forEach(c => {
-            if (typeof c.startLoading === 'function') c.startLoading();
-            for (let r in c.refs) Loader.start(c.refs[r]);
-        });
+        if (component) {
+            component.getAllRefs().forEach(c => {
+                if (typeof c.startLoading === 'function') c.startLoading();
+            });
+        }
 
         // Show cursor loading animation if there are active loaders
         if (Loader.documentHasLoaders()) document.body.style.cursor = 'progress';
     }
 
     static stop(component) {
-        component = Loader.collectComponents(component);
-        component.forEach(c => {
-            if (typeof c.stopLoading === 'function') c.stopLoading();
-            for (let r in c.refs) Loader.stop(c.refs[r]);
-        });
+        if (component) {
+            component.getAllRefs().forEach(c => {
+                if (typeof c.stopLoading === 'function') c.stopLoading();
+            });
+        }
 
         // Remove cursor progress animation if there are no more active loaders
         if (!Loader.documentHasLoaders()) document.body.style.cursor = 'auto';
@@ -37,13 +37,5 @@
 
     static documentHasLoaders() {
         return document.querySelectorAll('.loader').length > 0;
-    }
-
-    static collectComponents(component) {
-        if (isEmpty(component)) return [];
-        else if (component instanceof React.Component) return [component];
-        else if (typeof component === 'object' && !Array.isArray(component)) return Object.keys(component).map(k => component[k]);
-        else if (Array.isArray(component)) return component;
-        else return [component];
     }
 };

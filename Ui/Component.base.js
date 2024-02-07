@@ -4,6 +4,25 @@
     return components.concat(Object.toArray(this.props.parent.refs)).filter(c => c != this);
 };
 
+React.Component.prototype.getAllRefs = function () {
+    let refs = [this];
+    Object.toArray(this.refs).forEach(r => {
+        refs.push(r);
+        if (typeof r.getRefTree === 'function') refs = refs.concat(r.getRefTree());
+    });
+    return refs;
+};
+
+React.Component.prototype.getParent = function () {
+    return this.props.parent ?? null;
+};
+
+React.Component.prototype.getTopParent = function () {
+    let parent = this;
+    while (parent.getParent() !== null) parent = parent.getParent();
+    return parent;
+};
+
 React.Component.prototype.clear = function (withParent) {
     for (let c of this.collectRefs(withParent)) {
         if (typeof c.clear === 'function') c.clear();
