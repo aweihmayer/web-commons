@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using System.Reflection;
 using WebCommons;
 
 namespace Microsoft.AspNetCore.Mvc
@@ -8,12 +8,21 @@ namespace Microsoft.AspNetCore.Mvc
         /// <summary>
         /// Determines if the model is valid.
         /// </summary>
-        /// <returns>True if the model is valid.</returns>
+        /// <returns>True if the model is valid, otherwise false.</returns>
         /// <exception cref="BadRequestException">Thrown as a bad request (400) if the model is not valid.</exception>
         public static bool ModelMustBeValid(this Controller controller)
         {
             if (controller.ModelState.IsValid) return true;
             else throw new BadRequestException();
+        }
+
+        /// <summary>
+        /// Determines if the controller has the API attribute
+        /// </summary>
+        /// <returns>True if the controller has the attribute, otherwise false.</returns>
+        public static bool IsApiController(this Controller controller)
+        {
+            return controller.GetType().HasCustomAttribute<ApiControllerAttribute>();
         }
     }
 }

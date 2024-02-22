@@ -37,21 +37,18 @@ namespace WebCommons.Controllers
 
             if (context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor) {
                 this.AuthorizeRequest(context, controllerActionDescriptor.MethodInfo);
-            } else {
-                return;
             }
         }
 
         protected virtual void AuthorizeRequest(ActionExecutingContext context, MethodInfo method)
         {
-            bool isApiController = this.GetType().HasCustomAttribute<ApiControllerAttribute>();
             try {
                 var permissionAttributes = method.GetCustomAttribute<RequiresAuthAttribute>();
                 if (permissionAttributes != null) this.OperationContext.MustBeAuthenticated();
             } catch (ResponseException ex) {
-                context.Result = isApiController ? this.Response.AsJson(ex) : this.View(ex);
+                context.Result = this.IsApiController() ? this.Response.AsJson(ex) : this.View(ex);
             } catch (Exception ex) {
-                context.Result = isApiController ? this.Response.AsJson(ex) : this.View(ex);
+                context.Result = this.IsApiController() ? this.Response.AsJson(ex) : this.View(ex);
             }
         }
         
