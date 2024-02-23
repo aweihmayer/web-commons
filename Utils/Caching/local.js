@@ -44,11 +44,4 @@ class LocalStorageValue {
     clear() {
         localStorage.clear(this.name);
     }
-
-    /**
-     * Removes all keys from the local storage.
-     */
-    static clear() {
-        localStorage.clear();
-    }
 }

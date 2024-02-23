@@ -8,6 +8,11 @@
 
     public static class TimeSpanExtensions
     {
-
+        public static bool IsBetween(this TimeSpan time, TimeSpan a, TimeSpan b)
+        {
+            return (a > b)
+                ? (time >= b && time <= a)
+                : (time >= a && time <= b);
+        }
     }
 }
