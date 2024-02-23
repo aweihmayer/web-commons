@@ -8,7 +8,7 @@
         public string? Title { get; set; } = null;
         public string? TitlePrefix { get; set; } = null;
         public string? TitleSuffix { get; set; } = null;
-        public string FullTitle { get => string.Format("{0}{1}{2}",this.TitlePrefix, this.Title, this.TitleSuffix).Trim(); }
+        public string FullTitle { get => string.Format("{0}{1}{2}", this.TitlePrefix, this.Title, this.TitleSuffix).Trim(); }
 
         public string? Section { get; set; } = null;
         public string? Description { get; set; } = null;

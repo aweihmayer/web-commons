@@ -14,8 +14,7 @@ namespace WebCommons.Http
             var value = type.GetPropertyValue<string>(cookie, "Base64Value");
             if (string.IsNullOrEmpty(value)) return;
 
-            CookieOptions options = new();
-            options.HttpOnly = type.GetPropertyValue<bool>(cookie, "HttpOnly");
+            CookieOptions options = new() { HttpOnly = type.GetPropertyValue<bool>(cookie, "HttpOnly") };
             var path = type.GetPropertyValue<string?>(cookie, "Path");
             if (!string.IsNullOrEmpty(path)) options.Path = path;
             TimeSpan duration = type.GetPropertyValue<TimeSpan>(cookie, "Duration");
@@ -39,12 +38,12 @@ namespace WebCommons.Http
         /// </summary>
         public static T? Read<T>(this IRequestCookieCollection cookies) where T : new()
         {
-            T cookie = new T();
+            T cookie = new();
             Type type = typeof(T);
             var name = type.GetPropertyValue<string>(cookie, "Name");
-            if (string.IsNullOrEmpty(name) || cookies[name] == null) return default(T);
+            if (string.IsNullOrEmpty(name) || cookies[name] == null) return default;
             string? value = cookies[name];
-            if (string.IsNullOrEmpty(value)) return default(T);
+            if (string.IsNullOrEmpty(value)) return default;
             type.SetPropertyValue(cookie, "Base64Value", value);
             return cookie;
         }

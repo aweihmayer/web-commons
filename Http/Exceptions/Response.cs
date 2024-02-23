@@ -9,7 +9,7 @@ namespace WebCommons
 
         public ResponseException(HttpStatusCode statusCode, string? message = null) : base(message) {
             this.StatusCode = statusCode; 
-            if (string.IsNullOrEmpty(message)) { this.HasDefaultMessage = true; }
+            if (string.IsNullOrEmpty(message)) this.HasDefaultMessage = true;
         }
     }
 }

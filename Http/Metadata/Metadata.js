@@ -3,7 +3,7 @@
  */
 class SearchEngineMetadata {
     constructor(defaults) {
-        if (typeof defaults !== 'undefined') { this.defaults = defaults; }
+        if (typeof defaults !== 'undefined') this.defaults = defaults;
 
         this.description = null;
         this.image = null;
