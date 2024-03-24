@@ -6,7 +6,7 @@
     }
 
     render(input) {
-        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'tag-input']} tooltip={this.props.tooltip} ref="container">
+        return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, this.className, 'tag-input']} tooltip={this.props.tooltip} ref="container">
             <div>
                 {input}
                 <ul>
@@ -29,7 +29,7 @@
             else if (data.name && data.value) return data;
             else return data;
         } else {
-            const option = this.props.options.find(o => o.value = data);
+            const option = this.options.find(o => o.value == data);
             if (option) return option;
             else return { name: data, value: data };
         }
@@ -74,7 +74,6 @@
     }
 
     clear() {
-        this.closeSearch();
         this.setState({ data: [] });
         this.clearError();
     }

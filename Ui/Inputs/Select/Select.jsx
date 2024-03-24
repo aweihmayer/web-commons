@@ -1,4 +1,9 @@
 ﻿class SelectInput extends BaseInput {
+    constructor(props) {
+        super(props);
+        this.options = this.schema.toOptions();
+    }
+
     render() {
         return <InputContainer label={this.schema.label} id={this.id} className={[this.props.className, 'select-input']} tooltip={this.props.tooltip} ref="container">
             <div className="input-wrapper">
@@ -8,9 +13,7 @@
                     name={this.schema.name}
                     onChange={ev => this.handleChange(ev)}
                     onFocus={ev => this.handleFocus(ev)}>
-                    {this.schema.values.map((v, i) =>
-                        <option key={v} value={v}>{translate(this.schema.i18n[v], v)}</option>
-                    )}
+                    {this.options.map(o => <option key={o.value} value={o.value}>{o.name}</option>)}
                 </select>
             </div>
         </InputContainer>;

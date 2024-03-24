@@ -128,7 +128,7 @@
     <None Update="Ui\Icons\Filter.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\functions.js">
+    <None Update="Ui\Component.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Form.jsx">
@@ -197,7 +197,7 @@
     <None Update="Ui\Inputs\Select\Select.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Inputs\Tag\Tag.jsx">
+    <None Update="Ui\Inputs\Tag\Tag.base.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Tag\Tag.scss">

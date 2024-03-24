@@ -12,4 +12,6 @@ This library uses Entity Framework Core as its ORM.
 - Execute steps for *Creating a new database*
 
 ## Migrating to a new schema version
-- TODO
+- Open *Tools > NuGet Package Manager > Package Manager Console* 
+- Execute *Add-Migration MIGRATION_NAME*
+- Execute *Update-Database*
