@@ -1,7 +1,7 @@
 ﻿namespace WebCommons.Dto
 {
     /// <summary>
-    /// <see cref="TimestampableEntity"/>
+    /// <see cref="WebCommons.Db.TimestampableEntity"/>
     /// </summary>
     public interface TimestampableDto
     {

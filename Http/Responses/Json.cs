@@ -6,6 +6,9 @@ using WebCommons.IO;
 
 namespace WebCommons.Controllers
 {
+    /// <summary>
+    /// Defines how a controller returns a JSON response.
+    /// </summary>
     public static partial class ControllerResponseExtensions
     {
         #region Main

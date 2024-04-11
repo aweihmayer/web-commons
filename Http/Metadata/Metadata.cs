@@ -61,6 +61,9 @@
             }
         }
 
+        /// <summary>
+        /// Creates the HTML element for the metadata value as a string.
+        /// </summary>
         private string createMetadataElement(string name, string attribute, string value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;

@@ -49,9 +49,6 @@ namespace WebCommons.Http
         /// <summary>
         /// Determines if the cookie value is empty.
         /// </summary>
-        public bool IsEmpty()
-        {
-            return (this.Value == null);
-        }
+        public bool IsEmpty() => (this.Value == null);
     }
 }

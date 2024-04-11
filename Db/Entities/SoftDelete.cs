@@ -5,6 +5,6 @@
     /// </summary>
     public interface SoftDeleteEntity
     {
-        DateTime DeletedDate { get; set; }
+        DateTime? DeletedDate { get; set; }
     }
 }

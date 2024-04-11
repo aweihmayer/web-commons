@@ -11,7 +11,7 @@ namespace WebCommons.Controllers
 		public string? JsonTemplate { get; set; } = null;
 		public int CacheDuration { get; set; }
 
-		public JsonRouteAttribute(string template, string? jsonTemplate = null, int cacheDuration = 0) : base(template)
+		public JsonRouteAttribute(string template, string? jsonTemplate = null, int cacheDuration = 0, string cacheName = null) : base(template)
 		{
 			this.JsonTemplate = jsonTemplate;
 			this.CacheDuration = cacheDuration;

@@ -59,7 +59,7 @@ namespace WebCommons.Sitemap
             urlEl.AppendChild(changefreqEl);
 
             // Priority
-            if (priority > 1 || priority < 0) { priority = 0.5; }
+            if (priority > 1 || priority < 0) priority = 0.5;
             XmlElement priorityEl = this.CreateElement("priority");
             priorityEl.InnerText = priority.ToString("0.#");
             urlEl.AppendChild(priorityEl);
@@ -70,9 +70,6 @@ namespace WebCommons.Sitemap
         /// <summary>
         /// Gets the memory stream of the XML.
         /// </summary>
-        public MemoryStream ToMemoryStream()
-        {
-            return new MemoryStream(Encoding.UTF8.GetBytes(this.InnerXml));
-        }
+        public MemoryStream ToMemoryStream() => new MemoryStream(Encoding.UTF8.GetBytes(this.InnerXml));
     }
 }

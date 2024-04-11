@@ -5,7 +5,7 @@ using WebCommons.Dto;
 namespace WebCommons.Db
 {
     /// <summary>
-    /// Defines a custom DB context able to handle user authentification.
+    /// Defines a custom DB context able to handle user authentication.
     /// </summary>
     public class CommonDbContextWithAuth<TUser> : CommonDbContext where TUser : CommonUser
     {

@@ -32,10 +32,7 @@ namespace WebCommons.IO
         /// <summary>
         /// Appends the file path to the root path.
         /// </summary>
-        public static string MapPath(string file)
-        {
-            return Root + file;
-        }
+        public static string MapPath(string file) => Root + file;
 
         /// <summary>
         /// Copies the file to another location.
@@ -70,7 +67,7 @@ namespace WebCommons.IO
         public T? Read<T>() => JsonConvert.DeserializeObject<T>(this.Read());
 
         /// <summary>
-        /// Creates a stream of the file.
+        /// Reads the file as a stream.
         /// </summary>
         public FileStream ReadAsStream() => new (this.Path, FileMode.Open, FileAccess.Read);
 
@@ -102,11 +99,13 @@ namespace WebCommons.IO
         {
             List<SystemFile> files = new();
             
+            // Get the file paths
             string[] filePaths = Directory.GetFiles(
                 MapPath(directory),
                 pattern,
                 SearchOption.AllDirectories);
 
+            // Parse file paths into objects
             string file;
             foreach (string f in filePaths) {
                 file = f.Replace(@"\", "/");

@@ -56,28 +56,28 @@
     <None Update="Utils\Data\general.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\required.js">
+    <None Update="Utils\Validation\Types\required.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\boolean.js">
+    <None Update="Utils\Validation\Types\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\int.js">
+    <None Update="Utils\Validation\Types\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Validator.base.js">
+    <None Update="Utils\Validation\Validator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Validation\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\email.js">
+    <None Update="Utils\Validation\Types\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\number.js">
+    <None Update="Utils\Validation\Types\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\string.js">
+    <None Update="Utils\Validation\Types\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\App.jsx">

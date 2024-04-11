@@ -48,14 +48,8 @@
 
         // Replace with array
         if (Array.isArray(replacements)) {
-            if (placeholders.length > replacements.length) {
-                console.error('Missing i18n replacements for ' + value);
-            }
-
-            replacements.forEach((r, i) => {
-                value = value.replaceAll('{' + i + '}', r);
-            });
-
+            if (placeholders.length > replacements.length) console.error('Missing i18n replacements for ' + value);
+            replacements.forEach((r, i) => { value = value.replaceAll('{' + i + '}', r); });
             return value;
         // Replace with object
         } else {

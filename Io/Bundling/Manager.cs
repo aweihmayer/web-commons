@@ -1,5 +1,4 @@
 ﻿using WebCommons.IO;
-using WebCommons.Utils;
 
 namespace WebCommons.Bundling
 {
@@ -16,7 +15,7 @@ namespace WebCommons.Bundling
 		/// <summary>
 		/// The directory where bundles will be saved.
 		/// </summary>
-		protected string Directory = "";
+		protected string Directory = string.Empty;
 
 		/// <summary>
 		/// Map of placeholders and values. Values will replace the placeholders in the content.
@@ -59,11 +58,8 @@ namespace WebCommons.Bundling
 		}
 
 		/// <summary>
-		/// Transforms the contents before saving them.
+		/// Transforms the contents before saving them. Override this method to customize the content.
 		/// </summary>
-		public virtual string Transform(string content)
-		{
-			return content;
-		}
+		public virtual string Transform(string content) => content;
 	}
 }

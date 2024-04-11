@@ -9,7 +9,7 @@ namespace WebCommons.Api
 	/// This is useful because the content of a response is not deserialized and has to be read asynchronously.
 	/// Instead, this will read and deserialize the content once only.
 	/// </summary>
-	/// <typeparam name="T">The deserialiazed content type.</typeparam>
+	/// <typeparam name="T">The deserialized content type.</typeparam>
 	public class HttpResponse<T>
 	{
 		public HttpStatusCode StatusCode { get; set; }
@@ -43,10 +43,7 @@ namespace WebCommons.Api
 		/// <summary>
 		/// Determines if the response content is empty.
 		/// </summary>
-		public bool IsEmpty()
-		{
-			return this.Content == null;
-		}
+		public bool IsEmpty() => this.Content == null;
 
         public override string ToString()
         {

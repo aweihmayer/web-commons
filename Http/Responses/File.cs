@@ -4,6 +4,9 @@ using WebCommons.IO;
 
 namespace WebCommons.Controllers
 {
+    /// <summary>
+    /// Defines how a controller returns a file response.
+    /// </summary>
     public static partial class ControllerResponseExtensions
     {
 
