@@ -1,9 +1,9 @@
 ﻿namespace WebCommons.Dto
 {
     /// <summary>
-    /// <see cref="WebCommons.Db.SoftDeleteEntity"/>
+    /// <see cref="WebCommons.Db.ISoftDeleteEntity"/>
     /// </summary>
-    public interface SoftDeleteEntity
+    public interface ISoftDeleteDto
     {
         DateTime? DeletedDate { get; set; }
     }

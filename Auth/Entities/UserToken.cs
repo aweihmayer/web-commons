@@ -87,6 +87,8 @@ namespace WebCommons.Db
             this.Id = Guid.NewGuid();
             this.Duration = null;
             this.ExpirationDate = null;
+            this.CreatedDate = DateTime.UtcNow;
+            this.UpdatedDate = DateTime.UtcNow;
             this.UserId = user.Id;
             this.User = user;
             this.Type = type;
@@ -97,6 +99,7 @@ namespace WebCommons.Db
         {
             this.Id = Guid.NewGuid();
             this.Duration = duration;
+            this.CreatedDate = DateTime.UtcNow;
             this.Refresh();
             this.UserId = user.Id;
             this.User = user;
@@ -110,6 +113,7 @@ namespace WebCommons.Db
         public void Refresh()
         {
             if (this.Duration.HasValue) this.ExpirationDate = DateTime.UtcNow.Add(this.Duration.Value);
+            this.UpdatedDate = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -118,6 +122,7 @@ namespace WebCommons.Db
         public void Expire()
         {
             this.ExpirationDate = DateTime.MinValue;
+            this.UpdatedDate = DateTime.UtcNow;
         }
 
         /// <summary>

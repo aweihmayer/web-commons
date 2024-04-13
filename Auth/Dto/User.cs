@@ -3,7 +3,7 @@ using WebCommons.Db;
 
 namespace WebCommons.Dto
 {
-    public abstract class CommonUserDto : TimestampableDto
+    public abstract class CommonUserDto : ITimestampableDto
     {
         #region No details
 

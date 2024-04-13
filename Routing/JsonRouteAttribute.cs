@@ -9,11 +9,13 @@ namespace WebCommons.Controllers
     public class JsonRouteAttribute : RouteAttribute
 	{
 		public string? JsonTemplate { get; set; } = null;
-		public int CacheDuration { get; set; }
+        public string? CacheName { get; set; } = null;
+        public int CacheDuration { get; set; }
 
 		public JsonRouteAttribute(string template, string? jsonTemplate = null, int cacheDuration = 0, string cacheName = null) : base(template)
 		{
 			this.JsonTemplate = jsonTemplate;
+			this.CacheName = cacheName;
 			this.CacheDuration = cacheDuration;
 		}
 	}

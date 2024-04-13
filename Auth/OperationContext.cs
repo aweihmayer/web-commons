@@ -12,6 +12,14 @@ namespace WebCommons.Controllers
     {
         #region Request values
 
+        public AuthSource AuthSource { get; set; } = AuthSource.None;
+        public AuthMethod AuthMethod { get; set; } = AuthMethod.None;
+
+        public Guid? AccessToken { get; set; }
+        public Guid? RefreshToken { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+
         private Controller? _controller = null;
         public Controller? Controller
         {
@@ -26,12 +34,12 @@ namespace WebCommons.Controllers
                     this.Date = new DateTimeOffset(DateTime.UtcNow.Add(timeOffset));
                 }
 
-                // Header
+                // Authentication was done with header
                 string? authHeader = value.Request.Headers.Authorization;
                 if (!string.IsNullOrEmpty(authHeader)) {
                     this.PopulateAuthValueFromHeader(authHeader);
-                } 
-                // Cookie
+                }
+                // Authentication was done with cookie
                 else {
                     var accessTokenCookie = value.Request.Cookies.Read<AccessTokenCookie>();
                     var refreshTokenCookie = value.Request.Cookies.Read<RefreshTokenCookie>();
@@ -39,14 +47,6 @@ namespace WebCommons.Controllers
                 }
             }
         }
-
-        public AuthSource AuthSource { get; set; } = AuthSource.None;
-        public AuthMethod AuthMethod { get; set; } = AuthMethod.None;
-        
-        public Guid? AccessToken { get; set; }
-        public Guid? RefreshToken { get; set; }
-        public string? Email { get; set; }
-        public string? Password { get; set; }
 
         /// <summary>
         /// Determines the auth values from a header.

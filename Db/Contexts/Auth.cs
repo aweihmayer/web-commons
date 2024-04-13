@@ -42,21 +42,29 @@ namespace WebCommons.Db
             if (!token.HasValue) return default;
             UserToken<TUser>? userToken = this.FindToken(token.Value, true);
             if (userToken == null || userToken.IsExpired() || userToken.User == null) return default;
-            TUser user = userToken.User;
+            TUser? user = userToken.User;
+            if (user == null) return default;
 
+            // Create the token relationships for the user
+            UserTokenType altTokenType = tokenType;
             switch (tokenType) {
-                case UserTokenType.Access: user.AccessToken = new UserTokenDto(userToken); break;
-                case UserTokenType.Refresh: user.RefreshToken = new UserTokenDto(userToken); break;
+                case UserTokenType.Access: 
+                    user.AccessToken = new UserTokenDto(userToken);
+                    altTokenType = UserTokenType.Refresh;
+                    break;
+                case UserTokenType.Refresh:
+                    user.RefreshToken = new UserTokenDto(userToken);
+                    altTokenType = UserTokenType.Access;
+                    break;
             }
 
             // Include alt token if applicable
             if (!includeTokens) return user;
-
-            UserTokenType altType = (tokenType == UserTokenType.Access) ? UserTokenType.Refresh : UserTokenType.Access;
-            UserToken<TUser>? altToken = this.FindToken(user, altType);
+            UserToken<TUser>? altToken = this.FindToken(user, altTokenType);
             if (altToken == null) return user;
-            else if (altType == UserTokenType.Access) user.AccessToken = new UserTokenDto(altToken);
+            else if (altTokenType == UserTokenType.Access) user.AccessToken = new UserTokenDto(altToken);
             else user.RefreshToken = new UserTokenDto(altToken);
+
             return user;
         }
 

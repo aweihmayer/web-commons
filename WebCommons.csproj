@@ -68,7 +68,7 @@
     <None Update="Utils\Validation\Validator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Schema\ValueSchema.js">
+    <None Update="Utils\Validation\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Utils\Validation\Types\email.js">

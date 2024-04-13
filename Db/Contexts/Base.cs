@@ -7,20 +7,20 @@ namespace WebCommons.Db
     /// </summary>
     public abstract class CommonDbContext : DbContext
     {
-        public CommonDbContext() { }
+        protected CommonDbContext() { }
 
-        public CommonDbContext(DbContextOptions options) : base(options) { }
+        protected CommonDbContext(DbContextOptions options) : base(options) { }
 
         public override int SaveChanges()
         {
             foreach (var changedEntity in ChangeTracker.Entries()) {
-                TimestampableEntity timestampable;
-                SoftDeleteEntity softDelete;
+                ITimestampableEntity? timestampable;
+                ISoftDeleteEntity? softDelete;
 
                 switch (changedEntity.State) {
                     case EntityState.Added:
                         // Timestampable entity will have created and updated timestamps set to now
-                        timestampable = changedEntity.Entity as TimestampableEntity;
+                        timestampable = changedEntity.Entity as ITimestampableEntity;
                         if (timestampable == null) break;
                         timestampable.CreatedDate = DateTime.UtcNow;
                         timestampable.UpdatedDate = DateTime.UtcNow;
@@ -28,14 +28,14 @@ namespace WebCommons.Db
 
                     case EntityState.Modified:
                         // Timestampable entity will have its update timestamp set to now
-                        timestampable = changedEntity.Entity as TimestampableEntity;
+                        timestampable = changedEntity.Entity as ITimestampableEntity;
                         if (timestampable == null) break;
                         timestampable.UpdatedDate = DateTime.UtcNow;
                         break;
 
                     case EntityState.Deleted:
                         // Soft delete entity won't be permanently deleted, but have a deleted date timestamp
-                        softDelete = changedEntity.Entity as SoftDeleteEntity;
+                        softDelete = changedEntity.Entity as ISoftDeleteEntity;
                         if (softDelete == null) break;
                         softDelete.DeletedDate = DateTime.UtcNow;
                         changedEntity.State = EntityState.Modified;

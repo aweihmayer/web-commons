@@ -3,7 +3,7 @@
     /// <summary>
     /// <see cref="WebCommons.Db.TimestampableEntity"/>
     /// </summary>
-    public interface TimestampableDto
+    public interface ITimestampableDto
     {
         DateTime? CreatedDate { get; set; }
         DateTime? UpdatedDate { get; set; }

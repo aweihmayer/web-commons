@@ -6,18 +6,17 @@
      * @param {ValueSchema} schema The schema that contains extra information.
      */
     parse: function (value, type, schema) {
-        schema = schema ?? new ValueSchema();
-
-        // Parse the value
+        // Determine if the parsing function exists
         if (typeof this[type] !== 'function') {
             console.warn('No function defined to parse the type ' + type);
             return value;
         }
 
+        // Parse the value to the desired type
         let parsed = this[type](value);
 
-        // Nothing else to do
-        if (typeof schema === 'undefined') return parsed;
+        // If schema is undefined, nothing else to do
+        if (isUndefined(schema)) return parsed;
         // Parse non-enumerable
         else if (!schema.isEnumerable && Array.isArray(parsed)) {
             if (parsed.length === 0) parsed = null;
