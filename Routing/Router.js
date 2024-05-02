@@ -22,13 +22,12 @@ const Router = {
 
         if (routing.route !== null) {
             routing.params = routing.route.getParams(href);
+            return routing;
         } else {
             routing.code = 404;
             routing.route = null;
+            return routing;
         }
-
-        routing.params = routing.route.getParams(href);
-        return routing;
     },
 
     changeRoute: async function (path, action, force) {

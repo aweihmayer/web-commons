@@ -34,7 +34,7 @@
             } catch (ex) {
                 await this.props.onValidationFail(ex);
             } finally {
-                Loader.stop(this);
+                Loader.stop(this.props.parent);
                 this.isLoading = false;
             }
         })();

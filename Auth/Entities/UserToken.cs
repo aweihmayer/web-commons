@@ -16,7 +16,7 @@ namespace WebCommons.Db
 
     [Table("token")]
     [Index(nameof(EncryptedId), IsUnique = true)]
-    public class UserToken<TUser> : IUserToken, TimestampableEntity where TUser : CommonUser
+    public class UserToken<TUser> : IUserToken, ITimestampableEntity where TUser : CommonUser
     {
         [Column("encrypted_id")]
         [Key]

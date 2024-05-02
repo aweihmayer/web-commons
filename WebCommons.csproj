@@ -41,6 +41,12 @@
     <None Update="Ui\Embedded\YouTubeVideo.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Inputs\Tag\Search.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Ui\Inputs\Tag\Select.jsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Utils\Caching\local.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

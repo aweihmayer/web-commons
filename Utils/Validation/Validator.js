@@ -1,14 +1,13 @@
 ﻿const Validator = {
     /**
      * Parses a value into the desired type and validates it.
-     * @param {any} value
-     * @param {string} type
-     * @param {ValueSchema} [schema]
+     * @param {any} value The value being validate.
+     * @param {string} type The expected type of the value being validated.
+     * @param {ValueSchema} [schema] Schema for extra validation rules.
      * @returns {{ value: any, isValid: boolean, error: string, message: string, schema: ValueSchema }}
      */
     validate: function (value, type, schema) {
         schema = schema ?? new ValueSchema();
-
         let result = {
             value: value,
             isValid: true,
@@ -17,13 +16,16 @@
             schema: schema
         };
 
+        // Try to validate
         try {
             result.value = Parser.parse(value, type, schema);
             if (schema.isRequired) Validator.required(result.value, schema);
 
             if (typeof Validator[type] !== 'function') console.warn('No function defined to validate the type ' + type);
             else Validator[schema.type](result.value, schema);
+
             return result;
+        // The validation failed
         } catch (ex) {
             result.error = ex.message;
             result.isValid = false;
@@ -47,13 +49,14 @@
         }
 
         let message = Validator.messages[error];
-        if (error === 'required') { return message; }
-        if (!message.hasOwnProperty(type)) {
+        if (error === 'required') {
+            return message;
+        } else if (!message.hasOwnProperty(type)) {
             console.warn('No sub error message defined for ' + type);
             return 'Error';
+        } else {
+            return translate(message[type], schema);
         }
-
-        return translate(message[type], schema);
     },
 
     messages: {

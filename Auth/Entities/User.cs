@@ -7,7 +7,7 @@ namespace WebCommons.Db
 {
     [Table("app_user")]
     [Index(nameof(Id), IsUnique = true)]
-    public abstract class CommonUser : TimestampableEntity
+    public abstract class CommonUser : ITimestampableEntity
     {
         [Column("id")]
         [Key]

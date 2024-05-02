@@ -21,6 +21,18 @@ Object.defineProperty(Array.prototype, 'first', {
 });
 
 /**
+ * Gets the first element of the array.
+ * @returns {any}
+ */
+Object.defineProperty(Array.prototype, 'firstNonNull', {
+    enumerable: false,
+    value: function () {
+        const fileterd = this.filterNull();
+        return fileterd.any() ? fileterd.first() : null;
+    }
+});
+
+/**
  * Gets the last element of the array.
  * @returns {any}
  */
