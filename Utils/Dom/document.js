@@ -22,10 +22,10 @@ document.createUniqueId = (id) => {
  */
 function toClassName(className, extras) {
     let classNames = [];
-    if (Array.isArray(className)) classNames = classNames.concat(className);
+    if (isArray(className)) classNames = classNames.concat(className);
     else if (typeof className === 'string') classNames.push(className);
 
-    if (Array.isArray(extras)) classNames = classNames.concat(extras);
+    if (isArray(extras)) classNames = classNames.concat(extras);
     else if (typeof extras === 'string') classNames.push(extras);
 
     return classNames.filterEmpty().join(' ').trim();

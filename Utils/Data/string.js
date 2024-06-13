@@ -3,17 +3,15 @@
  * @param {number} length The length of the string. Defaults to 25.
  * @returns {string}
  */
-String.random = (length) => {
-    length = length ?? 25;
-    let result = [];
+String.random = (length = 25) => {
+    let result = '';
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
-        let position = Math.floor(Math.random() * charactersLength);
-        result.push(characters.charAt(position));
+        let position = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(position);
     }
-    return result.join('');
-}
+    return result;
+};
 
 /**
  * Transforms markdown text to HTML.
@@ -75,7 +73,7 @@ String.removeQueryString = (str) => str.split('?')[0];
  * Transforms the first char of a string to lower case.
  * @returns {string}
  */
-String.prototype.firstCharToLowerCase = function() {
+String.prototype.firstCharToLowerCase = function () {
     if (this.length === 0) return this;
     else return this.charAt(0).toLowerCase() + this.substring(1);
-}
+};

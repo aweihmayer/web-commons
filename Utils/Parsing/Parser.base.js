@@ -18,19 +18,19 @@
         // If schema is undefined, nothing else to do
         if (isUndefined(schema)) return parsed;
         // Parse non-enumerable
-        else if (!schema.isEnumerable && Array.isArray(parsed)) {
+        else if (!schema.isEnumerable && isArray(parsed)) {
             if (parsed.length === 0) parsed = null;
             else if (parsed.length === 1) parsed = parsed[0];
             else throw new Error('type');
         // Parse enumerable
-        } else if (schema.isEnumerable && !Array.isArray(parsed)) {
+        } else if (schema.isEnumerable && !isArray(parsed)) {
             parsed = [parsed];
         }
 
         // Nulls are allowed, nothing else to do
         if (schema.isNullable) return parsed;
         // Remove nulls from array
-        else if (Array.isArray(parsed)) return parsed.filterNull();
+        else if (isArray(parsed)) return parsed.filterNull();
         // Value is null, return default or throw an error
         else if (isNull(parsed)) {
             if (schema.default) return schema.default;

@@ -1,7 +1,7 @@
 ﻿/**
  * Defines a local storage value.
  * @param {string} name
- * @param {number} duration
+ * @param {number} duration The cache duration in milliseconds.
  */
 class LocalStorageValue {
     constructor(name, duration) {
@@ -33,9 +33,8 @@ class LocalStorageValue {
      * @param {any} data
      */
     put(value) {
-        value = { data: value, cachedAt: Date.now() };
-        value = JSON.stringify(value);
-        localStorage.setItem(this.name, value);
+        const data = JSON.stringify({ data: value, cachedAt: Date.now()});
+        localStorage.setItem(this.name, data);
     }
 
     /**

@@ -3,6 +3,10 @@ using Newtonsoft.Json.Linq;
 
 namespace WebCommons.Utils
 {
+    /// <summary>
+    /// Transforms an TimeSpan into an integer representing the total milliseconds.
+    /// Used on enum properties when they are serialized into JSON.
+    /// </summary>
     public class JsonTimeSpanToIntConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -27,9 +31,9 @@ namespace WebCommons.Utils
                 return TimeSpan.FromMilliseconds(token.Value<int>());
             } else if (token.Type == JTokenType.Null) {
                 return null;
+            } else {
+                throw new JsonSerializationException("Expected integer value for TimeSpan");
             }
-
-            throw new JsonSerializationException("Expected integer value for TimeSpan");
         }
 
         public override bool CanConvert(Type objectType)

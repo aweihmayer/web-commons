@@ -46,6 +46,12 @@ namespace WebCommons.Controllers
         public int? CacheDuration { get; set; }
 
         /// <summary>
+        /// Defines the cache name.
+        /// </summary>
+        [JsonProperty("cacheName")]
+        public string CacheName { get; set; }
+
+        /// <summary>
         /// Defines the allowed parameters in the query string.
         /// </summary>
         [JsonProperty("queryStringParams")]
@@ -56,6 +62,7 @@ namespace WebCommons.Controllers
             this.Name = routeAttribute.Name;
             this.Uri = string.IsNullOrEmpty(routeAttribute.JsonTemplate) ? routeAttribute.Template : routeAttribute.JsonTemplate;
             this.CacheDuration = (routeAttribute.CacheDuration != 0) ? routeAttribute.CacheDuration : null;
+            this.CacheName = routeAttribute.CacheName;
 
             // Method
 			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) this.Method = "DELETE";

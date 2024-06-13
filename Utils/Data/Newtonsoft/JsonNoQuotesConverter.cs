@@ -2,6 +2,9 @@
 
 namespace WebCommons.Utils
 {
+    /// <summary>
+    /// TODO
+    /// </summary>
     public class JsonNoQuotesConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

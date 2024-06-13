@@ -8,7 +8,7 @@ function isUndefined(value) {
 }
 
 /**
- * Determines if a value is null.
+ * Determines if a value is null or undefined.
  * @param {any} value
  * @returns {boolean}
  */
@@ -17,12 +17,13 @@ function isNull(value) {
 }
 
 /**
- * Determines if a value is null or empty.
+ * Determines if a value is null, undefined or empty.
  * @param {any} value
  * @returns {boolean}
  */
 function isEmpty(value) {
-    if (typeof value === 'object' && value !== null) return !Object.keys(value).any();
+    if (isNonArrayObject(value) && value !== null) return !Object.keys(value).any();
+    else if (isArray(value)) return !value.any();
     else return (isNull(value) || value === '');
 }
 
@@ -50,5 +51,5 @@ function isObject(value) {
  * @returns {boolean}
  */
 function isNonArrayObject(value) {
-    return typeof value === 'object' && !Array.isArray(value);
+    return isObject(value) && !isArray(value);
 }

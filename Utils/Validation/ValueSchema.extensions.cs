@@ -106,8 +106,8 @@ namespace WebCommons.Model
                 case "enum":
                     // Enums are ints in the front-end with a limited set of values
                     schema.Type = "int";
-                    schema.Values = EnumUtils.GetValuesAsObject(propertyType);
-                    schema.Constants = propertyType.ToEnumConstMap();
+                    schema.Values = propertyType.GetEnumsAsObjects();
+                    schema.Constants = propertyType.GetEnumsAsConstantMap();
                     return schema;
                 case "bool":
                 case "boolean":

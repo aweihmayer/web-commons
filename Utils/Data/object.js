@@ -30,7 +30,7 @@ Object.defineProperty(Object.prototype, 'getProp', {
             // The child property exists, keep going
             if (obj.hasOwnProperty(k)) obj = obj[k];
             // The child property does not exist, throw an error
-            else throw new Error('The property "' + k + '" of the path "' + path + '" is undefined');
+            else throw new Error(`The property "${key}" of the path "${path}" is undefined`);
         });
 
         return obj;
@@ -93,7 +93,22 @@ Object.defineProperty(Object.prototype, 'deleteProp', {
  * @param {object} obj
  * @returns {object}
  */
-Object.clone = (obj) => JSON.parse(JSON.stringify(obj));
+Object.clone = (obj) => {
+    // Return primitives and non-objects directly
+    if (obj === null || !isObject(obj)) return obj; 
+
+    let clone;
+    if (isArray(obj)) {
+        clone = [];
+        obj.forEach((item, index) => { clone[index] = Object.clone(item); });
+        return clone;
+    } else {
+        clone = {};
+        Object.keys(obj).forEach(key => { clone[key] = Object.clone(obj[key]); });
+        return clone;
+    }
+};
+
 
 /**
  * Transforms a query string to an object.
@@ -101,11 +116,8 @@ Object.clone = (obj) => JSON.parse(JSON.stringify(obj));
  * @returns {object}
  */
 Object.fromQueryString = (query) => {
-    let params = {};
-    query = query.substring(query.indexOf('?'));
-    let queryParams = new URLSearchParams(query);
-    for (let pair of queryParams.entries()) params[pair[0]] = pair[1];
-    return params;
+    const queryParams = new URLSearchParams(query);
+    return Object.fromEntries(Array.from(queryParams.entries()));
 };
 
 /**
@@ -115,8 +127,7 @@ Object.fromQueryString = (query) => {
  */
 Object.toQueryString = (obj) => {
     if (isEmpty(obj)) return '';
-    let query = new URLSearchParams(obj).toString();
-    return '?' + query;
+    else return '?' + new URLSearchParams(obj).toString();
 };
 
 /**
@@ -125,7 +136,7 @@ Object.toQueryString = (obj) => {
  * @returns {Array}
  */
 Object.toArray = (obj) => {
-    if (Array.isArray(obj)) return obj;
+    if (isArray(obj)) return obj;
     else return Object.keys(obj).map(k => obj[k]);
 };
 

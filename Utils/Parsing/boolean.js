@@ -1,5 +1,5 @@
 ﻿Parser.bool = function (value) {
-    if (Array.isArray(value)) return value.map(v => this.bool(v));
+    if (isArray(value)) return value.map(v => this.bool(v));
     else if (value === null) return false;
 
     switch (typeof value) {

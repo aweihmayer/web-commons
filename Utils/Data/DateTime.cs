@@ -12,6 +12,9 @@
             return date.AddDays(targetDay - currentDay);
         }
 
+        /// <summary>
+        /// Gets the date of the previous occurrence of a day.
+        /// </summary>
         public static DateTime GetPreviousDay(this DateTime date, DayOfWeek day)
         {
             int currentDay = (int)date.DayOfWeek;
@@ -27,6 +30,9 @@
             return new DateTime(date.Year, date.Month, 1, 0, 0, 0, date.Kind);
         }
 
+        /// <summary>
+        /// Gets the first day of the month.
+        /// </summary>
         public static DateTimeOffset GetFirstDayOfMonth(this DateTimeOffset date)
         {
             return new DateTimeOffset(date.Year, date.Month, 1, 0, 0, 0, date.Offset);
@@ -40,6 +46,9 @@
             return DateOnly.FromDateTime(date);
         }
 
+        /// <summary>
+        /// Converts to DateOnly
+        /// </summary>
         public static DateOnly ToDateOnly(this DateTimeOffset date)
         {
             return DateOnly.FromDateTime(date.DateTime);

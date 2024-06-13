@@ -3,6 +3,10 @@ using Newtonsoft.Json.Converters;
 
 namespace WebCommons.Utils
 {
+    /// <summary>
+    /// Transforms an enum into an integer.
+    /// Used on enum properties when they are serialized into JSON.
+    /// </summary>
     public class JsonEnumToIntConverter : StringEnumConverter
     {
         public JsonEnumToIntConverter()

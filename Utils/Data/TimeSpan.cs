@@ -8,6 +8,9 @@
 
     public static class TimeSpanExtensions
     {
+        /// <summary>
+        /// Determines if a TimeSpan is between two durations.
+        /// </summary>
         public static bool IsBetween(this TimeSpan time, TimeSpan a, TimeSpan b)
         {
             return (a > b)

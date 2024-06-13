@@ -1,5 +1,5 @@
 ﻿Parser.number = function (value) {
-    if (Array.isArray(value)) return value.map(v => this.number(v));
+    if (isArray(value)) return value.map(v => this.number(v));
     else if (value === null) return null;
 
     switch (typeof value) {
