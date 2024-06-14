@@ -37,25 +37,28 @@ namespace WebCommons.Api
 			int code = (int) statusCode;
 			this.IsSuccessStatusCode = (code >= 200 && code < 300);
 			this.Headers = new HttpResponseMessage().Headers;
-
 		}
+
+		public HttpResponse(ResponseException ex) : this(ex.StatusCode) { }
 
 		/// <summary>
 		/// Determines if the response content is empty.
 		/// </summary>
 		public bool IsEmpty() => this.Content == null;
 
-        public override string ToString()
-        {
-			return string.Format("Response took {0}ms and returned {1} {2}",
-				this.Duration.TotalMilliseconds.ToString(),
-				this.StatusCode.ToString(),
-				JsonConvert.SerializeObject(this.Content));
-        }
-
-		public ResponseException ToException()
+		public ResponseLog ToLog(bool includeContent = true)
 		{
-			string message = this.ToString();
+			return new ResponseLog(
+				"",
+				"",
+				(int) this.StatusCode,
+                (int) this.Duration.TotalMilliseconds,
+                includeContent ? JsonConvert.SerializeObject(this.Content) : null);
+		}
+
+		public ResponseException ToException(bool includeContent = true)
+		{
+			string message = this.ToLog(includeContent).ToString();
             switch (this.StatusCode) {
 				case HttpStatusCode.BadRequest:				return new BadRequestException(message);
                 case HttpStatusCode.Conflict:				return new ConflictException(message);
@@ -68,5 +71,51 @@ namespace WebCommons.Api
 				default:									return new ResponseException(this.StatusCode, message);
             }
 		}
+    }
+
+	public class ResponseLog
+	{
+        [JsonProperty("method")]
+        public string Method { get; set; }
+
+        [JsonProperty("endpoint")]
+        public string Endpoint { get; set; }
+
+        [JsonProperty("status")]
+        public int Status { get; set; }
+
+        [JsonProperty("duration")]
+        public int Duration { get; set; }
+
+        [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
+        public object? Content { get; set; }
+
+		public ResponseLog(string method, string endpoint, int status, int duration, object? content)
+		{
+            this.Method = method;
+            this.Endpoint = endpoint;
+			this.Duration = duration;
+            this.Status = status;
+            this.Content = content;
+		}
+
+        public string ToString()
+        {
+            string duration = includeTime ? this.Duration.TotalMilliseconds.ToString();
+            string status = this.StatusCode.ToString();
+            string content = includeContent ? JsonConvert.SerializeObject(this.Content) : string.Empty;
+
+            string message = "";
+
+            if (includeContent && includeTime) return $"";
+            else if (includeContent && !includeTime) return $"";
+            else if (!includeContent && includeTime) return $"";
+            else if (!includeContent && !includeTime) return $"";
+
+            return string.Format("Response took {0}ms and returned {1} {2}",
+                duration,
+                status,
+                JsonConvert.SerializeObject(this.Content));
+        }
     }
 }

@@ -21,18 +21,15 @@ namespace WebCommons.Api
         public static Dictionary<string, object> GetQueryStringParams(this object? obj, bool onlyPropertiesWithQueryAttribute = true)
         {
             if (obj == null) return new Dictionary<string, object>();
-
-            Type type = obj.GetType();
-            PropertyInfo[] props = type.GetProperties();
-
             Dictionary<string, object> query = new();
 
-            foreach (PropertyInfo prop in props) {
+            foreach (PropertyInfo prop in obj.GetType().GetProperties()) {
+                // Only primiate flat values can be query values
                 if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.IsArray) continue;
                 string name = prop.Name;
 
                 if (onlyPropertiesWithQueryAttribute) {
-                    FromQueryAttribute? queryAttribute = prop.GetCustomAttribute<FromQueryAttribute>();
+                    var queryAttribute = prop.GetCustomAttribute<FromQueryAttribute>();
                     if (queryAttribute == null) continue;
                     else if (!string.IsNullOrEmpty(queryAttribute.Name)) name = queryAttribute.Name;
                 }
@@ -51,10 +48,14 @@ namespace WebCommons.Api
         {
             List<string> query = new();
             foreach (KeyValuePair<string, object> param in parameters) {
-                query.Add(param.Key.FirstCharToLower() + "=" + HttpUtility.UrlEncode(param.Value.ToString()));
+                string key = param.Key.FirstCharToLower();
+                string value = HttpUtility.UrlEncode(param.Value.ToString());
+                query.Add(key + "=" + value);
             }
 
-            return (query.Count == 0) ? "" : "?" + String.Join("&", query.ToArray());
+            return (query.Count == 0)
+                ? string.Empty
+                : $"?{String.Join("&", query.ToArray())}";
         }
 
         /// <summary>

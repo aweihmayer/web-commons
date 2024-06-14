@@ -22,7 +22,7 @@ namespace Microsoft.AspNetCore.Mvc
         /// <returns>True if the controller has the attribute, otherwise false.</returns>
         public static bool IsApiController(this Controller controller)
         {
-            return controller.GetType().HasCustomAttribute<ApiControllerAttribute>();
+            return controller.GetType().HasAttribute<ApiControllerAttribute>();
         }
     }
 }

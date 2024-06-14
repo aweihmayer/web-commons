@@ -108,7 +108,7 @@ namespace WebCommons.Controllers
 		{
 			List<JsonRoute> routes = new();
 			MethodInfo[] methods = controller.GetMethods();
-			bool isApiController = controller.HasCustomAttribute<ApiControllerAttribute>();
+			bool isApiController = controller.HasAttribute<ApiControllerAttribute>();
 
 			// For each method in the controller
 			foreach (MethodInfo method in methods) {

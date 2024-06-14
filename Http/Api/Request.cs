@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -25,9 +26,7 @@ namespace WebCommons.Api
 		/// The remaining parameters will be added as a query string.
 		/// The query can be <see cref="Dictionary{string, object}" /> or a custom object.
 		/// </summary>
-		public object? Query { get; set; }
-
-		public object? DefaultQuery { get; set; }
+		public QueryMap Query { get; set; } = new QueryMap();
 
         /// <summary>
         /// The request's model.
@@ -38,44 +37,34 @@ namespace WebCommons.Api
         /// </summary>
         public object? Model { get; set; }
 
-		public object? DefaultModel { get; set; }
-
 		/// <summary>
 		/// The request's headers.
 		/// </summary>
 		public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-		public HttpRequest(string endpoint, HttpMethod method, object? query = null, object? model = null, object? defaultQuery = null, object? defaultModel = null)
+		public HttpRequest(string endpoint, HttpMethod method)
 		{
-			this.Endpoint = endpoint;
-			this.Method = method;
-			this.Query = query;
-			this.Model = model;
-			this.DefaultQuery = defaultQuery;
-			this.DefaultModel = defaultModel;
-		}
+            this.Endpoint = endpoint;
+            this.Method = method;
+        }
 
 		/// <summary>
 		/// Builds request usable by a HTTP client.
 		/// </summary>
         public HttpRequestMessage Build()
 		{
-			Dictionary<string, object> query = this.BuildQuery();
+			var query = this.BuildQuery();
 			string uri = this.BuildEndpoint(query);
-
-			// Create the request
 			HttpRequestMessage request = new(this.Method, uri);
 
 			// Set the content body if the method is not GET
 			if (this.Method != HttpMethod.Get) {
-				string stringContent = JsonConvert.SerializeObject(this.Model);
-				if (!string.IsNullOrEmpty(stringContent)) {
-					request.Content = new StringContent(stringContent, Encoding.UTF8, "application/json");
-				}
+				string content = JsonConvert.SerializeObject(this.Model);
+				if (!string.IsNullOrEmpty(content)) request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 			}
 
 			// Set the headers
-			foreach (KeyValuePair<string, string> header in this.BuildHeaders()) {
+			foreach (var header in this.BuildHeaders()) {
 				switch (header.Key) {
 					case "Accept":	request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(header.Value)); break;
 					default:		request.Headers.Add(header.Key, header.Value); break;
@@ -93,14 +82,8 @@ namespace WebCommons.Api
 		/// </summary>
 		protected Dictionary<string, object> BuildQuery()
 		{
-			Dictionary<string, object> query = this.Query.GetQueryStringParams(false);
-			// Add model query params
-			foreach (var param in this.Model.GetQueryStringParams(true)) query.Add(param.Key, param.Value);
-			// Add default query params
-			foreach (var param in this.DefaultQuery.GetQueryStringParams(false)) query.Add(param.Key, param.Value);
-			// Add default model params
-			foreach (var param in this.DefaultModel.GetQueryStringParams(true)) query.Add(param.Key, param.Value);
-
+			var query = this.Query.GetQueryStringParams(false);
+			foreach (var param in this.Model.GetQueryStringParams(true)) query[param.Key] = param.Value;
 			return query;
 		}
 
@@ -108,16 +91,18 @@ namespace WebCommons.Api
 		/// Builds the full URI.
 		/// Query parameters can replace placeholders in the URI and will be removed from the query string if they are.
 		/// </summary>
-		protected string BuildEndpoint(Dictionary<string, object> query)
+		protected string BuildEndpoint()
 		{
 			string uri = this.Endpoint;
+			var query = this.Query.Clone();
+			query.Put(this.Model.GetQueryStringParams());
 
-			// Replace placeholders in the URI with query parameter value and remove the parameter
-			foreach (var param in query) {
-				string placeholder = "{" + param.Key + "}";
+            // Replace placeholders in the URI with query parameter value and remove the parameter
+            foreach (var param in query.Params) {
+				string placeholder = $"{{{param.Key}}}";
 				if (!uri.Contains(placeholder)) continue;
 				uri = uri.Replace(placeholder, param.Value.ToString());
-				query.Remove(param.Key);
+				query.Params.Remove(param.Key);
 			}
 
 			// Add the query string to the uri
@@ -140,7 +125,7 @@ namespace WebCommons.Api
 		/// </summary>
         public override string ToString()
 		{
-			HttpRequestMessage request = this.Build();
+			var request = this.Build();
             return string.Format("[{0}] Request {1} {2} {3}",
                 DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm"),
                 request.Method.ToString(),

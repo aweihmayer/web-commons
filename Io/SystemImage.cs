@@ -35,8 +35,9 @@ namespace WebCommons.IO
             base64 = base64.Substring(base64.IndexOf(',') + 1);
             byte[] bytes = Convert.FromBase64String(base64);
             using MemoryStream ms = new(bytes, false);
-            Image image = Image.FromStream(ms, useEmbeddedColorManagement: true, validateImageData: false);
-            image.Save(this.Path, ImageFormat.Jpeg);
+            using (var image = Image.FromStream(ms, useEmbeddedColorManagement: true, validateImageData: false)) {
+                image.Save(this.Path, ImageFormat.Jpeg);
+            }
         }
     }
 }
