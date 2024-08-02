@@ -7,11 +7,16 @@ namespace WebCommons.IO
     /// </summary>
     public class SystemFile
     {
+        /// <summary>
+        /// The root path of your file system. File paths will be appended to the root.
+        /// </summary>
         public static string? Root { get; set; }
+
         public string Path { get; }
 
         private string extension = string.Empty;
         public string Extension { get { return FileType.GetExtension(this.extension); } }
+
         public string ContentType { get { return FileType.GetContentType(this.extension); } }
 
         public SystemFile(string path)

@@ -17,7 +17,7 @@ namespace Microsoft.AspNetCore.Mvc
         }
 
         /// <summary>
-        /// Determines if the controller has the API attribute
+        /// Determines if the controller class has the API attribute.
         /// </summary>
         /// <returns>True if the controller has the attribute, otherwise false.</returns>
         public static bool IsApiController(this Controller controller)

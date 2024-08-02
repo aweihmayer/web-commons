@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebCommons.Dto;
 
 namespace WebCommons.Controllers
 {
@@ -11,12 +10,12 @@ namespace WebCommons.Controllers
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
 
         /// <summary>
-        /// Defines an operation as being a test or a simulation that shouldn't permanently impact data.
+        /// Defines an operation as being a test or a simulation that shouldn't permanently impact the state of the application.
         /// </summary>
         public bool DryRun { get; set; } = false;
 
         /// <summary>
-        /// Defines the language at which the operation is ran in.
+        /// Defines the language at which the operation is executed in.
         /// </summary>
         public string Locale { get; set; } = "en";
 

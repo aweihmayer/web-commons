@@ -5,7 +5,7 @@ namespace WebCommons.Http
     /// <summary>
     /// Defines a cookie. To manipulate cookies, see <see cref="CookieExtensions">extensions</see>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The value type.</typeparam>
     public abstract class Cookie<T>
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace WebCommons.Http
         /// <summary>
         /// The value of the cookie.
         /// </summary>
-        public T Value { get; set; }
+        public T? Value { get; set; }
 
         public string Base64Value
         {
