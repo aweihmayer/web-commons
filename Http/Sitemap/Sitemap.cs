@@ -70,6 +70,6 @@ namespace WebCommons.Sitemap
         /// <summary>
         /// Gets the memory stream of the XML.
         /// </summary>
-        public MemoryStream ToMemoryStream() => new MemoryStream(Encoding.UTF8.GetBytes(this.InnerXml));
+        public MemoryStream ToMemoryStream() => new(Encoding.UTF8.GetBytes(this.InnerXml));
     }
 }

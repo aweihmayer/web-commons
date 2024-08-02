@@ -86,4 +86,68 @@ namespace WebCommons.Bundling
             return filesToMerge;
         }
     }
+
+    public static class CustomBundleChunkExtensions
+    {
+        #region JS
+
+        /// <summary>
+        /// Adds the Drawdown JS library for markdown text formatting.
+        /// </summary>
+        public static void AddJsDrawdown(this List<CustomBundleChunk> chunks)
+		{
+			chunks.Add(new CustomBundleChunk() {
+                Files = new string[] { "/Commons/ThirdParty/Drawdown/drawdown.js" }
+            });
+		}
+
+		/// <summary>
+		/// Adds the Fuse JS library for fuzzy searching through lists.
+		/// </summary>
+		public static void AddJsFuse(this List<CustomBundleChunk> chunks)
+		{
+			chunks.Add(new CustomBundleChunk() {
+                Files = new string[] { "/Commons/ThirdParty/Fuse/fuse.js" }
+            });
+		}
+
+		/// <summary>
+		/// Adds the React JS library for creating UI components.
+		/// </summary>
+		/// <param name="env">Can be "dev" or "prod".</param>
+		public static void AddJsReact(this List<CustomBundleChunk> chunks, string env = "dev")
+		{
+			chunks.Add(new CustomBundleChunk() {
+                Files = new string[] { $"/Commons/ThirdParty/React/{env}.js" }
+            });
+		}
+
+		/// <summary>
+		/// Adds the common JS framework files.
+		/// </summary>
+		public static void AddJsCommons(this List<CustomBundleChunk> chunks)
+		{
+			chunks.Add(new CustomBundleChunk() {
+                Directories = new string[] { "/Commons" },
+                Patterns = new string[] { "*.base.js", "*.js", "*.base.jsx", "*.jsx" }
+            });
+		}
+
+        #endregion
+
+        #region CSS
+
+		/// <summary>
+		/// Adds the commons CSS framework files.
+		/// </summary>
+		public static void AddCssCommons(this List<CustomBundleChunk> chunks)
+		{
+			chunks.Add(new CustomBundleChunk() {
+				Patterns = new string[] { "*.scss" },
+				Directories = new string[] { "/Commons" },
+			});
+		}
+
+		#endregion
+    }
 }

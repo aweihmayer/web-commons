@@ -36,6 +36,16 @@ namespace WebCommons.Dto
         [JsonProperty("tokens", NullValueHandling = NullValueHandling.Ignore)]
         public List<UserTokenDto>? Tokens { get; set; }
 
+        public UserTokenDto? AccessToken { get {
+            if (this.Tokens == null) return null;
+            else return this.Tokens.FirstOrDefault(t => t.Type == UserTokenType.Access.ToString().ToLower());
+        }}
+
+        public UserTokenDto? RefreshToken { get {
+            if (this.Tokens == null) return null;
+            else return this.Tokens.FirstOrDefault(t => t.Type == UserTokenType.Refresh.ToString().ToLower());
+        }}
+
         #endregion
 
         #region All details

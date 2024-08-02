@@ -1,19 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebCommons.Db;
+using WebCommons.Dto;
 
 namespace WebCommons.Controllers
 {
-    public interface OperationContext
+    public partial class CommonOperationContext
     {
-        public Controller? Controller { get; set; }
-        bool MustBeAuthenticated();
-    }
-
-    public partial class CommonOperationContext<TDb, TUser> : OperationContext
-        where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
-    {
-        public TDb Db { get; set; } = new TDb();
-
+        /// <summary>
+        /// Defines the date at which the operation was executed.
+        /// </summary>
         public DateTimeOffset Date { get; set; } = DateTimeOffset.UtcNow;
 
         /// <summary>
@@ -21,7 +15,15 @@ namespace WebCommons.Controllers
         /// </summary>
         public bool DryRun { get; set; } = false;
 
+        /// <summary>
+        /// Defines the language at which the operation is ran in.
+        /// </summary>
         public string Locale { get; set; } = "en";
+
+        /// <summary>
+        /// Defines the controller managing the request.
+        /// </summary>
+        public Controller? Controller { get; set; }
 
         public CommonOperationContext() { }
     }

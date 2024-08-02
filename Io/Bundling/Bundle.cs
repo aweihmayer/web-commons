@@ -20,19 +20,18 @@ namespace WebCommons.Bundling
 		/// <summary>
 		/// The file chunks of the bundle.
 		/// </summary>
-		public CustomBundleChunk[] Chunks { get; set; }
+		public List<CustomBundleChunk> Chunks { get; set; } = new();
 
-		public CustomBundle(string name, CustomBundleChunk[] chunks, TimeSpan? cacheDuration = null)
+		public CustomBundle(string name, TimeSpan? cacheDuration = null)
 		{
 			this.Name = name;
-			this.Chunks = chunks;
 			this.CacheDuration = cacheDuration;
 		}
 
-		/// <summary>
-		/// Gets the contents of all the chunks.
-		/// </summary>
-		public string GetContents()
+        /// <summary>
+        /// Gets the contents of all the chunks.
+        /// </summary>
+        public string GetContents()
 		{
 			string contents = "";
 			HashSet<string> mergedFiles = new();

@@ -1,9 +1,6 @@
-﻿using MartialMap.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
-using System.Reflection;
 
 namespace WebCommons.Controllers
 {
@@ -18,38 +15,16 @@ namespace WebCommons.Controllers
     ///     <item>Create cookies.</item>
     /// </list>
     /// </summary>
-    public abstract class CommonController<TOperation> : Controller
-        where TOperation : OperationContext, new()
+    public abstract class CommonController : Controller
     {
-        protected TOperation OperationContext { get; set; } = new TOperation();
-
         #region Life cycle events
         
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            this.OperationContext.Controller = this;
-
             // Set default utility values
             ViewBag.AbsolutePath = this.Request.Path.Value;
             ViewBag.Domain = this.Request.Host.Value;
-            ViewBag.OperationContext = this.OperationContext;
             ViewBag.Response = this.Response;
-
-            if (context.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor) {
-                this.AuthorizeRequest(context, controllerActionDescriptor.MethodInfo);
-            }
-        }
-
-        protected virtual void AuthorizeRequest(ActionExecutingContext context, MethodInfo method)
-        {
-            try {
-                var permissionAttributes = method.GetCustomAttribute<RequiresAuthAttribute>();
-                if (permissionAttributes != null) this.OperationContext.MustBeAuthenticated();
-            } catch (ResponseException ex) {
-                context.Result = this.IsApiController() ? this.Response.AsJson(ex) : this.View(ex);
-            } catch (Exception ex) {
-                context.Result = this.IsApiController() ? this.Response.AsJson(ex) : this.View(ex);
-            }
         }
         
         #endregion

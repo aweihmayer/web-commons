@@ -18,7 +18,7 @@ namespace WebCommons.Dto
         public TimeSpan? Duration { get; set; }
 
         [JsonProperty("expiresIn")]
-        public TimeSpan? ExpiresIn { get; set; }
+        public DateTime? ExpirationDate { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -29,7 +29,7 @@ namespace WebCommons.Dto
             this.Code = token.Code;
             this.FormattedCode = token.FormattedCode;
             this.Duration = token.Duration;
-            this.ExpiresIn = token.ExpirationDate - DateTime.UtcNow;
+            this.ExpirationDate = token.ExpirationDate;
             this.Type = token.Type.ToString().ToLower();
         }
     }

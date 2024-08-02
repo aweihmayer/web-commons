@@ -48,6 +48,7 @@ namespace WebCommons.Api
 
 		public ResponseLog ToLog(bool includeContent = true)
 		{
+			// TODO request info
 			return new ResponseLog(
 				"",
 				"",
@@ -58,7 +59,7 @@ namespace WebCommons.Api
 
 		public ResponseException ToException(bool includeContent = true)
 		{
-			string message = this.ToLog(includeContent).ToString();
+			string message = this.ToLog(includeContent).ToString(includeContent);
             switch (this.StatusCode) {
 				case HttpStatusCode.BadRequest:				return new BadRequestException(message);
                 case HttpStatusCode.Conflict:				return new ConflictException(message);
@@ -99,23 +100,11 @@ namespace WebCommons.Api
             this.Content = content;
 		}
 
-        public string ToString()
+        public string ToString(bool includeContent = true)
         {
-            string duration = includeTime ? this.Duration.TotalMilliseconds.ToString();
-            string status = this.StatusCode.ToString();
-            string content = includeContent ? JsonConvert.SerializeObject(this.Content) : string.Empty;
-
-            string message = "";
-
-            if (includeContent && includeTime) return $"";
-            else if (includeContent && !includeTime) return $"";
-            else if (!includeContent && includeTime) return $"";
-            else if (!includeContent && !includeTime) return $"";
-
-            return string.Format("Response took {0}ms and returned {1} {2}",
-                duration,
-                status,
-                JsonConvert.SerializeObject(this.Content));
+			string message = $"Response took {this.Duration}ms with status {this.Status}";
+            if (includeContent) return message += $"and content {JsonConvert.SerializeObject(this.Content)}";
+            return message;
         }
     }
 }

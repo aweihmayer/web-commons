@@ -53,8 +53,7 @@ namespace WebCommons.Api
 		/// </summary>
         public HttpRequestMessage Build()
 		{
-			var query = this.BuildQuery();
-			string uri = this.BuildEndpoint(query);
+			string uri = this.BuildEndpoint();
 			HttpRequestMessage request = new(this.Method, uri);
 
 			// Set the content body if the method is not GET
@@ -93,6 +92,7 @@ namespace WebCommons.Api
 		/// </summary>
 		protected string BuildEndpoint()
 		{
+			// TODO query
 			string uri = this.Endpoint;
 			var query = this.Query.Clone();
 			query.Put(this.Model.GetQueryStringParams());

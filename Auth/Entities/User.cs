@@ -31,8 +31,8 @@ namespace WebCommons.Db
         [Column("salt", TypeName = "varchar(10)")]
         public string? Salt { get; set; }
 
-        [Column("active")]
-        public bool Active { get; set; }
+        [Column("is_active")]
+        public bool IsActive { get; set; }
 
         [Column("last_auth_date")]
         public DateTime? LastAuthDate { get; set; }
