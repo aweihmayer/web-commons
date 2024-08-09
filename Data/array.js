@@ -13,7 +13,7 @@ Object.defineProperty(Array.prototype, 'any', {
  */
 Object.defineProperty(Array.prototype, 'first', {
     enumerable: false,
-    value: function () { return this.any() ? undefined : this[0]; }
+    value: function () { return this.any() ? this[0] : undefined; }
 });
 
 /**

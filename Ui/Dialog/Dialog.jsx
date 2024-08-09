@@ -2,6 +2,7 @@
  * Defines a component that displays in front of the main view.
  */
 class Dialog extends React.Component {
+    static node = null;
     static root = null;
 
     /**
@@ -9,39 +10,45 @@ class Dialog extends React.Component {
      * @param {Element} dialog The dialog's content.
      */
     static open(dialog) {
-        let container = document.getElementById('dialog-container');
-        Dialog.root = ReactDOM.createRoot(container);
+        // A dialog is already open
+        if (Dialog.root !== null) return;
+
+        // Prepare the DOM to show dialogs by creating necessary elements and events.
+        if (Dialog.node === null) {
+            // Container
+            let container = document.createElement('aside');
+            container.id = 'app-dialog';
+            document.body.appendChild(container);
+            Dialog.node = container;
+            // Close the dialog if clicking outside of its box
+            container.onclick = function (ev) {
+                if (ev.target.closest('dialog') != null) return;
+                Dialog.close();
+            };
+        }
+
+        // Create the dialog
+        Dialog.root = ReactDOM.createRoot(Dialog.node);
         Dialog.root.render(dialog);
-        document.getElementById('app-dialog').classList.add('active');
+        Dialog.node.classList.add('active');
+
+        // Waits for React to have rendered to call the showModal function on the dialog. This is needed to have the backdrop enabled
+        function showModal() {
+            if (Dialog.node.childNodes.length === 0) setTimeout(showModal, 50);
+            else Dialog.node.childNodes.forEach(c => {
+                if (typeof c.showModal === 'function') c.showModal();
+            })
+        };
+
+        showModal();
     }
 
     /** 
      * Close the current dialog.
      */
     static close() {
-        document.getElementById('app-dialog').classList.remove('active');
         Dialog.root.unmount();
-    }
-
-    /**
-     * Readies the DOM to show dialogs by creating necessary elements and events.
-     */
-    static require() {
-        // Container
-        let container = document.createElement('aside');
-        container.id = 'app-dialog';
-
-        // Close the dialog if clicking outside of its box
-        container.onclick = function (ev) {
-            if (ev.target.closest('article') != null) return;
-            Dialog.close();
-        };
-
-        // Subcontainer
-        let subcontainer = document.createElement('div');
-        subcontainer.id = 'dialog-container';
-        container.appendChild(subcontainer);
-
-        document.body.appendChild(container);
+        Dialog.root = null;
+        Dialog.node.classList.remove('active');
     }
 }

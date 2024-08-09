@@ -20,7 +20,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Auth\Dtos\User.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Auth\Store.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="commons.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Html\utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Network\Http.js">
@@ -50,7 +59,7 @@
     <None Update="Ui\Inputs\Tag\Select.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caching\LocalStorageValue.js">
+    <None Update="Caching\LocalStorageValue.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Metadata\Metadata.js">
