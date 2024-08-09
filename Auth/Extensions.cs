@@ -1,19 +1,35 @@
-﻿using System.Security.Cryptography;
-using WebCommons.Db;
+﻿using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
 
 namespace WebCommons.Auth
 {
-    public static class AuthUtils
+    public static class CommonAuthExtensions
     {
         /// <summary>
         /// Carrying an extra salt inside of the source slightly improves security in case data is compromised.
         /// </summary>
         private const string SALT = "WQ33ijFDOoyDHF41XvZQ";
 
+        public static void SetUser(this HttpContext context, object? user)
+        {
+            if (user == null) return;
+            else context.Items["user"] = user;
+        }
+
+        public static object? GetUser(this HttpContext context)
+        {
+            return context.Items["user"];
+        }
+
+        public static T? GetUser<T>(this HttpContext context)
+        {
+            return (T)context.Items["user"];
+        }
+
         /// <summary>
         /// Encrypts a value with a salt as SHA512.
         /// </summary>
-        public static string Encrypt(string value, string? salt = null)
+        public static string Encrypt(this string value, string? salt = null)
         {
             string encrypted = value + salt + SALT;
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(encrypted);
@@ -24,27 +40,20 @@ namespace WebCommons.Auth
             return hashedString;
         }
 
-        public static string Encrypt(Guid value, string? salt = null)
+        /// <summary>
+        /// <see cref="Encrypt(string, string?)"/>
+        /// </summary>
+        public static string Encrypt(this Guid value, string? salt = null)
         {
-            return Encrypt(value.ToString(), salt);
+            return value.ToString().Encrypt(salt);
         }
 
         /// <summary>
         /// Determines if a value matches its encrypted value.
         /// </summary>
-        public static bool VerifyEncryptedValue(string value, string encryptedValue, string? salt = null)
+        public static bool VerifyEncryption(this string encryptedValue, string value, string? salt = null)
         {
-            return (encryptedValue == Encrypt(value, salt));
-        }
-
-        /// <summary>
-        /// Determines if a value matches its encrypted value.
-        /// </summary>
-        /// <param name="user">The user whose password we want to validate.</param>
-        public static bool VerifyEncryptedValue(string value, CommonUser user)
-        {
-            if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt)) return false;
-            else return VerifyEncryptedValue(value, user.Password, user.Salt);
+            return encryptedValue == value.Encrypt(salt);
         }
 
         /// <summary>

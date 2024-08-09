@@ -20,10 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="commons.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Http\Network\Http.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Http\Network\Cache.js">
+    <None Update="Caching\RequestCacheValue.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Network\Response.js">
@@ -47,43 +50,46 @@
     <None Update="Ui\Inputs\Tag\Select.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Caching\local.js">
+    <None Update="Caching\LocalStorageValue.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Metadata\Metadata.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="I18n\http.json">
+    <None Update="Internationalization\http.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="I18n\i18n.js">
+    <None Update="Internationalization\i18n.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Data\general.js">
+    <None Update="Data\general.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\required.js">
+    <None Update="Data\TimeSpan.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\boolean.js">
+    <None Update="Validation\Types\required.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\int.js">
+    <None Update="Validation\Types\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Validator.js">
+    <None Update="Validation\Types\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\ValueSchema.js">
+    <None Update="Validation\Validator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\email.js">
+    <None Update="Validation\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\number.js">
+    <None Update="Validation\Types\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Validation\Types\string.js">
+    <None Update="Validation\Types\number.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Validation\Types\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Routing\App.jsx">
@@ -239,16 +245,16 @@
     <None Update="Ui\Loader\Loader.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Modal\Header.jsx">
+    <None Update="Ui\Dialog\Header.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Modal\Header.scss">
+    <None Update="Ui\Dialog\Header.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Modal\Modal.jsx">
+    <None Update="Ui\Dialog\Dialog.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Ui\Modal\Modal.scss">
+    <None Update="Ui\Dialog\Dialog.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Pagination\Pagination.js">
@@ -263,49 +269,49 @@
     <None Update="Ui\Toast\Toast.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\document.js">
+    <None Update="Html\document.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\element.js">
+    <None Update="Html\element.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\head.js">
+    <None Update="Html\head.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Dom\lazyload.js">
+    <None Update="Html\lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Data\array.js">
+    <None Update="Data\array.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Data\object.js">
+    <None Update="Data\object.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\boolean.js">
+    <None Update="Parsing\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\int.js">
+    <None Update="Parsing\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\number.js">
+    <None Update="Parsing\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\email.js">
+    <None Update="Parsing\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\string.js">
+    <None Update="Parsing\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Parsing\Parser.base.js">
+    <None Update="Parsing\Parser.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Data\string.js">
+    <None Update="Data\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Cookies\Cookie.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Utils\Data\date.js">
+    <None Update="Data\date.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

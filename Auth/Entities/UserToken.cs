@@ -26,7 +26,7 @@ namespace WebCommons.Db
         public Guid Id {
             get => this.value;
             set {
-                this.EncryptedId = AuthUtils.Encrypt(value);
+                this.EncryptedId = value.Encrypt();
                 this.value = value;
             }
         }

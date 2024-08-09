@@ -1,4 +1,4 @@
-﻿#app-modal {
+﻿#app-dialog {
     background-color: rgba(0,0,0,0.4);
     display: none;
     height: 100%;
@@ -13,7 +13,7 @@
     }
 }
 
-#modal-container {
+#dialog-container {
     align-items: center;
     display: flex;
     height: 100%;

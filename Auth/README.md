@@ -49,28 +49,19 @@ This library comes standard operations for authentication. Below is a list expla
         public MyAuthService(CommonDbContextWithAuth<MyUser> db, Controller? controller = null) : base(db, controller) { }
     }
 	```
-4. Create your implementation of the authentication filter that identifies users and the permissions filter that validates their permissions.
+4. If you need to validate custom permissions on top of determining if the user is authenticated or not, create your implementation of the authentication filter that identifies users and the permissions filter that validates their permissions.
 	```
-	public class MyAuthFilter : CommonAuthFilter<MyUser>
+	public class MyAuthFilter : AuthFilter<MyDbContext, MyUser>
     {
-        public override CommonAuthService<User> CreateService(Controller controller)
-        {
-            return new MyAuthService(new MyDbContext(), controller);
+        public override bool ValidatePermissions(ActionExecutingContext context, string[] allowedPermissions, TUser user) {
+            // Custom logic here
         }
     }
-
-	public class MyPermissionsFilter : CommonPermissionsFilter
-    {   
-        public override bool ValidatePermissions(ActionExecutingContext context, string[] permission) {
-            
-        };
-    }
 	```
-5. In the startup phase, add the authentication filter and the permissions filter to the services in that order.
+5. In the startup configuration, add the authentication filter.
  	```
 	builder.Services.AddControllersWithViews(options => {
-        options.Filters.Add<MyAuthFilter>(1);
-        options.Filters.Add<MyPermissionsFilter>(2);
+        options.Filters.Add<AuthFilter<MyDbContext, MyUser>>(1);
     });
 	```
 6. You can retrieve the user that was authenticated at any time.

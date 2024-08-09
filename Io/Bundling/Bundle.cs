@@ -13,6 +13,11 @@ namespace WebCommons.Bundling
 		public string Name { get; set; }
 
 		/// <summary>
+		/// The bundle file type see <see cref="FileType"/>.
+		/// </summary>
+		public FileType.Type FileType { get; set; }
+
+		/// <summary>
 		/// Utility caching value. This value does nothing. Use at your own discretion.
 		/// </summary>
 		public TimeSpan? CacheDuration { get; set; }

@@ -43,7 +43,7 @@ namespace WebCommons.Bundling
 		/// </summary>
 		public FileStream Bundle(CustomBundle bundle)
 		{
-			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name);
+			SystemFile cachedFile = new(this.Directory + "/" + bundle.Name + "." + FileType.GetExtension(bundle.FileType));
 
 			// If caching is enabled, use existing file
 			if (cachedFile.Exists() && IsCachingEnabled) return cachedFile.ReadAsStream();

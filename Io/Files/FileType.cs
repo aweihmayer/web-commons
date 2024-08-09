@@ -5,6 +5,8 @@
     /// </summary>
     public static class FileType
     {
+        public enum Type { Css, Gif, Html, Ico, Jpg, Png, Js, Json, Ttf, Woff, Xml };
+
         public const string CSS = "css";
         public const string CSS_CONTENT_TYPE = "text/css";
 
@@ -37,6 +39,27 @@
 
         public const string XML = "xml";
         public const string XML_CONTENT_TYPE = "text/xml";
+
+        /// <summary>
+        /// Gets the file extension format (.jpg) for a content type format (image/jpeg).
+        /// </summary>
+        public static string GetExtension(Type type)
+        {
+            switch (type) {
+                case Type.Css:  return CSS;
+                case Type.Gif:  return GIF;
+                case Type.Html: return HTML;
+                case Type.Ico:  return ICO;
+                case Type.Jpg:  return JPG;
+                case Type.Js:   return JS;
+                case Type.Json: return JSON;
+                case Type.Png:  return PNG;
+                case Type.Ttf:  return TTF;
+                case Type.Woff: return WOFF;
+                case Type.Xml:  return XML;
+                default:        return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Gets the file extension format (.jpg) for a content type format (image/jpeg).

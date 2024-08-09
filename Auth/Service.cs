@@ -6,14 +6,26 @@ using WebCommons.Http;
 
 namespace WebCommons.Auth
 {
-    public abstract class CommonAuthService<TUser> where TUser : CommonUser
+    // TODO make disposable
+    public class AuthService<TDb, TUser> where TDb : CommonDbContextWithAuth<TUser>, new() where TUser : CommonUser
     {
-        public CommonDbContextWithAuth<TUser> Db { get; set; }
+        public TDb Db { get; set; }
         public Controller? Controller { get; set; }
 
-        public CommonAuthService(CommonDbContextWithAuth<TUser> db, Controller? controller = null) {
+        public AuthService(TDb db, Controller? controller = null) {
             this.Db = db;
             this.Controller = controller;
+        }
+
+        public AuthService(Controller controller)
+        {
+            this.Db = new TDb();
+            this.Controller = controller;
+        }
+
+        public AuthService()
+        {
+            this.Db = new TDb();
         }
 
         #region Users - Fetching
@@ -42,11 +54,12 @@ namespace WebCommons.Auth
             // Find the access token with the user
             if (!token.HasValue) return default;
             UserToken<TUser>? userToken = this.FindToken(token.Value, true);
-            if (userToken == null || userToken.IsExpired() || userToken.User == null) return default;
-            TUser? user = userToken.User;
-            if (user == null) return default;
+            // If the token does not exist or is expired or the user is not found or inactive, return nothing
+            if (userToken == null || userToken.IsExpired() || userToken.User == null || !userToken.User.IsActive) return default;
 
             // Create the token relationships for the user
+            TUser? user = userToken.User;
+            if (user == null) return default;
             UserTokenType altTokenType = tokenType;
             switch (tokenType) {
                 case UserTokenType.Access: 
@@ -59,7 +72,7 @@ namespace WebCommons.Auth
                     break;
             }
 
-            // Include alt token if applicable
+            // Include other tokens if applicable
             if (!includeTokens) return user;
             UserToken<TUser>? altToken = this.FindToken(user, altTokenType);
             if (altToken == null) return user;
@@ -72,12 +85,17 @@ namespace WebCommons.Auth
         /// <summary>
         /// Finds a user with their credentials.
         /// </summary>
-        public TUser? FindUser(string? email, string? password)
+        public TUser? FindUser(string? identity, string? password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return default;
-            TUser? user = this.Db.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null) return null;
-            else if (AuthUtils.VerifyEncryptedValue(password, user)) return user;
+            // Invalid credentials, return nothing
+            if (string.IsNullOrEmpty(identity) || string.IsNullOrEmpty(password)) return default;
+            // Find an active user by email or username
+            TUser? user = identity.Contains('@')
+                ? this.Db.Users.FirstOrDefault(u => u.Email == identity && u.IsActive)
+                : this.Db.Users.FirstOrDefault(u => u.Username == identity && u.IsActive);
+            // If a user is found, validate their password
+            if (user == null || string.IsNullOrEmpty(user.Password) ) return null;
+            else if (user.Password.VerifyEncryption(password, user.Salt)) return user;
             else return null;
         }
 
@@ -114,11 +132,8 @@ namespace WebCommons.Auth
         /// </summary>
         public UserToken<TUser>? FindToken(Guid id, bool includeUser = false)
         {
-            var query = includeUser
-                ? this.Db.Tokens.Include(t => t.User)
-                : this.Db.Tokens.AsQueryable();
-
-            string encryptedId = AuthUtils.Encrypt(id);
+            var query = includeUser ? this.Db.Tokens.Include(t => t.User) : this.Db.Tokens.AsQueryable();
+            string encryptedId = id.Encrypt();
             return query.Where(t => t.EncryptedId == encryptedId).WhereIsNotExpired().FirstOrDefault();
         }
 
@@ -190,7 +205,7 @@ namespace WebCommons.Auth
 
         #endregion
 
-        #region Token revocation
+        #region Tokens - Revocation
 
         /// <summary>
         /// Revokes a user's token.

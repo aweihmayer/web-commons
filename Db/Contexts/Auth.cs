@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebCommons.Auth;
-using WebCommons.Dto;
 
 namespace WebCommons.Db
 {

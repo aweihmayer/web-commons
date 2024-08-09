@@ -16,14 +16,11 @@ namespace WebCommons.Db
 
         #region Columns
 
-        [Column("first_name", TypeName = "varchar(50)")]
-        public string? FirstName { get; set; }
-
-        [Column("last_name", TypeName = "varchar(50)")]
-        public string? LastName { get; set; }
-
         [Column("email", TypeName = "varchar(255)")]
         public string? Email { get; set; }
+
+        [Column("username", TypeName = "varchar(255)")]
+        public string? Username { get; set; }
 
         [Column("password", TypeName = "varchar(255)")]
         public string? Password { get; set; }

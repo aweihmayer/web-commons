@@ -36,8 +36,14 @@ namespace WebCommons.Http
             }
         }
 
-        public bool HttpOnly { get; set; } = false;
+        /// <summary>
+        /// A HTTP-only cookie is a cookie that cannot be accessed by client-side scripts such as JS. This makes the cookie more secure. 
+        /// </summary>
+        public bool IsHttpOnly { get; set; } = false;
 
+        /// <summary>
+        /// Defines the scope of a cookie within a website. The path restricts the cookie to be sent to only certain URLs.
+        /// </summary>
         public string? Path { get; set; }
 
         protected Cookie(string name, TimeSpan duration)

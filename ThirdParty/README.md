@@ -1,2 +1,2 @@
 ﻿# Third party libraries
-This folder contains third party JS librairies.
+This folder contains third party JS libraries.

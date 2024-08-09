@@ -11,7 +11,7 @@ namespace WebCommons.Auth
         public static string DefaultPath { get; set; } = "/api/auth/refresh";
 
         public RefreshTokenCookie() : base("refresh_token", UserTokenDurations.Refresh) {
-            this.HttpOnly = true;
+            this.IsHttpOnly = true;
             this.Path = RefreshTokenCookie.DefaultPath;
         }
     }
