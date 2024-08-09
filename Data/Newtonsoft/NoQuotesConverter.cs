@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace WebCommons.Utils
+﻿namespace Newtonsoft.Json.Converters
 {
     /// <summary>
     /// TODO

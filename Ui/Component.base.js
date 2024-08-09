@@ -13,7 +13,7 @@ React.Component.prototype.collectRefs = function (withParent) {
  * Collects each ref of the component and the subrefs of each ref if the 'getRefTree' function is defined.
  * @returns {Array}
  */
-React.Component.prototype.getAllRefs = function () {
+React.Component.prototype.getAllRefs = function () { // TODO breakpoint
     let refs = [this];
     Object.toArray(this.refs).forEach(r => {
         refs.push(r);

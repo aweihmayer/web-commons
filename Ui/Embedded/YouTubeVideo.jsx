@@ -1,8 +1,11 @@
 ﻿class EmbeddedYouTubeVideo extends React.Component {
+    static URL = 'https://www.youtube.com/embed/';
+
     render() {
-        let src = 'https://www.youtube.com/embed/' + this.props.id + '?enablejsapi=1';
-        if (this.props.autoplay) src += '&autoplay=1';
-        if (this.props.startAt) src += ('&start=' + this.props.startAt);
+        let query = { enablejsapi: 1 };
+        if (this.props.autoplay) query.autoplay = 1;
+        if (this.props.startAt) query.start = this.props.startAt;
+        let src = EmbeddedYouTubeVideo.URL + this.props.id + Object.toQueryString(query);
 
         return <iframe width="560" height="315"
             title="YouTube video player"

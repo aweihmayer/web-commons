@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
 
-namespace WebCommons.Caching
+namespace Microsoft.Net.Http.Headers
 {
     public static class CacheExtensions
     {

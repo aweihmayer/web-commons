@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace WebCommons.Utils
+﻿namespace Newtonsoft.Json.Converters
 {
     /// <summary>
     /// Transforms an enum into an integer.

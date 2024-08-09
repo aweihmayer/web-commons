@@ -1,4 +1,4 @@
-﻿namespace WebCommons.Utils
+﻿namespace System
 {
     public static class EnumUtils
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace WebCommons.Model
+namespace System.ComponentModel.DataAnnotations
 {
     /// <summary>
     /// Defines the properties of a value for validation and parsing reasons.

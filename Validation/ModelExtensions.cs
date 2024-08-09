@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebCommons.Model
+﻿namespace System.ComponentModel.DataAnnotations
 {
     /// <summary>
     /// Defines the values of a request.

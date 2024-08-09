@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Converters;
-
-namespace WebCommons.Utils
+﻿namespace Newtonsoft.Json.Converters
 {
     /// <summary>
     /// Transforms a date to a different format.

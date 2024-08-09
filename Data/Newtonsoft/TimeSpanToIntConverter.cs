@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
-namespace WebCommons.Utils
+namespace Newtonsoft.Json.Converters
 {
     /// <summary>
     /// Transforms an TimeSpan into an integer representing the total milliseconds.

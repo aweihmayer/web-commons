@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using WebCommons.Utils;
 
-namespace WebCommons.Model
+namespace System.ComponentModel.DataAnnotations
 {
     /// <summary>
     /// Defines the values of a request.
