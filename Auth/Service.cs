@@ -94,7 +94,7 @@ namespace WebCommons.Auth
                 ? this.Db.Users.FirstOrDefault(u => u.Email == identity && u.IsActive)
                 : this.Db.Users.FirstOrDefault(u => u.Username == identity && u.IsActive);
             // If a user is found, validate their password
-            if (user == null || string.IsNullOrEmpty(user.Password) ) return null;
+            if (user == null || string.IsNullOrEmpty(user.Password)) return null;
             else if (user.Password.VerifyEncryption(password, user.Salt)) return user;
             else return null;
         }

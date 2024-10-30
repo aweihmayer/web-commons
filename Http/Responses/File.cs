@@ -9,7 +9,6 @@ namespace WebCommons.Controllers
     /// </summary>
     public static partial class ControllerResponseExtensions
     {
-
         public static FileResult AsFile(this HttpResponse response, SystemFile file)
         {
             FileStream stream = file.ReadAsStream();

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Template;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using WebCommons.IO;
 
 namespace WebCommons.Controllers
@@ -9,86 +12,73 @@ namespace WebCommons.Controllers
     public class JsonRoute
     {
         /// <summary>
-        /// Defines the route name which should be a JSON path.
+        /// Defines the route name which should be a JSON path. On the front-end you can retrieve the route with that path.
         /// </summary>
         [JsonProperty("name")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; } = string.Empty;
 
         /// <summary>
         /// Defines the URI template for the route.
-        /// The <see cref="RouteAttribute"/> has priority, but since its syntax is not customizable syntax, you may want to change it with this property.
         /// </summary>
-        [JsonProperty("uri")]
-        public string Uri { get; set; }
+        [JsonProperty("template")]
+        public string Template { get; }
 
         /// <summary>
         /// Defines the HTTP method of the route.
         /// </summary>
         [JsonProperty("method")]
-        public string Method { get; set; }
+        public string Method { get; }
 
         /// <summary>
         /// Defines the acceptable HTTP <see cref="FileType.GetContentType">content type</see> of the response.
         /// </summary>
         [JsonProperty("accept")]
-        public string Accept { get; set; }
+        public string? Accept { get; } = null;
 
         /// <summary>
         /// Defines the HTTP <see cref="FileType.GetContentType">content type</see> of the request.
         /// </summary>
         [JsonProperty("contentType")]
-        public string ContentType { get; set; }
+        public string? ContentType { get; } = null;
 
         /// <summary>
         /// Defines cache duration in ms.
         /// </summary>
         [JsonProperty("cacheDuration")]
-        public int? CacheDuration { get; set; }
+        public int? CacheDuration { get; }
 
         /// <summary>
         /// Defines the cache name.
         /// </summary>
         [JsonProperty("cacheName")]
-        public string CacheName { get; set; }
+        public string? CacheName { get; }
 
-        /// <summary>
-        /// Defines the allowed parameters in the query string.
-        /// </summary>
-        [JsonProperty("queryStringParams")]
-        public List<ValueSchema> QueryStringParams { get; set; } = new();
+        public Dictionary<string, string> RouteParams { get; } = new();
+
+        public Dictionary<string, string> QueryParams { get; } = new();
 
         public JsonRoute(JsonRouteAttribute routeAttribute, MethodInfo method, bool isApiController)
         {
-            this.Name = routeAttribute.Name;
-            this.Uri = string.IsNullOrEmpty(routeAttribute.JsonTemplate) ? routeAttribute.Template : routeAttribute.JsonTemplate;
+            this.Name = routeAttribute.Name ?? "default";
             this.CacheDuration = (routeAttribute.CacheDuration != 0) ? routeAttribute.CacheDuration : null;
             this.CacheName = routeAttribute.CacheName;
 
             // Method
-			if (method.GetCustomAttribute<HttpDeleteAttribute>() != null) this.Method = "DELETE";
-			else if (method.GetCustomAttribute<HttpPatchAttribute>() != null) this.Method = "PATCH";
-			else if (method.GetCustomAttribute<HttpPostAttribute>() != null) this.Method = "POST";
-			else if (method.GetCustomAttribute<HttpPutAttribute>() != null)	this.Method = "PUT";
-			else if (method.GetCustomAttribute<HttpGetAttribute>() != null)	this.Method = "GET";
-
-            // Query string
-			foreach (ParameterInfo paramInfo in method.GetParameters()) {
-				if (paramInfo.GetCustomAttribute<FromQueryAttribute>() != null) {
-					this.QueryStringParams.AddRange(paramInfo.ParameterType.BuildSchema().Select(s => s.Value));
-				} else {
-					foreach (PropertyInfo property in paramInfo.ParameterType.GetProperties()) {
-                        if (property.GetCustomAttribute<FromQueryAttribute>() == null) continue;
-                        this.QueryStringParams.Add(property.BuildSchema());
-                    }
-				}
-			}
-
-            this.QueryStringParams = this.QueryStringParams.Where(p => p != null).ToList();
+			if (method.HasAttribute<HttpDeleteAttribute>()) this.Method = "DELETE";
+			else if (method.HasAttribute<HttpPatchAttribute>()) this.Method = "PATCH";
+			else if (method.HasAttribute<HttpPostAttribute>()) this.Method = "POST";
+			else if (method.HasAttribute<HttpPutAttribute>()) this.Method = "PUT";
+			else if (method.HasAttribute<HttpGetAttribute>()) this.Method = "GET";
+            else throw new Exception("Route is missing HTTP method");
 
             if (isApiController) {
                 this.Accept = FileType.JSON_CONTENT_TYPE;
 				this.ContentType = FileType.JSON_CONTENT_TYPE;
 			}
+
+            this.Template = routeAttribute.Template;
+            var regex = new Regex(@"\{([^{}]+)\}");
+            this.RouteParams = regex.Matches(this.Template).Select(x => x.Groups[1].Value.Split(':').First()).ToArray();
         }
 
         /// <summary>
@@ -107,11 +97,10 @@ namespace WebCommons.Controllers
 		public static List<JsonRoute> BuildRoutes(Type controller)
 		{
 			List<JsonRoute> routes = new();
-			MethodInfo[] methods = controller.GetMethods();
 			bool isApiController = controller.HasAttribute<ApiControllerAttribute>();
 
 			// For each method in the controller
-			foreach (MethodInfo method in methods) {
+			foreach (MethodInfo method in controller.GetMethods()) {
 				// Skip if the method doesn't have the necessary attributes
 				var routeAttributes = method.GetCustomAttributes<JsonRouteAttribute>();
                 foreach (var route in routeAttributes) routes.Add(new JsonRoute(route, method, isApiController));

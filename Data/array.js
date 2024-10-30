@@ -1,5 +1,5 @@
 ﻿/**
- * Determines if the array has any elements.
+ * Determines if the array has at least one element.
  * @returns {boolean}
  */
 Object.defineProperty(Array.prototype, 'any', {

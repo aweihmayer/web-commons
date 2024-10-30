@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace WebCommons.Auth
 {
-    public static class CommonAuthExtensions
+    public static partial class AuthExtensions
     {
         /// <summary>
         /// Carrying an extra salt inside of the source slightly improves security in case data is compromised.

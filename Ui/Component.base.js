@@ -95,10 +95,9 @@ React.Component.prototype.fill = function (data, withParent) {
  * @returns {boolean}
  */
 React.Component.prototype.isValid = async function (withParent) {
-    let isValid = true;
     for (let c of this.collectRefs(withParent)) {
-        if (typeof c.isValid === 'function' && !await c.isValid()) isValid = false;
+        if (typeof c.isValid === 'function' && !await c.isValid()) return false;
     }
 
-    return isValid;
+    return true;
 };

@@ -2,7 +2,7 @@
     // Value is an object, it contains locales and/or keys
     if (isNonArrayObject(value)) {
         // A specific key is defined
-        if (!isUndefined(key) && this.hasProp(key)) value = value.getProp(key);
+        if (!isUndefined(key) && value.hasProp(key)) value = value.getProp(key);
 
         // The value has an i18n property
         if (isObject(value) && value.i18n) value = value.i18n;

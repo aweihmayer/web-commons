@@ -1,48 +1,16 @@
 ﻿class Route {
     /**
-     * @param {string} name The route name which should be a JSON path. When adding with Routes.add(), you can retrieve them with that path.
-     * @param {any} uri The URI template.
-     * @param {any} method The HTTP method.
-     * @param {any} [options]
-     * @param {Function} [options.view] A function that returns a view to render.
-     * @param {string[]} [options.bundles] Bundles to be loaded when the route changes.
-     * @param {string} [options.cacheName] The cache name. Must be defined to enable the cache.
-     * @param {number} [options.cacheDuration]
-     * @param {Array<ValueSchema>} [options.queryStringParams]
+     * See the C# Route class.
+     * @param {Function} [route.view] A function that returns a view to render.
+     * @param {string[]} [route.bundles] Bundles to be loaded when the route changes.
      */
-    constructor(name, template, method, options) {
-        options = options || {};
-        this.name = name;
-        this.method = method;
-        this.accept = options.accept || null;
-        this.contentType = options.contentType || null;
-        this.view = options.view || null;
-        this.bundles = options.bundles || [];
+    constructor(route, template, method, options) {
+        Object.assign(this, route);
         this.cache = new RequestCacheValue(options.cacheName, options.cacheDuration);
 
         this.template = String.removeQueryString(template) || '/';
         if (this.template.charAt(0) != '/') this.template = '/' + this.template;
         this.params = [];
-
-        // Build params
-        const uriParams = this.template.match(/{.*?}/g) ?? [];
-        this.params = uriParams.map(p => {
-            p = p.replace(/{|}/g, '');
-            return {
-                name: p.split(':')[0],
-                type: p.split(':')[1] ?? 'string',
-                location: 'uri'
-            };
-        });
-
-        if (typeof options.queryStringParams === 'undefined') return;
-        options.queryStringParams.forEach(p => {
-            this.params.push({
-                name: p.name,
-                type: p.type,
-                location: 'query'
-            });
-        });
     }
 
     // #region HTTP
@@ -123,65 +91,57 @@
     /**
      * Builds the relative path of the URI.
      * @param {object} params
-     * @param {boolean} query
+     * @param {boolean} addQueryString
      * @returns {string}
      */
-    getRelativeUri(params, query) {
+    getRelativeUri(params, addQueryString) {
         params = params ?? {};
-        query = query ?? {};
 
         // If the payload is not an object, its value belongs to the first route param
         if (typeof params !== 'object') {
-            const firstUriParam = this.params.find(p => p.location === 'uri');
-            if (!firstUriParam) params = {};
-            else {
-                let value = params;
+            if (!this.routeParams.any()) {
                 params = {};
-                params[firstUriParam.name] = value;
+            } else {
+                const firstRouteParam = this.routeParams.first();
+                const temp = params;
+                params = {};
+                params[firstRouteParam] = temp;
             }
         }
 
+        params = Object.clone(params);
+
         let uri = this.template;
-        this.params.forEach(param => {
-            if (param.location !== 'uri') return;
-            else if (!params.hasProp(param.name)) return;
-            let v = params.getProp(param.name);
-            v = Parser.parse(v, 'string');
+        this.routeParams.forEach(p => {
+            if (!params.hasProp(p)) return;
+            let v = params.getProp(p);
             let regex = new RegExp('{' + param.name + '.*?}');
             uri = uri.replace(regex, v);
+            params.deleteProp(p);
         });
 
-        if (uri.includes('{')) throw new Error('Missing route parameter for ' + this.template);
-        else if (typeof query === 'string') {
-            return uri + query;
-        } else if (typeof query === 'object') {
-            let parsedQuery = {};
-            Object.keys(query).forEach(k => {
-                if (typeof query[k] === 'object') return;
-                let v = query[k];
-                v = Parser.parse(v, 'string');
-                parsedQuery[k] = v;
-            });
-
-            return uri + Object.toQueryString(parsedQuery);
-        } else {
+        if (uri.includes('{')) {
+            throw new Error('Missing route parameter for ' + this.template);
+        } else if (!addQueryString) {
             return uri;
+        } else {
+            return uri + Object.toQueryString(params);
         }
     }
 
     /**
      * Builds the full path of the route (ex: https://www.news.com/articles/new-president?id=1).
      * @param {object} params
-     * @param {boolean} queryString
+     * @param {boolean} query
      * @returns {string}
      */
-    getAbsoluteUri(params, queryString) {
-        return `${window.location.protocol}//${window.location.hostname}${this.getRelativeUri(params, queryString)}`;
+    getAbsoluteUri(params, query) {
+        return `${window.location.protocol}//${window.location.hostname}${this.getRelativeUri(params, query)}`;
     }
 
     /**
      * Builds the canonical path of the route without a query string (ex: https://www.news.com/articles/new-president).
-     * @param {object} params The route parameters.
+     * @param {object} params
      * @returns {string}
      */
     getCanonicalUri(params) {

@@ -1,7 +1,6 @@
 ﻿Stores.auth = {
     /**
      * Retrieves the user from the local cache.
-     * @returns {CommonUserDto}
      */
     get user() {
         if (this._user !== null) return this._user;
@@ -11,7 +10,6 @@
 
     /**
      * Stores the user in the local cache.
-     * @param {CommonUserDto} user
      */
     set user(user) {
         this._user = user;
@@ -42,17 +40,9 @@
         return accessToken.expirationDate - Date.now();
     },
 
-    silentlyRefreshAcessToken: function () {
-        setTimeout(() => { this.silentlyRefreshAcessToken() }, 10000);
-        if (!this.isAuthenticated()) return;
-        let remainingPercentage = this.getRemainingDuration() / 1800000;
-        if (remainingPercentage > 0.25) return;
-        this.refresh();
-    },
-
-    beforeRouteChangeAuthentification: function (newRouting) {
+    authenticateRoute: function (routing) {
         if (Store.auth.isAuthenticated()) return;
-        newRouting.code = 401;
-        newRouting.route = Routes.error['401'];
+        routing.code = 401;
+        routing.route = Routes.error['401'];
     }
 };

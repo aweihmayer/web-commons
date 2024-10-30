@@ -29,22 +29,22 @@
     <None Update="commons.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Html\utils.js">
+    <None Update="Data\Html\utils.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Network\Http.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caching\RequestCacheValue.js">
+    <None Update="Data\Caching\RequestCacheValue.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Network\Response.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Io\Bundling\functions.js">
+    <None Update="Data\Io\Bundling\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\function.js">
+    <None Update="Http\Routing\function.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Picture.jsx">
@@ -59,7 +59,7 @@
     <None Update="Ui\Inputs\Tag\Select.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Caching\LocalStorageValue.base.js">
+    <None Update="Data\Caching\LocalStorageValue.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Metadata\Metadata.js">
@@ -77,40 +77,40 @@
     <None Update="Data\TimeSpan.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\required.js">
+    <None Update="Data\Validation\Types\required.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\boolean.js">
+    <None Update="Data\Validation\Types\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\int.js">
+    <None Update="Data\Validation\Types\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Validator.js">
+    <None Update="Data\Validation\Validator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\ValueSchema.js">
+    <None Update="Data\Validation\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\email.js">
+    <None Update="Data\Validation\Types\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\number.js">
+    <None Update="Data\Validation\Types\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Validation\Types\string.js">
+    <None Update="Data\Validation\Types\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\App.jsx">
+    <None Update="Http\Routing\App.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\Route.js">
+    <None Update="Http\Routing\Route.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\Router.js">
+    <None Update="Http\Routing\Router.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Routing\Routes.js">
+    <None Update="Http\Routing\Routes.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ThirdParty\Drawdown\drawdown.js">
@@ -278,16 +278,16 @@
     <None Update="Ui\Toast\Toast.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Html\document.js">
+    <None Update="Data\Html\document.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Html\element.js">
+    <None Update="Data\Html\element.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Html\head.js">
+    <None Update="Data\Html\head.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Html\lazyload.js">
+    <None Update="Data\Html\lazyload.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\array.js">
@@ -296,22 +296,22 @@
     <None Update="Data\object.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\boolean.js">
+    <None Update="Data\Parsing\boolean.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\int.js">
+    <None Update="Data\Parsing\int.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\number.js">
+    <None Update="Data\Parsing\number.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\email.js">
+    <None Update="Data\Parsing\email.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\string.js">
+    <None Update="Data\Parsing\string.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Parsing\Parser.base.js">
+    <None Update="Data\Parsing\Parser.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\string.js">

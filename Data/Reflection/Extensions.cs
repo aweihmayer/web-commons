@@ -33,5 +33,29 @@
         {
             return type.GetCustomAttribute<T>() != null;
         }
+
+        /// <summary>
+        /// Determines if a parameter has an attribute.
+        /// </summary>
+        public static bool HasAttribute<T>(this ParameterInfo param) where T : Attribute
+        {
+            return param.GetCustomAttribute<T>() != null;
+        }
+
+        /// <summary>
+        /// Determines if a method has an attribute.
+        /// </summary>
+        public static bool HasAttribute<T>(this MethodInfo method) where T : Attribute
+        {
+            return method.GetCustomAttribute<T>() != null;
+        }
+
+        /// <summary>
+        /// Determines if a type is a list.
+        /// </summary>
+        public static bool IsList(this Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+        }
     }
 }

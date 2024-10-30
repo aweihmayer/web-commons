@@ -1,0 +1,1 @@
+﻿This directory lists all the validation functions for different data types.

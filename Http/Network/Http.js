@@ -59,7 +59,7 @@
         if (options.cache instanceof RequestCacheValue) {
             cache = options.cache;
         } else if (options.cacheName || options.cacheDuration) {
-            cache = new RequestCacheValue(options.cacheName, otions.cacheDuration);
+            cache = new RequestCacheValue(options.cacheName, options.cacheDuration);
         }
 
         if (cache && cache.isEnabled && !options.noCache) return cache.retrieve(request);

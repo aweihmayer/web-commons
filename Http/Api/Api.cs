@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.stics;
 using System.Net;
 
 namespace WebCommons.Api
@@ -28,7 +28,7 @@ namespace WebCommons.Api
             Stopwatch watch = new();
             watch.Start();
             try {
-                HttpRequestMessage requestMessage = request.Build();
+                Httest.Build();
                 HttpResponseMessage response = await this.Client.SendAsync(requestMessage).ConfigureAwait(false);
                 string content = await response.Content.ReadAsStringAsync();
                 watch.Stop();
