@@ -4,29 +4,32 @@
      * @param {Function} [route.view] A function that returns a view to render.
      * @param {string[]} [route.bundles] Bundles to be loaded when the route changes.
      */
-    constructor(route, template, method, options) {
+    constructor(route) {
         Object.assign(this, route);
-        this.cache = new RequestCacheValue(options.cacheName, options.cacheDuration);
-
-        this.template = String.removeQueryString(template) || '/';
-        if (this.template.charAt(0) != '/') this.template = '/' + this.template;
-        this.params = [];
+        this.cache = new RequestCacheValue(route.cacheName, route.cacheDuration);
     }
 
     // #region HTTP
 
-    static onFetchResponse = response => response;
-
-    fetch(payload, options) {
+    buildRequest(options) {
         options = options ?? {};
-        options.payload = payload;
-        options.cache = this.cache;
-        options.method = this.method;
-        options.headers = new Headers();
-        options.onResponse = Route.onFetchResponse;
-        if (this.accept) options.headers.append('Accept', this.accept);
-        if (this.contentType) options.headers.append('Content-Type', this.contentType);
-        return Http.fetch(this, options);
+
+        // Build headers
+        let headers = new Headers();
+        headers.append('Time-Offset', new Date().getTimezoneOffset() * -1);
+        if (options.headers) Object.keys(options.headers).forEach(h => headers.append(h, options.headers[h]));
+        if (this.accept) headers.append('Accept', this.accept);
+        if (this.contentType) headers.append('Content-Type', this.contentType);
+
+        // Assemble all the parts into a request object
+        const request = new Request(this.getRelativeUri(options.params, options.query), {
+            method: this.method ?? 'GET',
+            body: options.payload ? JSON.stringify(payload) : null,
+            headers: headers
+        });
+
+        request.requestCache = this.cache;
+        return request;
     }
 
     // #endregion
@@ -44,10 +47,19 @@
      */
     matches(uri) {
         uri = String.removeQueryString(uri);
-        // Escape special characters in the URL pattern and replace wildcard with a regex wildcard
-        const regexPattern = this.template.replace(/\//g, '\\/').replace(/\{.*?\}/g, '([\\w-]+)');
-        const regex = new RegExp('^' + regexPattern + '$');
-        return regex.test(uri);
+        const templateParts = this.template.split('/').filter(x => x !== '');
+        const uriParts = uri.split('/').filter(x => x !== '');
+
+        if (templateParts.length !== uriParts.length) return false;
+
+        for (let i in templateParts) {
+            const t = templateParts[i];
+            const u = uriParts[i];
+            if (t.startsWith('{') && t.endsWith('}')) continue;
+            if (t !== u) return false;
+        }
+
+        return true;
     }
 
     /**
@@ -57,28 +69,30 @@
      */
     getParams(uri) {
         if (!this.matches(uri)) return {};
+        let params = {};
 
         uri = uri ?? (window.location.relativeHref);
         let query = String.getQueryString(uri);
-        uri = String.removeQueryString(uri);
-        let params = {};
-
-        const regexPattern = this.template.replace(/\//g, '\\/').replace(/\{([^{}]+)\}/g, '([^/]+)');
-        const regex = new RegExp('^' + regexPattern + '$');
-        const uriParams = uri.match(regex).slice(1);
-        uriParams.forEach((v, i) => {
-            let param = this.params[i];
-            v = Parser.parse(v, param.type);
-            params.setProp(param.name, v);
-        })
-
-        if (isEmpty(query)) return params;
-
         query = Object.fromQueryString(query);
+        uri = String.removeQueryString(uri);
+
+        const templateParts = this.template.split('/');
+        const uriParts = uri.split('/');
+
+        for (let i in templateParts) {
+            const t = templateParts[i];
+            const u = uriParts[i];
+            if (!t.startsWith('{') || !t.endsWith('}')) continue;
+            const paramName = t.replace(/{|}/g, '').split(':').first();
+            const param = this.routeParams.find(p => p.name === paramName);
+            if (param) params[paramsName] = param.parse(u);
+            else params.name = u;
+        }
+
         Object.keys(query).forEach(k => {
-            let queryParam = this.params.find(p => p.name === k);
-            if (!queryParam) params[k] = query[k];
-            else params[k] = Parser.parse(query[k], queryParam.type);
+            const param = this.queryParams.find(p => p.name === k);
+            if (param) params[k] = param.parse(query[k]);
+            else params[k] = query[k];
         });
 
         return params;
@@ -113,11 +127,11 @@
 
         let uri = this.template;
         this.routeParams.forEach(p => {
-            if (!params.hasProp(p)) return;
-            let v = params.getProp(p);
-            let regex = new RegExp('{' + param.name + '.*?}');
+            if (!params.hasProp(p.name)) return;
+            let v = params.getProp(p.name);
+            let regex = new RegExp('{' + p.name + '.*?}');
             uri = uri.replace(regex, v);
-            params.deleteProp(p);
+            params.deleteProp(p.name);
         });
 
         if (uri.includes('{')) {

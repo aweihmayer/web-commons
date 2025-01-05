@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Template;
 using Newtonsoft.Json;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using WebCommons.IO;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     public class JsonRoute
     {
@@ -53,9 +50,11 @@ namespace WebCommons.Controllers
         [JsonProperty("cacheName")]
         public string? CacheName { get; }
 
-        public Dictionary<string, string> RouteParams { get; } = new();
+        [JsonProperty("routeParams")]
+        public List<ValueSchema> RouteParams { get; } = new();
 
-        public Dictionary<string, string> QueryParams { get; } = new();
+        [JsonProperty("queryParams")]
+        public List<ValueSchema> QueryParams { get; } = new();
 
         public JsonRoute(JsonRouteAttribute routeAttribute, MethodInfo method, bool isApiController)
         {
@@ -77,8 +76,9 @@ namespace WebCommons.Controllers
 			}
 
             this.Template = routeAttribute.Template;
-            var regex = new Regex(@"\{([^{}]+)\}");
-            this.RouteParams = regex.Matches(this.Template).Select(x => x.Groups[1].Value.Split(':').First()).ToArray();
+            if (!this.Template.StartsWith('/')) this.Template = '/' + this.Template;
+            this.RouteParams = method.GetParameters().Where(p => p.HasAttribute<FromRouteAttribute>()).Select(p => new ValueSchema(p)).ToList();
+            this.QueryParams = method.GetParameters().Where(p => p.HasAttribute<FromQueryAttribute>()).Select(p => new ValueSchema(p)).ToList();
         }
 
         /// <summary>

@@ -35,7 +35,7 @@
     <None Update="Http\Network\Http.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Caching\RequestCacheValue.js">
+    <None Update="Http\Network\RequestCacheValue.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Network\Response.js">
@@ -44,7 +44,7 @@
     <None Update="Data\Io\Bundling\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Http\Routing\function.js">
+    <None Update="Http\Routing\functions.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Basic\Picture.jsx">
@@ -53,13 +53,16 @@
     <None Update="Ui\Embedded\YouTubeVideo.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Ui\Inputs\render.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Ui\Inputs\Tag\Search.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Ui\Inputs\Tag\Select.jsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Caching\LocalStorageValue.base.js">
+    <None Update="Data\LocalStorageValue.base.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Http\Metadata\Metadata.js">
@@ -89,7 +92,7 @@
     <None Update="Data\Validation\Validator.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\Validation\ValueSchema.js">
+    <None Update="Data\Schema\ValueSchema.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Data\Validation\Types\email.js">

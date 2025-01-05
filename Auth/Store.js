@@ -1,4 +1,4 @@
-﻿Stores.auth = {
+﻿Store.auth = {
     /**
      * Retrieves the user from the local cache.
      */

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using WebCommons;
+using WebCommons.Http;
 
 namespace Microsoft.AspNetCore.Mvc
 {

@@ -11,37 +11,21 @@ const Routes = {
 
         for (let r of routes) {
             let route = r;
-            if (!(route instanceof Route)) {
-                route = new Route(route.name, route.uri, route.method, route);
-            }
-
+            if (!(route instanceof Route)) route = new Route(route);
             this.setProp(route.name, route);
             this._routes.push(route);
         }
 
-        this.setGroupFunctions();
-    },
-
-    setGroupFunctions(routes) {
-        routes = routes ?? this;
-        if (typeof routes !== 'object') return;
-        if (routes instanceof Route) return;
-        routes.toArray = function () {
-            let routes = [];
-            for (let k in this) {
-                if (this[k] instanceof Route) { routes.push(this[k]); }
-                else if (typeof this[k] === 'object') { routes = routes.concat(this[k].toArray()); }
+        // Set group functions
+        this._routes.forEach(route => {
+            route.clearCaches = function () {
+                let routes = this.toArray();
+                Object.keys(this).forEach(k => {
+                    if (this[k] instanceof Route) this[k].clearCaches();
+                    Promise.all(routes.map(r => r.cache.clear()))
+                })
             }
-
-            return routes;
-        };
-
-        routes.clearCaches = function () {
-            let routes = this.toArray();
-            return Promise.all(routes.map(r => r.cache.clear()));
-        }
-
-        for (let k in routes) this.setGroupFunctions(routes[k]);
+        });
     },
 
     /**

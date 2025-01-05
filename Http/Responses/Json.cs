@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Net;
 using WebCommons.IO;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     /// <summary>
     /// Defines how a controller returns a JSON response.

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     /// <summary>
     /// Defines controllers which are the main entry point for requests. They can:
@@ -17,18 +16,6 @@ namespace WebCommons.Controllers
     /// </summary>
     public abstract class CommonController : Controller
     {
-        #region Life cycle events
-        
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            // Set default utility values
-            ViewBag.AbsolutePath = this.Request.Path.Value;
-            ViewBag.Domain = this.Request.Host.Value;
-            ViewBag.Response = this.Response;
-        }
-        
-        #endregion
-
         #region View response
 
         protected ViewResult View(Exception ex)

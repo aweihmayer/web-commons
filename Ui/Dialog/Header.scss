@@ -1,14 +1,12 @@
-﻿#dialog-container {
-    header {
-        .dialog-close-btn {
-            background-color: transparent;
-            border: none;
-            color: darkgray;
-            cursor: pointer;
-            margin: 0.2em;
-            position: absolute;
-            right: 0px;
-            top: 0px;
-        }
+﻿dialog header {
+    .dialog-close-btn {
+        background-color: transparent;
+        border: none;
+        color: darkgray;
+        cursor: pointer;
+        margin: 0.2em;
+        position: absolute;
+        right: 0px;
+        top: 0px;
     }
 }

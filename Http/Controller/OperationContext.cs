@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     public partial class CommonOperationContext
     {

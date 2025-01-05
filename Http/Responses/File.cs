@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebCommons.IO;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     /// <summary>
     /// Defines how a controller returns a file response.

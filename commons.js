@@ -1,1 +1,1 @@
-﻿const Stores = {};
+﻿const Store = {};

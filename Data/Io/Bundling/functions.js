@@ -5,6 +5,8 @@
  * @param {string[]} bundles
  */
 document.loadBundles = async function (bundles) {
+    if (!bundles) return;
+
     for (let b of bundles) {
         if (this.bundles.hasOwnPropert(b)) await this.loadBundle(b);
         else await this.load(b);

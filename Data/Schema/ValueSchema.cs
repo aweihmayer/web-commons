@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Reflection;
 
 namespace System.ComponentModel.DataAnnotations
@@ -25,6 +26,12 @@ namespace System.ComponentModel.DataAnnotations
         /// </summary>
         [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
         public string? Label { get; set; }
+
+        /// <summary>
+        /// The text to describe the input to the user. Usually a placeholder.
+        /// </summary>
+        [JsonProperty("prompt", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Prompt { get; set; }
 
         /// <summary>
         /// Defines the data type.
@@ -96,10 +103,16 @@ namespace System.ComponentModel.DataAnnotations
         public Dictionary<object, object>? Colors { get; set; } = null;
 
         /// <summary>
-        /// The preferred input component when this value is used in a form.
+        /// The preferred input component when this schema is rendered.
         /// </summary>
-        [JsonProperty("component", NullValueHandling = NullValueHandling.Ignore)]
-        public string? InputComponent { get; set; } = null;
+        [JsonProperty("input", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Input { get; set; } = null;
+
+        /// <summary>
+        /// The tooltip for thet input component when this schema is rendered.
+        /// </summary>
+        [JsonProperty("tooltip", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Tooltip { get; set; } = null;
 
         /// <summary>
         /// Defines additional data.
@@ -107,46 +120,31 @@ namespace System.ComponentModel.DataAnnotations
         [JsonExtensionData]
         public Dictionary<object, object> Data { get; set; } = new();
 
-        private void Build(string name, Type type,
+        public ValueSchema(
+            string name,
+            Type type,
             EmailAddressAttribute? emailAttr = null,
             StringLengthAttribute? lengthAttr = null,
             RangeAttribute? rangeAttr = null,
             RequiredAttribute? requiredAttr = null,
-            FillNameAttribute? fillAttr = null,
-            DisplayNameAttribute? displayAttr = null
-            )
+            FillNameAttribute? fillNameAttr = null,
+            DisplayAttribute? displayAttr = null,
+            InputAttribute? inputAttr = null,
+            TooltipAttribute? tooltipAttr = null)
         {
             this.Name = name.FirstCharToLower();
+            Type baseType = type.GetBaseType();
 
             this.IsRequired = (requiredAttr != null);
-            if (fillAttr != null) this.Fill = fillAttr.Name;
-            if (displayAttr != null) this.Label = displayAttr.DisplayName;
-
-            // Get the property type
-            Type propertyType;
-            
-            // If the type if nullable, the real type is the underlying one
-            Type? nullableType = Nullable.GetUnderlyingType(type);
-            if (nullableType != null) {
-                this.IsNullable = true;
-                propertyType = nullableType;
-            } else {
-                this.IsNullable = false;
-                propertyType = type;
-            }
-
-            Type[] genericTypes = propertyType.GetGenericArguments();
-            if (genericTypes.Any()) {
-                propertyType = genericTypes.First();
-                this.IsEnumerable = true;
-            }
-
-            string typeName;
-            if (propertyType.IsEnum) typeName = "enum";
-            else typeName = propertyType.Name;
+            this.IsNullable = baseType.IsNullable();
+            this.IsEnumerable = baseType.IsList();
+            if (fillNameAttr != null) this.Fill = fillNameAttr.Name;
+            if (displayAttr != null) { this.Label = displayAttr.Name; this.Prompt = displayAttr.Prompt; }
+            if (inputAttr != null) this.Input = inputAttr.Input;
+            if (tooltipAttr != null) this.Tooltip = tooltipAttr.Tip;
 
             // Determine the type and its validation rules
-            switch (typeName.ToLower()) {
+            switch (baseType.GetStringType()) {
                 case "string":
                     this.IsNullable = true;
 
@@ -179,8 +177,8 @@ namespace System.ComponentModel.DataAnnotations
                 case "enum":
                     // Enums are ints in the front-end with a limited set of values
                     this.Type = "int";
-                    this.Values = type.GetEnumsAsObjects();
-                    this.Constants = type.GetEnumsAsConstantMap();
+                    this.Values = baseType.GetEnumsAsObjects();
+                    this.Constants = baseType.GetEnumsAsConstantMap();
                     break;
                 case "bool":
                 case "boolean":
@@ -189,24 +187,32 @@ namespace System.ComponentModel.DataAnnotations
             }
         }
 
-        public ValueSchema(PropertyInfo property, object? instance = null)
+        public ValueSchema(PropertyInfo property, object? instance = null) : this(
+            property.Name,
+            property.PropertyType,
+            property.GetCustomAttribute<EmailAddressAttribute>(),
+            property.GetCustomAttribute<StringLengthAttribute>(),
+            property.GetCustomAttribute<RangeAttribute>(),
+            property.GetCustomAttribute<RequiredAttribute>(),
+            property.GetCustomAttribute<FillNameAttribute>(),
+            property.GetCustomAttribute<DisplayAttribute>(),
+            property.GetCustomAttribute<InputAttribute>())
         {
             this.DefaultValue = (instance != null) ? property.GetValue(instance) : null;
+        }
 
-            this.Build(property.Name, property.PropertyType,
-                emailAttr: property.GetCustomAttribute<EmailAddressAttribute>(),
-                lengthAttr: property.GetCustomAttribute<StringLengthAttribute>(),
-                rangeAttr: property.GetCustomAttribute<RangeAttribute>(),
-                requiredAttr: property.GetCustomAttribute<RequiredAttribute>(),
-                fillAttr: property.GetCustomAttribute<FillNameAttribute>(),
-                displayAttr: property.GetCustomAttribute<DisplayNameAttribute>()); 
+        public ValueSchema(ParameterInfo parameter) : this(
+            parameter.Name,
+            parameter.ParameterType)
+        {
+            this.DefaultValue = parameter.DefaultValue;
         }
 
         /// <summary>
         /// Generates a schema of the model to be serialized as JSON and used with JS.
         /// This is useful because it prevents duplication of validation rules between front-end and back-end.
         /// </summary>
-        public static Dictionary<string, ValueSchema> BuildSchema(this Type model)
+        public static Dictionary<string, ValueSchema> BuildSchema(Type model)
         {
             Dictionary<string, ValueSchema> schemas = new();
 

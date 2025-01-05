@@ -1,4 +1,6 @@
-﻿namespace WebCommons.Http
+﻿using System.Collections.Generic;
+
+namespace WebCommons.Http
 {
     /// <summary>
     /// Defines the HTML page metadata for search engines.
@@ -32,27 +34,42 @@
 
         #endregion
 
-        public string Html
+        public Dictionary<string, string> ToMap()
         {
-            get {
-                return "<title>" + this.FullTitle + "</title>"
-                    + CreateMetadataElement("og:title", "property", this.FullTitle)
-                    + CreateMetadataElement("description", "name", this.Description)
-                    + CreateMetadataElement("og:description", "property", this.Description)
-                    + CreateMetadataElement("og:type", "property", (this.Type == PageType.Other) ? null : Enum.GetName(typeof(PageType), this.Type).ToLower())
-                    + CreateMetadataElement("og:section", "property", this.Section)
-                    + CreateMetadataElement("og:site_name", "property", this.SiteName)
-                    + CreateMetadataElement("og:locale", "property", this.Locale)
-                    + CreateMetadataElement("og:modified_time", "property", this.ModifiedTime?.ToString("yyyy-MM-dd"))
-                    + CreateMetadataElement("og:image", "property", this.Domain + this.Image)
-                    + CreateMetadataElement("robots", "name", RobotsMap[this.Robots])
-                    + CreateMetadataElement("url", "name", this.Domain + this.Url);
-            }
+            Dictionary<string, string> map = new();
+            map["title"] = this.Title;
+            map["fullTitle"] = this.FullTitle;
+            map["titlePrefix"] = this.TitlePrefix;
+            map["titleSuffix"] = this.TitleSuffix;
+            map["description"] = this.Description;
+            map["type"] = (this.Type == PageType.Other) ? null : Enum.GetName(typeof(PageType), this.Type).ToLower();
+            map["section"] = this.Section;
+            map["siteName"] = this.SiteName;
+            map["locale"] = this.Locale;
+            map["modifiedTime"] = this.ModifiedTime?.ToString("yyyy-MM-dd");
+            map["image"] = this.Domain + this.Image;
+            map["robots"] = RobotsMap[this.Robots];
+            map["url"] = this.Domain + this.Url;
+            return map;
         }
 
-        /// <summary>
-        /// Creates the HTML element for the metadata value as a string.
-        /// </summary>
+        public string ToHtml()
+        {
+            var map = this.ToMap();
+            return "<title>" + this.FullTitle + "</title>"
+                + CreateMetadataElement("og:title", "property", this.FullTitle)
+                + CreateMetadataElement("description", "name", map["description"])
+                + CreateMetadataElement("og:description", "property", map["description"])
+                + CreateMetadataElement("og:type", "property", map["type"])
+                + CreateMetadataElement("og:section", "property", map["section"])
+                + CreateMetadataElement("og:site_name", "property", map["siteName"])
+                + CreateMetadataElement("og:locale", "property", map["locale"])
+                + CreateMetadataElement("og:modified_time", "property", map["modifiedTime"])
+                + CreateMetadataElement("og:image", "property", map["image"])
+                + CreateMetadataElement("robots", "name", map["robots"])
+                + CreateMetadataElement("url", "name", map["url"]);
+        }
+
         private static string CreateMetadataElement(string name, string attribute, string value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;

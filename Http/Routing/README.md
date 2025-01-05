@@ -1,4 +1,5 @@
 ﻿# API
+
 APIs should be structured in a standard way. The goal is to make things discoverable and not overload a
 class with too many endpoint methods. We should structure the methods with the context first and the technical
 operation last.

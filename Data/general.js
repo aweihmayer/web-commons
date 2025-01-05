@@ -53,3 +53,12 @@ function isObject(value) {
 function isNonArrayObject(value) {
     return isObject(value) && !isArray(value);
 }
+
+/**
+ * Determines if a value is a string.
+ * @param {any} value
+ * @returns {boolean}
+ */
+function isString(value) {
+    return (typeof value === 'string');
+}

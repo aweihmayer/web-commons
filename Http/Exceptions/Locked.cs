@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WebCommons
+namespace WebCommons.Http
 {
     public class LockedException : ResponseException
     {

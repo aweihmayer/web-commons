@@ -57,5 +57,40 @@
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
+
+        /// <summary>
+        /// Determines if a type is a list.
+        /// </summary>
+        public static bool IsNullable(this Type type)
+        {
+            Type? nullableType = Nullable.GetUnderlyingType(type);
+            return (nullableType != null);
+        }
+
+        public static Type GetNullableUnderlyingType(this Type type)
+        {
+            return type.IsNullable() ? Nullable.GetUnderlyingType(type) : type;
+        }
+
+        public static Type GetBaseType(this Type type)
+        {
+            Type propertyType;
+            
+            // If the type if nullable, the real type is the underlying one
+            Type? nullableType = Nullable.GetUnderlyingType(type);
+            if (nullableType != null) propertyType = nullableType;
+            else propertyType = type;
+
+            Type[] genericTypes = propertyType.GetGenericArguments();
+            if (genericTypes.Any()) return genericTypes.First();
+            else return propertyType;
+        }
+
+        public static string GetStringType(this Type type)
+        {
+            Type baseType = type.GetBaseType();
+            if (baseType.IsEnum) return "enum";
+            else return baseType.Name;
+        }
     }
 }

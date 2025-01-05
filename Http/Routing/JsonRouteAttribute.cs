@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebCommons.Controllers
+namespace WebCommons.Http
 {
     /// <summary>
     /// Placed on action and used to generate a JSON route config.
